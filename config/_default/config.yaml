@@ -1,5 +1,5 @@
 baseURL: https://miimuu.com
-title: Eureka Demo
+title: 米木
 
 # Uncomment when not installing with Hugo Modules
 theme: eureka
@@ -9,15 +9,14 @@ theme: eureka
 
 paginate: 3
 copyright: >
-  &copy; 2021 <a href="https://www.wangchucheng.com/">WANG Chucheng</a> and <a
-  href="https://www.ruiqima.com/">MA Ruiqi</a>
+  &copy; 2023 <a href="https://miimuu.com/">MiiMuu.com</a>
 enableEmoji: true
 enableGitInfo: false
 summaryLength: 75
 
-defaultContentLanguage: en
-hasCJKLanguage: false # Set `true` for Chinese/Japanese/Korean.
-defaultContentLanguageInSubdir: false
+defaultContentLanguage: zh
+hasCJKLanguage: true # Set `true` for Chinese/Japanese/Korean.
+defaultContentLanguageInSubdir: true
 
 # Uncomment for google analytics
 # googleAnalytics: UA-123-45
