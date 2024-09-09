@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RISC-V Extension - Most Comprehensive RISC-V ASM Highlighting</title>
+  <style>
+    /* Page Styling */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    header {
+      background-color: #0078d7;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #0078d7;
+      text-align: center;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #333;
+      text-align: justify;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 15px 25px;
+      font-size: 1.2rem;
+      color: white;
+      background-color: #0078d7;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #005fa3;
+    }
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .feature-item {
+      flex-basis: 30%;
+      text-align: center;
+      padding: 20px;
+      background-color: #e9f5ff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #f1f1f1;
+      color: #777;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    RISC-V Extension - The Most Comprehensive RISC-V ASM Highlighting
+  </header>
+
+  <main>
+    <h1>Welcome to the RISC-V Extension</h1>
+    <p>This Extension offers the <strong>most comprehensive RISC-V assembly code highlighting</strong> available for Visual
+      Studio Code. It supports all RISC-V extensions, ensuring a seamless coding experience with accurate syntax
+      highlighting for a wide range of RISC-V related projects.</p>
+
+    <a class="btn" href="https://marketplace.visualstudio.com/items?itemName=sunshaoce.RISC-V"
+      target="_blank">Download RISC-V Extension</a>
+
+    <h2>Supported RISC-V Extensions</h2>
+    <p>This extension uniquely supports the following RISC-V extensions:</p>
+<ol>
+  <li><code>A</code> Atomic Extension</li>
+  <li><code>B</code> Bitmanip Extension</li>
+  <li><code>C</code> Compressed Extension</li>
+  <li><code>D</code> Double-Precision Extension</li>
+  <li><code>E</code> (<code>RV32E</code> / <code>RV64E</code> / <code>RV128E</code>) Embedded Extension</li>
+  <li><code>F</code> Single-Precision Extension</li>
+  <li><code>G</code> (<code>I</code>, <code>M</code>, <code>A</code>, <code>F</code>, <code>D</code>,
+    <code>Zicsr</code>, <code>Zifencei</code>) General Extensions</li>
+  <li><code>H</code> Hypervisor Extension</li>
+  <li><code>I</code> (<code>RV32I</code> / <code>RV64I</code> / <code>RV128I</code>) Integer Extension</li>
+  <li><code>M</code> Multiplication Extension</li>
+  <li><code>Q</code> Quard Extension</li>
+  <li><code>Shcounterenw</code> Extension</li>
+  <li><code>Shgatpa</code> Extension</li>
+  <li><code>Shtvala</code> Extension</li>
+  <li><code>Shvsatpa</code> Extension</li>
+  <li><code>Shvstvala</code> Extension</li>
+  <li><code>Shvstvecd</code> Extension</li>
+  <li><code>Smaia</code> Extension</li>
+  <li><code>Smcdeleg</code> Extension</li>
+  <li><code>Smcsrind</code> Extension</li>
+  <li><code>Smepmp</code> Extension</li>
+  <li><code>Smmpm</code> Extension</li>
+  <li><code>Smnpm</code> Extension</li>
+  <li><code>Smstateen</code> Extension</li>
+  <li><code>Ssaia</code> Extension</li>
+  <li><code>Ssccfg</code> Extension</li>
+  <li><code>Ssccptr</code> Extension</li>
+  <li><code>Sscofpmf</code> Extension</li>
+  <li><code>Sscounterenw</code> Extension</li>
+  <li><code>Sscsrind</code> Extension</li>
+  <li><code>Ssnpm</code> Extension</li>
+  <li><code>Sspm</code> Extension</li>
+  <li><code>Ssqosid</code> Extension</li>
+  <li><code>Ssstateen</code> Extension</li>
+  <li><code>Ssstrict</code> Extension</li>
+  <li><code>Sstc</code> Extension</li>
+  <li><code>Sstvala</code> Extension</li>
+  <li><code>Sstvecd</code> Extension</li>
+  <li><code>Ssu64xl</code> Extension</li>
+  <li><code>Supm</code> Extension</li>
+  <li><code>Svade</code> Extension</li>
+  <li><code>Svadu</code> Extension</li>
+  <li><code>Svbare</code> Extension</li>
+  <li><code>Svinval</code> Extension</li>
+  <li><code>Svnapot</code> Extension</li>
+  <li><code>Svpbmt</code> Extension</li>
+  <li><code>V</code> Vector Extension</li>
+  <li><code>Za128rs</code> Extension</li>
+  <li><code>Za64rs</code> Extension</li>
+  <li><code>Zaamo</code> Extension</li>
+  <li><code>Zabha</code> Extension</li>
+  <li><code>Zacas</code> Extension</li>
+  <li><code>Zalasr</code> Extension</li>
+  <li><code>Zalrsc</code> Extension</li>
+  <li><code>Zama16b</code> Extension</li>
+  <li><code>Zawrs</code> Extension</li>
+  <li><code>Zba</code> Extension</li>
+  <li><code>Zbb</code> Extension</li>
+  <li><code>Zbc</code> Extension</li>
+  <li><code>Zbkb</code> Extension</li>
+  <li><code>Zbkc</code> Extension</li>
+  <li><code>Zbkx</code> Extension</li>
+  <li><code>Zbs</code> Extension</li>
+  <li><code>Zca</code> Extension</li>
+  <li><code>Zcb</code> Extension</li>
+  <li><code>Zcd</code> Extension</li>
+  <li><code>Zce</code> Extension</li>
+  <li><code>Zcf</code> Extension</li>
+  <li><code>Zcmop</code> Extension</li>
+  <li><code>Zcmp</code> Extension</li>
+  <li><code>Zcmt</code> Extension</li>
+  <li><code>Zdinx</code> Extension</li>
+  <li><code>Zfa</code> Extension</li>
+  <li><code>Zfbfmin</code> Extension</li>
+  <li><code>Zfh</code> Extension</li>
+  <li><code>Zfhmin</code> Extension</li>
+  <li><code>Zfinx</code> Extension</li>
+  <li><code>Zhinx</code> Extension</li>
+  <li><code>Zhinxmin</code> Extension</li>
+  <li><code>Zic64b</code> Extension</li>
+  <li><code>Zicbom</code> Extension</li>
+  <li><code>Zicbop</code> Extension</li>
+  <li><code>Zicboz</code> Extension</li>
+  <li><code>Ziccamoa</code> Extension</li>
+  <li><code>Ziccif</code> Extension</li>
+  <li><code>Zicclsm</code> Extension</li>
+  <li><code>Ziccrse</code> Extension</li>
+  <li><code>Zicfilp</code> Extension</li>
+  <li><code>Zicfiss</code> Extension</li>
+  <li><code>Zicntr</code> Extension</li>
+  <li><code>Zicond</code> Extension</li>
+  <li><code>Zicsr</code> Extension</li>
+  <li><code>Zifencei</code> Extension</li>
+  <li><code>Zihintntl</code> Extension</li>
+  <li><code>Zihintpause</code> Extension</li>
+  <li><code>Zihpm</code> Extension</li>
+  <li><code>Zimop</code> Extension</li>
+  <li><code>Zk</code> Extension</li>
+  <li><code>Zkn</code> Extension</li>
+  <li><code>Zknd</code> Extension</li>
+  <li><code>Zkne</code> Extension</li>
+  <li><code>Zknh</code> Extension</li>
+  <li><code>Zkr</code> Extension</li>
+  <li><code>Zks</code> Extension</li>
+  <li><code>Zksed</code> Extension</li>
+  <li><code>Zksh</code> Extension</li>
+  <li><code>Zkt</code> Extension</li>
+  <li><code>Zmmul</code> Extension</li>
+  <li><code>Ztso</code> Extension</li>
+  <li><code>Zvbb</code> Extension</li>
+  <li><code>Zvbc</code> Extension</li>
+  <li><code>Zve32f</code> Extension</li>
+  <li><code>Zve32x</code> Extension</li>
+  <li><code>Zve64d</code> Extension</li>
+  <li><code>Zve64f</code> Extension</li>
+  <li><code>Zve64x</code> Extension</li>
+  <li><code>Zvfbfmin</code> Extension</li>
+  <li><code>Zvfbfwma</code> Extension</li>
+  <li><code>Zvfh</code> Extension</li>
+  <li><code>Zvfhmin</code> Extension</li>
+  <li><code>Zvkb</code> Extension</li>
+  <li><code>Zvkg</code> Extension</li>
+  <li><code>Zvkn</code> Extension</li>
+  <li><code>Zvknc</code> Extension</li>
+  <li><code>Zvkned</code> Extension</li>
+  <li><code>Zvkng</code> Extension</li>
+  <li><code>Zvknha</code> Extension</li>
+  <li><code>Zvknhb</code> Extension</li>
+  <li><code>Zvks</code> Extension</li>
+  <li><code>Zvksc</code> Extension</li>
+  <li><code>Zvksed</code> Extension</li>
+  <li><code>Zvksg</code> Extension</li>
+  <li><code>Zvksh</code> Extension</li>
+  <li><code>Zvkt</code> Extension</li>
+  <li><code>Zvl1024b</code> Extension</li>
+  <li><code>Zvl128b</code> Extension</li>
+  <li><code>Zvl16384b</code> Extension</li>
+  <li><code>Zvl2048b</code> Extension</li>
+  <li><code>Zvl256b</code> Extension</li>
+  <li><code>Zvl32768b</code> Extension</li>
+  <li><code>Zvl32b</code> Extension</li>
+  <li><code>Zvl4096b</code> Extension</li>
+  <li><code>Zvl512b</code> Extension</li>
+  <li><code>Zvl64b</code> Extension</li>
+  <li><code>Zvl65536b</code> Extension</li>
+  <li><code>Zvl8192b</code> Extension</li>
+</ol>
+
+    <div class="features">
+      <div class="feature-item">
+        <h3>Comprehensive Syntax Highlighting</h3>
+        <p>Enjoy full syntax highlighting for RISC-V assembly language, ensuring you never miss a keyword or
+          instruction.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Universal Support</h3>
+        <p>This extension supports all known RISC-V extensions, making it the only one of its kind in the marketplace.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Seamless Integration</h3>
+        <p>Easily integrates with your existing Visual Studio Code setup, providing an enhanced development environment.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div class="footer">
+    &copy; 2024 Shao-Ce SUN. All rights reserved. | <a
+      href="https://marketplace.visualstudio.com/items?itemName=sunshaoce.RISC-V" target="_blank">Visit Marketplace
+      Page</a>
+  </div>
+</body>
+
+</html>
