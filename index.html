@@ -119,20 +119,19 @@
   <main class="wrap">
     <nav class="buttons" aria-label="Primary">
       <a class="btn" href="https://love.miimuu.com" id="loveBtn">Love</a>
-      <a class="btn" href="https://miimuu.com/code/index.html" id="codeBtn">Code</a>
+      <a class="btn" href="https://code.miimuu.com" id="codeBtn">Code</a>
     </nav>
   </main>
   <script>
     /*
       JavaScript:
       - Love button: drops letters in sequence from translated sentence.
-      - Code button: drops letters from printf("Hello, world!\\n");
+      - Code button: drops letters from printf("Hello, world!\n");
       - Random gray letters fall when not hovering buttons.
       - On empty area click: all letters fade lighter progressively.
+      - Added touch support: letters also fall when dragging or swiping on touchscreen.
     */
 
-    // Love phrase translated to English:
-    // "I hope you will always love and be loved."
     const lovePhrase = "I hope you will always love and be loved.";
     const codePhrase = "printf(\"Hello, world!\\n\");";
 
@@ -144,7 +143,6 @@
 
     const lettersContainer = document.getElementById('letters-container');
 
-    // Create a falling letter element
     function createLetter(x, y, char, color = 'rgba(0,0,0,0.6)') {
       const letter = document.createElement('div');
       letter.className = 'falling-letter';
@@ -157,31 +155,35 @@
       letter.addEventListener('animationend', () => letter.remove());
     }
 
-    // Mouse move: spawn letters
-    document.body.addEventListener('mousemove', (e) => {
+    function handleMove(x, y) {
       if (!currentHoverBtn && Math.random() < 0.05) {
-        // Gray random letter
         const randomChar = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-        createLetter(e.clientX, e.clientY, randomChar);
+        createLetter(x, y, randomChar);
       }
       if (currentHoverBtn) {
         const now = Date.now();
         if (now - lastSpawnTime > 300) {
           lastSpawnTime = now;
           if (currentHoverBtn.id === 'loveBtn') {
-            // Drop next character from lovePhrase
-            createLetter(e.clientX, e.clientY, lovePhrase[loveIndex], '#ffb6c1');
+            createLetter(x, y, lovePhrase[loveIndex], '#ffb6c1');
             loveIndex = (loveIndex + 1) % lovePhrase.length;
           } else if (currentHoverBtn.id === 'codeBtn') {
-            // Drop next character from codePhrase
-            createLetter(e.clientX, e.clientY, codePhrase[codeIndex], '#add8e6');
+            createLetter(x, y, codePhrase[codeIndex], '#add8e6');
             codeIndex = (codeIndex + 1) % codePhrase.length;
           }
         }
       }
+    }
+
+    document.body.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+
+    // Touch event support for phones and tablets
+    document.body.addEventListener('touchmove', (e) => {
+      for (const touch of e.touches) {
+        handleMove(touch.clientX, touch.clientY);
+      }
     });
 
-    // Click empty area: fade all letters lighter
     document.body.addEventListener('click', (e) => {
       if (e.target.closest('.btn')) return;
       clickCount++;
@@ -191,11 +193,14 @@
       });
     });
 
-    // Track hover state for buttons
     function setupHover(id) {
       const btn = document.getElementById(id);
       btn.addEventListener('mouseenter', () => currentHoverBtn = btn);
       btn.addEventListener('mouseleave', () => currentHoverBtn = null);
+
+      // Touchstart for mobile hover simulation
+      btn.addEventListener('touchstart', () => currentHoverBtn = btn);
+      btn.addEventListener('touchend', () => currentHoverBtn = null);
     }
 
     setupHover('loveBtn');
