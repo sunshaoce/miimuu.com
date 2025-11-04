@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>清风目录</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(120deg, #e0f7fa, #f1f5f9, #e6fffa);
+      background-size: 200% 200%;
+      animation: flow 25s ease-in-out infinite;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      gap: 1.2rem;
+    }
+
+    @keyframes flow {
+      0% {
+        background-position: 0% 0%;
+      }
+
+      50% {
+        background-position: 100% 100%;
+      }
+
+      100% {
+        background-position: 0% 0%;
+      }
+    }
+
+    a {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #475569;
+      /* 柔和的蓝灰色 */
+      font-size: 1.3rem;
+      border: none;
+      background: none;
+      animation: float 6s ease-in-out infinite;
+      transition: transform 0.3s ease, border 0.5s ease, color 0.5s ease, box-shadow 1s ease;
+    }
+
+    a:hover {
+      transform: translateY(-5px);
+      border: 2px solid rgba(186, 230, 253, 0.9);
+      box-shadow: 0 0 18px rgba(186, 230, 253, 0.9), 0 0 24px rgba(186, 230, 253, 0.5);
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      background-image: linear-gradient(90deg, #bae6fd, #c7d2fe, #a5f3fc);
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 10px rgba(186, 230, 253, 0.4), 0 0 20px rgba(186, 230, 253, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 0 18px rgba(186, 230, 253, 0.8), 0 0 30px rgba(186, 230, 253, 0.6);
+      }
+
+      100% {
+        box-shadow: 0 0 10px rgba(186, 230, 253, 0.4), 0 0 20px rgba(186, 230, 253, 0.3);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="wind.html">风</a>
+  <!-- <a href="car.html">车之页</a>
+  <a href="rain.html">雨之页</a>
+  <a href="sky.html">天空之页</a>
+  <a href="tree.html">树之页</a>
+  <a href="mountain.html">山之页</a>
+  <a href="ocean.html">海之页</a>
+  <a href="moon.html">月之页</a> -->
+</body>
+
+</html>
