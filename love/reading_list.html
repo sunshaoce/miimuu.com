@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>现代成年人通识书单</title>
+<style>
+:root{
+  --paper:#f7f4ee;
+  --ink:#191919;
+  --muted:#74716b;
+  --line:rgba(25,25,25,.075);
+  --line-dark:rgba(25,25,25,.20);
+  --warm:#7a3d2c;
+  --wash:#f0ece5;
+  --white:#fffefa;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0)),
+    var(--paper);
+  color:var(--ink);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  line-height:1.6;
+}
+main{
+  width:min(1520px, calc(100% - 48px));
+  margin:0 auto;
+  padding:72px 0 84px;
+}
+.masthead{
+  display:grid;
+  grid-template-columns:minmax(0,1.45fr) minmax(240px,.55fr);
+  gap:40px;
+  align-items:end;
+  padding-bottom:10px;
+}
+.eyebrow{
+  font-size:.72rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--warm);
+  font-weight:700;
+  margin-bottom:12px;
+}
+h1{
+  margin:0;
+  max-width:16ch;
+  font-family: Georgia, "Noto Serif SC","Songti SC", serif;
+  font-size:clamp(2.6rem,5.2vw,6.1rem);
+  line-height:.95;
+  font-weight:500;
+  letter-spacing:-.045em;
+}
+.deck{
+  align-self:end;
+  max-width:460px;
+  color:#5b5751;
+  font-family: Georgia, "Noto Serif SC","Songti SC", serif;
+  font-size:1rem;
+  line-height:1.72;
+}
+.deck strong{
+  color:var(--ink);
+  font-weight:600;
+}
+.section{
+  margin-top:34px;
+}
+.section-head{
+  display:block;
+  margin-bottom:18px;
+}
+.section-title{
+  margin:0;
+  font-family: Georgia, "Noto Serif SC","Songti SC",serif;
+  font-size:clamp(1.7rem,2.6vw,2.6rem);
+  font-weight:500;
+}
+.controls{
+  display:grid;
+  grid-template-columns:minmax(280px,1fr) 220px 180px auto;
+  gap:10px;
+  margin:18px 0 14px;
+}
+input,select{
+  appearance:none;
+  width:100%;
+  border:0;
+  border-radius:10px;
+  background:rgba(255,255,255,.34);
+  box-shadow:inset 0 0 0 1px rgba(25,25,25,.055);
+  padding:10px 12px;
+  color:var(--ink);
+  font:inherit;
+  outline:none;
+}
+input:focus,select:focus{
+  background:rgba(255,255,255,.60);
+  box-shadow:inset 0 0 0 1px rgba(122,61,44,.28),0 0 0 3px rgba(122,61,44,.05);
+}
+.count{
+  display:flex;
+  align-items:end;
+  justify-content:flex-end;
+  padding-bottom:9px;
+  color:#8a867f;
+  font-size:.78rem;
+  letter-spacing:.03em;
+  white-space:nowrap;
+}
+.table-frame{
+  overflow:auto;
+  max-height:76vh;
+  background:rgba(255,254,250,.22);
+}
+table{
+  border-collapse:collapse;
+  width:max-content;
+  min-width:100%;
+  font-size:.82rem;
+}
+thead th{
+  position:sticky;
+  top:0;
+  z-index:4;
+  background:rgba(247,244,238,.94);
+  backdrop-filter:blur(12px);
+  color:#4d4944;
+  font-weight:650;
+  padding:12px 12px 10px;
+  border-bottom:1px solid rgba(25,25,25,.10);
+  text-align:left;
+  white-space:nowrap;
+}
+tbody td{
+  padding:15px 12px 16px;
+  vertical-align:top;
+  border-bottom:1px solid rgba(25,25,25,.045);
+  max-width:330px;
+  background:transparent;
+}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:rgba(255,255,255,.30)}
+td.rank{
+  width:58px;
+  text-align:right;
+  color:rgba(122,61,44,.78);
+  font-family:Georgia,serif;
+  font-size:.90rem;
+  font-variant-numeric:tabular-nums;
+}
+td.book{
+  min-width:220px;
+  font-weight:650;
+  letter-spacing:-.01em;
+}
+td.core{min-width:360px}
+td.role,td.domain{white-space:nowrap}
+.pill{
+  display:inline-block;
+  padding:0;
+  color:#5f5b56;
+}
+@media(max-width:1000px){
+  main{width:min(100% - 28px, 1520px);padding-top:40px}
+  .masthead{grid-template-columns:1fr;gap:22px}
+  .controls{margin-left:0}
+  .controls{grid-template-columns:1fr 1fr}
+  .count{justify-content:flex-start}
+}
+@media(max-width:720px){
+  .controls{margin-left:0;grid-template-columns:1fr}
+  h1{font-size:3.1rem}
+  .deck{font-size:.95rem}
+  .table-frame{max-height:none}
+}
+@media print{
+  body{background:white}
+  main{width:100%;padding:0}
+  .controls{display:none}
+  .table-frame{max-height:none;overflow:visible}
+  thead th{position:static;background:white}
+  table{font-size:7.2pt}
+  .masthead{break-after:avoid}
+}
+
+tbody tr:nth-child(5n) td{
+  border-bottom-color:rgba(25,25,25,.085);
+}
+
+
+.site-footer{
+  margin-top:34px;
+  padding-top:10px;
+  color:rgba(25,25,25,.42);
+  font-size:.74rem;
+  letter-spacing:.035em;
+  text-align:right;
+}
+
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <div>
+      <div class="eyebrow">A durable reading list for adult life</div>
+      <h1>现代成年人通识书单</h1>
+    </div>
+    <div class="deck">
+      <strong>155 项。</strong> 以生活、判断、科学、技术与精神生活为共同主干。
+      不因作者身份、名气与流行度加分，只看内容、方法、耐久性与不可替代性。
+    </div>
+  </header>
+
+  <section class="section" id="complete-list">
+<div class="controls">
+      <input id="search" type="search" placeholder="搜索书名、作者、核心价值…">
+      <select id="domain">
+        <option value="">全部领域</option>
+        <option value="健康与家庭">健康与家庭</option>
+<option value="哲学与逻辑">哲学与逻辑</option>
+<option value="学习与习惯">学习与习惯</option>
+<option value="宗教与文化">宗教与文化</option>
+<option value="思维与决策">思维与决策</option>
+<option value="数学与统计">数学与统计</option>
+<option value="文学与精神生活">文学与精神生活</option>
+<option value="沟通与工作">沟通与工作</option>
+<option value="生活技能">生活技能</option>
+<option value="系统与工程">系统与工程</option>
+<option value="经济与社会">经济与社会</option>
+<option value="自然科学">自然科学</option>
+<option value="艺术与精神生活">艺术与精神生活</option>
+<option value="计算机与AI">计算机与AI</option>
+<option value="设计与审美">设计与审美</option>
+<option value="财务与消费">财务与消费</option>
+<option value="风险与安全">风险与安全</option>
+      </select>
+      <select id="reliability">
+        <option value="">全部可靠性</option>
+        <option value="高">高</option>
+        <option value="中高">中高</option>
+        <option value="中：">中（需注释）</option>
+        <option value="论证型">论证型</option>
+        <option value="艺术作品">艺术作品</option>
+      </select>
+      <div class="count" id="count"></div>
+    </div>
+
+    <div class="table-frame">
+      <table>
+        <thead>
+          <tr>
+            <th>顺位</th><th>书名</th><th>英文/原名</th><th>作者</th><th>核心价值</th>
+            <th>阅读定位</th><th>可靠性</th><th>耐久性</th><th>领域</th>
+          </tr>
+        </thead>
+        <tbody id="books-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="site-footer">© miimuu.com, by codex</footer>
+
+</main>
+
+<script>
+const rows = [{"顺位": "1", "书名": "《First Aid/CPR/AED Participant’s Manual r.25》", "英文/原名": "First Aid/CPR/AED Participant’s Manual r.25", "作者": "American Red Cross", "核心价值": "识别紧急情况、CPR、AED、窒息、严重出血等", "阅读定位": "官方/参考工具", "可靠性": "高", "耐久性": "原则耐久，执行细节必须更新", "领域": "健康与家庭"}, {"顺位": "2", "书名": "《学会提问》", "英文/原名": "Asking the Right Questions", "作者": "M. Neil Browne / Stuart M. Keeley", "核心价值": "结论、理由、证据、假设", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "思维与决策"}, {"顺位": "3", "书名": "《统计学的艺术》", "英文/原名": "The Art of Statistics", "作者": "David Spiegelhalter", "核心价值": "样本、分布、风险、相关与因果", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "数学与统计"}, {"顺位": "4", "书名": "《简单的逻辑学》", "英文/原名": "Being Logical", "作者": "D. Q. McInerny", "核心价值": "前提、结论、定义、一致性、谬误", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "哲学与逻辑"}, {"顺位": "5", "书名": "《怎样解题》", "英文/原名": "How to Solve It", "作者": "George Pólya", "核心价值": "理解问题、类比、简化、验证", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "思维与决策"}, {"顺位": "6", "书名": "《Security in a Box》", "英文/原名": "Security in a Box", "作者": "Tactical Tech / Front Line Defenders", "核心价值": "密码、设备、通信、备份与数字威胁的实操安全", "阅读定位": "官方/参考工具", "可靠性": "高", "耐久性": "原则耐久，执行细节必须更新", "领域": "计算机与AI"}, {"顺位": "7", "书名": "《Testing Treatments》", "英文/原名": "Testing Treatments, 2nd Edition", "作者": "Imogen Evans / Hazel Thornton / Iain Chalmers / Paul Glasziou", "核心价值": "如何判断治疗是否真的有效：公平比较、随机误差、系统评价、关联与因果", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高；数据/研究需定期更新", "领域": "健康与家庭"}, {"顺位": "8", "书名": "《Know Your Chances》", "英文/原名": "Know Your Chances", "作者": "Steven Woloshin / Lisa Schwartz / H. Gilbert Welch", "核心价值": "绝对风险、相对风险、筛查数据", "阅读定位": "严肃科普/专业入门", "可靠性": "高", "耐久性": "高；数据/研究需定期更新", "领域": "健康与家庭"}, {"顺位": "9", "书名": "《The Craft of Research》", "英文/原名": "The Craft of Research, 5th Edition", "作者": "Wayne C. Booth / Gregory G. Colomb / Joseph M. Williams / Joseph Bizup / William T. FitzGerald", "核心价值": "提出好问题、寻找和评价来源、建立论证、处理反对意见与研究伦理", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "思维与决策"}, {"顺位": "10", "书名": "《Thinking in Systems》", "英文/原名": "Thinking in Systems", "作者": "Donella Meadows", "核心价值": "存量、流量、反馈、延迟、杠杆点", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "系统与工程"}, {"顺位": "11", "书名": "《Getting to Yes》", "英文/原名": "Getting to Yes", "作者": "Roger Fisher / William Ury / Bruce Patton", "核心价值": "立场与利益、BATNA、原则谈判", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "沟通与工作"}, {"顺位": "12", "书名": "《Difficult Conversations》", "英文/原名": "Difficult Conversations", "作者": "Douglas Stone / Bruce Patton / Sheila Heen", "核心价值": "处理事实、情绪与身份层面的冲突", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "沟通与工作"}, {"顺位": "13", "书名": "《The Chicago Guide to Fact-Checking》", "英文/原名": "The Chicago Guide to Fact-Checking, 2nd Edition", "作者": "Brooke Borel", "核心价值": "事实核查、来源等级、数字与引语验证、冲突信息与记录管理", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "思维与决策"}, {"顺位": "14", "书名": "《Bad Science》", "英文/原名": "Bad Science", "作者": "Ben Goldacre", "核心价值": "安慰剂、随机试验、样本、回归均值、媒体和商业如何误用科学", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "思维与决策"}, {"顺位": "15", "书名": "《The Index Card》", "英文/原名": "The Index Card", "作者": "Helaine Olen / Harold Pollack", "核心价值": "把个人财务原则压缩成简单规则", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "财务与消费"}, {"顺位": "16", "书名": "《个人保险消费者指南》", "英文/原名": "Consumer Guide to Insurance（当地保险监管机构）", "作者": "当地保险监管机构", "核心价值": "保额、免赔额、除外责任、等待期、责任险等", "阅读定位": "官方/参考工具", "可靠性": "高", "耐久性": "原则耐久，执行细节必须更新", "领域": "财务与消费"}, {"顺位": "17", "书名": "《个人税务官方指南》", "英文/原名": "Individual Tax Guide（当地税务机关）", "作者": "当地税务机关", "核心价值": "税前税后、申报、扣除、凭证与截止日期", "阅读定位": "官方/参考工具", "可靠性": "高", "耐久性": "原则耐久，执行细节必须更新", "领域": "财务与消费"}, {"顺位": "18", "书名": "《Accounting Made Simple》", "英文/原名": "Accounting Made Simple", "作者": "Mike Piper", "核心价值": "资产、负债、权益、利润表、资产负债表与现金流的基本关系", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "财务与消费"}, {"顺位": "19", "书名": "《The Little Book of Common Sense Investing》", "英文/原名": "The Little Book of Common Sense Investing", "作者": "John C. Bogle", "核心价值": "指数、低费用、长期持有", "阅读定位": "严肃科普/专业入门", "可靠性": "高", "耐久性": "高—极高", "领域": "财务与消费"}, {"顺位": "20", "书名": "《The Sleep Solution》", "英文/原名": "The Sleep Solution", "作者": "W. Chris Winter", "核心价值": "睡眠节律、失眠机制、睡眠卫生与常见误区", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "高；数据/研究需定期更新", "领域": "健康与家庭"}, {"顺位": "21", "书名": "《ACSM's Complete Guide to Fitness & Health》", "英文/原名": "ACSM's Complete Guide to Fitness & Health, 2nd Edition", "作者": "American College of Sports Medicine / Barbara A. Bushman (ed.)", "核心价值": "基于运动医学证据的心肺、力量、柔韧、功能体适能和不同年龄运动原则", "阅读定位": "官方/参考工具", "可靠性": "高", "耐久性": "高；数据/研究需定期更新", "领域": "健康与家庭"}, {"顺位": "22", "书名": "《Eat, Drink, and Be Healthy》", "英文/原名": "Eat, Drink, and Be Healthy", "作者": "Walter C. Willett / P. J. Skerrett", "核心价值": "以整体饮食模式理解营养，不追逐单一“超级食物”", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "高；数据/研究需定期更新", "领域": "健康与家庭"}, {"顺位": "23", "书名": "《Human Sexuality in a Changing World》", "英文/原名": "Human Sexuality in a Changing World, 11th Edition", "作者": "Spencer A. Rathus / Jeffrey S. Nevid / Taylor Rathus", "核心价值": "从生物、心理、关系与文化多个层面建立成人性与生殖健康基础框架", "阅读定位": "知识主干/教材型", "可靠性": "高（使用最新版）", "耐久性": "原则高耐久；医学与社会研究需持续更新", "领域": "健康与家庭"}, {"顺位": "24", "书名": "《金钱心理学》", "英文/原名": "The Psychology of Money", "作者": "Morgan Housel", "核心价值": "复利、尾部事件、安全边际、财富与收入", "阅读定位": "框架/观点型", "可靠性": "中高", "耐久性": "中高—高", "领域": "财务与消费"}, {"顺位": "25", "书名": "《Getting Things Done》", "英文/原名": "Getting Things Done", "作者": "David Allen", "核心价值": "大脑负责思考，不负责记忆", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "学习与习惯"}, {"顺位": "26", "书名": "《Make It Stick》", "英文/原名": "Make It Stick", "作者": "Peter C. Brown 等", "核心价值": "提取、间隔、交错练习", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "学习与习惯"}, {"顺位": "27", "书名": "《On Writing Well》", "英文/原名": "On Writing Well", "作者": "William Zinsser", "核心价值": "清晰、简洁、删除废话", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "沟通与工作"}, {"顺位": "28", "书名": "《A Poetry Handbook》", "英文/原名": "A Poetry Handbook", "作者": "Mary Oliver", "核心价值": "用非常短的篇幅理解节奏、韵律、声音、句法、形式和诗歌阅读方式", "阅读定位": "审美方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "艺术与精神生活"}, {"顺位": "29", "书名": "《如何阅读一本书》", "英文/原名": "How to Read a Book", "作者": "Mortimer Adler / Charles Van Doren", "核心价值": "检视、分析、主题阅读", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "学习与习惯"}, {"顺位": "30", "书名": "《设计心理学1：日常的设计》", "英文/原名": "The Design of Everyday Things", "作者": "Don Norman", "核心价值": "可供性、反馈、映射、约束", "阅读定位": "方法型", "可靠性": "高", "耐久性": "高—极高", "领域": "设计与审美"}, {"顺位": "31", "书名": "《观看之道》", "英文/原名": "Ways of Seeing", "作者": "John Berger", "核心价值": "理解观看并非中性：构图、复制、广告、性别与所有权如何改变我们看图像的方式", "阅读定位": "经典论证/审美方法型", "可靠性": "论证型：观点鲜明，但文本本身足够强", "耐久性": "极高（作为视觉文化论证）", "领域": "艺术与精神生活"}, {"顺位": "32", "书名": "《The Scout Mindset》", "英文/原名": "The Scout Mindset", "作者": "Julia Galef", "核心价值": "求真而非证明自己正确", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "思维与决策"}, {"顺位": "33", "书名": "《超预测》", "英文/原名": "Superforecasting", "作者": "Philip Tetlock / Dan Gardner", "核心价值": "概率表达、持续更新判断", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "思维与决策"}, {"顺位": "34", "书名": "《How to Lie with Statistics》", "英文/原名": "How to Lie with Statistics", "作者": "Darrell Huff", "核心价值": "平均数、抽样、坐标轴、百分比误导", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "数学与统计"}, {"顺位": "35", "书名": "《官方灾害准备指南》", "英文/原名": "Ready.gov / 当地民防机构 Emergency Preparedness Guide", "作者": "FEMA / 当地民防机构", "核心价值": "家庭通信计划、应急包、停电、洪水、疏散等", "阅读定位": "官方/参考工具", "可靠性": "中高：作为科普/框架使用", "耐久性": "原则耐久，执行细节必须更新", "领域": "风险与安全"}, {"顺位": "36", "书名": "《Get It Together》", "英文/原名": "Get It Together: Organize Your Records So Your Family Won't Have To", "作者": "Melanie Cullen", "核心价值": "整理账户、保险、税务、遗产与重要文件", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "健康与家庭"}, {"顺位": "37", "书名": "《The Rule of Law》", "英文/原名": "The Rule of Law", "作者": "Tom Bingham", "核心价值": "法治、程序、公平、权力限制", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "经济与社会"}, {"顺位": "38", "书名": "《In Praise of Idleness》", "英文/原名": "In Praise of Idleness and Other Essays", "作者": "Bertrand Russell", "核心价值": "为闲暇、无用知识、思考与非生产性时间辩护，抵抗把一切时间都工具化", "阅读定位": "经典随笔/规范性论证", "可靠性": "论证型：不以科学定论衡量", "耐久性": "高—极高", "领域": "文学与精神生活"}, {"顺位": "39", "书名": "《Salt, Fat, Acid, Heat》", "英文/原名": "Salt, Fat, Acid, Heat", "作者": "Samin Nosrat", "核心价值": "盐、脂肪、酸、温度四变量", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "生活技能"}, {"顺位": "40", "书名": "《Home Comforts》", "英文/原名": "Home Comforts", "作者": "Cheryl Mendelson", "核心价值": "清洁、洗衣、床品、食品、家务系统", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "生活技能"}, {"顺位": "41", "书名": "《How Your House Works》", "英文/原名": "How Your House Works", "作者": "Charlie Wing", "核心价值": "水、电、暖气、排水、结构原理", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "生活技能"}, {"顺位": "42", "书名": "《Being Mortal》", "英文/原名": "Being Mortal", "作者": "Atul Gawande", "核心价值": "衰老、养老、临终与生活质量", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "健康与家庭"}, {"顺位": "43", "书名": "《影响力》", "英文/原名": "Influence", "作者": "Robert Cialdini", "核心价值": "互惠、社会认同、权威、稀缺、一致性", "阅读定位": "框架/观点型", "可靠性": "中高", "耐久性": "中高—高", "领域": "沟通与工作"}, {"顺位": "44", "书名": "《金字塔原理》", "英文/原名": "The Pyramid Principle", "作者": "Barbara Minto", "核心价值": "结论先行、分组、递进", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "沟通与工作"}, {"顺位": "45", "书名": "《掌控习惯》", "英文/原名": "Atomic Habits", "作者": "James Clear", "核心价值": "身份、提示、环境、降低摩擦", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "学习与习惯"}, {"顺位": "46", "书名": "《Your Money or Your Life》", "英文/原名": "Your Money or Your Life", "作者": "Vicki Robin / Joe Dominguez", "核心价值": "把金钱换算为人生时间", "阅读定位": "框架/观点型", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "中高—高", "领域": "财务与消费"}, {"顺位": "47", "书名": "《漫步华尔街》", "英文/原名": "A Random Walk Down Wall Street", "作者": "Burton Malkiel", "核心价值": "指数、分散、长期投资", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "高；数据/研究需定期更新", "领域": "财务与消费"}, {"顺位": "48", "书名": "《Thanks for the Feedback》", "英文/原名": "Thanks for the Feedback", "作者": "Douglas Stone / Sheila Heen", "核心价值": "从反馈中分离有用信息", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "沟通与工作"}, {"顺位": "49", "书名": "《关键对话》", "英文/原名": "Crucial Conversations", "作者": "Kerry Patterson 等", "核心价值": "高风险、高情绪对话中的安全感", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "沟通与工作"}, {"顺位": "50", "书名": "《Designing Your Life》", "英文/原名": "Designing Your Life", "作者": "Bill Burnett / Dave Evans", "核心价值": "用原型和实验设计职业与人生", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "沟通与工作"}, {"顺位": "51", "书名": "《Good Strategy/Bad Strategy》", "英文/原名": "Good Strategy/Bad Strategy", "作者": "Richard Rumelt", "核心价值": "诊断、指导方针、一致行动", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "系统与工程"}, {"顺位": "52", "书名": "《The Effective Executive》", "英文/原名": "The Effective Executive", "作者": "Peter Drucker", "核心价值": "时间、贡献、优先级、有效决策", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "沟通与工作"}, {"顺位": "53", "书名": "《The Goal》", "英文/原名": "The Goal", "作者": "Eliyahu M. Goldratt", "核心价值": "找到并改善系统瓶颈", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "系统与工程"}, {"顺位": "54", "书名": "《High Output Management》", "英文/原名": "High Output Management", "作者": "Andrew Grove", "核心价值": "杠杆率、会议、绩效、产出", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "沟通与工作"}, {"顺位": "55", "书名": "《How Not to Be Wrong》", "英文/原名": "How Not to Be Wrong", "作者": "Jordan Ellenberg", "核心价值": "数量级、非线性、回归均值、概率", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "数学与统计"}, {"顺位": "56", "书名": "《Calling Bullshit》", "英文/原名": "Calling Bullshit", "作者": "Carl Bergstrom / Jevin West", "核心价值": "识别数据、图表与算法包装的误导", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "思维与决策"}, {"顺位": "57", "书名": "《魔鬼出没的世界》", "英文/原名": "The Demon-Haunted World", "作者": "Carl Sagan", "核心价值": "证据、怀疑精神、伪科学识别", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "哲学与逻辑"}, {"顺位": "58", "书名": "《你的第一本哲学书》", "英文/原名": "What Does It All Mean?", "作者": "Thomas Nagel", "核心价值": "知识、自由意志、意识、道德、死亡", "阅读定位": "严肃科普/专业入门", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "中高—高", "领域": "哲学与逻辑"}, {"顺位": "59", "书名": "《论自由》", "英文/原名": "On Liberty", "作者": "John Stuart Mill", "核心价值": "个人自由、社会干预、言论与伤害原则的基本框架", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "哲学与逻辑"}, {"顺位": "60", "书名": "《Naked Economics》", "英文/原名": "Naked Economics", "作者": "Charles Wheelan", "核心价值": "GDP、通胀、失业、贸易、央行", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "经济与社会"}, {"顺位": "61", "书名": "《The Undercover Economist》", "英文/原名": "The Undercover Economist", "作者": "Tim Harford", "核心价值": "价格、稀缺、信息不对称", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "经济与社会"}, {"顺位": "62", "书名": "《事实》", "英文/原名": "Factfulness", "作者": "Hans Rosling", "核心价值": "数量级、避免二元化与极端化", "阅读定位": "框架/观点型", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "高；数据/研究需定期更新", "领域": "思维与决策"}, {"顺位": "63", "书名": "《What to Listen for in Music》", "英文/原名": "What to Listen for in Music", "作者": "Aaron Copland", "核心价值": "从节奏、旋律、和声、音色、形式等层次学会主动听音乐，而不是只判断“好不好听”", "阅读定位": "审美方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "艺术与精神生活"}, {"顺位": "64", "书名": "《The Art of Strategy》", "英文/原名": "The Art of Strategy", "作者": "Avinash Dixit / Barry Nalebuff", "核心价值": "策略互动、承诺、威慑、合作", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "经济与社会"}, {"顺位": "65", "书名": "《人体简史》", "英文/原名": "The Body: A Guide for Occupants", "作者": "Bill Bryson", "核心价值": "人体主要系统如何运作，以及医学与生理学的整体地图", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "66", "书名": "《谈美》", "英文/原名": "谈美", "作者": "朱光潜", "核心价值": "以短篇书信式文字讨论审美距离、移情、自然美与艺术美，帮助普通人学会欣赏", "阅读定位": "经典审美随笔/论证型", "可靠性": "论证型：不以科学定论衡量", "耐久性": "高（作为中文审美入门）", "领域": "艺术与精神生活"}, {"顺位": "67", "书名": "《The Food Lab》", "英文/原名": "The Food Lab", "作者": "J. Kenji López-Alt", "核心价值": "用实验理解煎、炸、烤、煮", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "生活技能"}, {"顺位": "68", "书名": "《人间草木》", "英文/原名": "人间草木", "作者": "汪曾祺", "核心价值": "从草木、食物、风俗和普通生活中提取趣味，让“日常”本身变得值得观察", "阅读定位": "文学随笔", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "高—极高", "领域": "文学与精神生活"}, {"顺位": "69", "书名": "《On Food and Cooking》", "英文/原名": "On Food and Cooking", "作者": "Harold McGee", "核心价值": "加热、乳化、发酵等食物科学", "阅读定位": "官方/参考工具", "可靠性": "中高", "耐久性": "中高—高", "领域": "生活技能"}, {"顺位": "70", "书名": "《缘缘堂随笔》", "英文/原名": "缘缘堂随笔", "作者": "丰子恺", "核心价值": "以儿童、艺术、日常和人情为题，训练温和而细致的生活观察", "阅读定位": "文学随笔", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "71", "书名": "《Reader's Digest Complete Do-It-Yourself Manual》", "英文/原名": "Reader's Digest Complete Do-It-Yourself Manual", "作者": "Reader's Digest", "核心价值": "墙、水管、电、木工、工具基础", "阅读定位": "官方/参考工具", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "生活技能"}, {"顺位": "72", "书名": "《Auto Repair For Dummies》", "英文/原名": "Auto Repair For Dummies", "作者": "Deanna Sclar", "核心价值": "胎压、电瓶、机油、保养、故障基础", "阅读定位": "官方/参考工具", "可靠性": "中高：作为科普/框架使用", "耐久性": "原则耐久，执行细节必须更新", "领域": "生活技能"}, {"顺位": "73", "书名": "《Estate Planning Basics》", "英文/原名": "Estate Planning Basics", "作者": "Denis Clifford", "核心价值": "遗嘱、受益人、授权、医疗意愿与遗产规划基础", "阅读定位": "官方/参考工具", "可靠性": "中高：作为科普/框架使用", "耐久性": "原则耐久，执行细节必须更新", "领域": "健康与家庭"}, {"顺位": "74", "书名": "《幸福的婚姻》", "英文/原名": "The Seven Principles for Making Marriage Work", "作者": "John Gottman / Nan Silver", "核心价值": "长期关系中的友谊、冲突管理、共同意义与可修复互动模式", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "健康与家庭"}, {"顺位": "75", "书名": "《蒙田随笔选》", "英文/原名": "The Essays: A Selection", "作者": "Michel de Montaigne", "核心价值": "把身体、习惯、友谊、恐惧、死亡、教育和自我当作可反复观察的生活材料", "阅读定位": "经典随笔/思想型", "可靠性": "论证型：不以科学定论衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "76", "书名": "《How to Talk So Kids Will Listen & Listen So Kids Will Talk》", "英文/原名": "How to Talk So Kids Will Listen & Listen So Kids Will Talk", "作者": "Adele Faber / Elaine Mazlish", "核心价值": "与孩子沟通、减少威胁和说教", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "健康与家庭"}, {"顺位": "77", "书名": "《契诃夫短篇小说选》", "英文/原名": "Selected Stories of Anton Chekhov", "作者": "Anton Chekhov", "核心价值": "以短篇观察普通人的荒谬、困境、善意、孤独与微小幸福，训练同理心和生活细节感", "阅读定位": "文学经典/短篇小说", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "78", "书名": "《The 36-Hour Day》", "英文/原名": "The 36-Hour Day", "作者": "Nancy Mace / Peter Rabins", "核心价值": "失智症家庭照护", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "健康与家庭"}, {"顺位": "79", "书名": "《Overdiagnosed》", "英文/原名": "Overdiagnosed", "作者": "H. Gilbert Welch 等", "核心价值": "过度诊断与筛查的代价", "阅读定位": "严肃科普/专业入门", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "高；数据/研究需定期更新", "领域": "健康与家庭"}, {"顺位": "80", "书名": "《The Rules of Contagion》", "英文/原名": "The Rules of Contagion", "作者": "Adam Kucharski", "核心价值": "传播、R值、网络、指数增长", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "高；数据/研究需定期更新", "领域": "自然科学"}, {"顺位": "81", "书名": "《清单革命》", "英文/原名": "The Checklist Manifesto", "作者": "Atul Gawande", "核心价值": "用系统和清单减少人为错误", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "健康与家庭"}, {"顺位": "82", "书名": "《伊凡·伊里奇之死》", "英文/原名": "The Death of Ivan Ilyich", "作者": "Leo Tolstoy", "核心价值": "用很短的小说逼近死亡、职业、体面、家庭关系与“是否真正活过”的问题", "阅读定位": "文学经典/短篇小说", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "83", "书名": "《Never Split the Difference》", "英文/原名": "Never Split the Difference", "作者": "Chris Voss", "核心价值": "镜像、标注、校准式问题", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "沟通与工作"}, {"顺位": "84", "书名": "《Deep Work》", "英文/原名": "Deep Work", "作者": "Cal Newport", "核心价值": "保护注意力、建立深度工作环境", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "沟通与工作"}, {"顺位": "85", "书名": "《让创意更有黏性》", "英文/原名": "Made to Stick", "作者": "Chip Heath / Dan Heath", "核心价值": "简单、意外、具体、可信、情感、故事", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "沟通与工作"}, {"顺位": "86", "书名": "《Understanding Comics》", "英文/原名": "Understanding Comics", "作者": "Scott McCloud", "核心价值": "用漫画本身解释图像、符号、分镜、时间、留白与读者参与，是高效的视觉叙事入门", "阅读定位": "审美/媒介方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "艺术与精神生活"}, {"顺位": "87", "书名": "《Artificial Intelligence: A Guide for Thinking Humans》", "英文/原名": "Artificial Intelligence: A Guide for Thinking Humans", "作者": "Melanie Mitchell", "核心价值": "AI能做什么与不能做什么", "阅读定位": "框架/观点型", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "原则耐久，执行细节必须更新", "领域": "计算机与AI"}, {"顺位": "88", "书名": "《Film Art: An Introduction》", "英文/原名": "Film Art: An Introduction, 13th Edition / 2026 Release", "作者": "David Bordwell / Kristin Thompson / Jeff Smith", "核心价值": "掌握电影形式、叙事、场面调度、摄影、剪辑、声音与类型的基础分析语言", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高；案例与技术部分需使用新版", "领域": "艺术与精神生活"}, {"顺位": "89", "书名": "《Code》", "英文/原名": "Code: The Hidden Language of Computer Hardware and Software, 2nd Edition", "作者": "Charles Petzold", "核心价值": "从编码、电路、逻辑门逐层建立计算机硬件与软件的底层理解", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "计算机与AI"}, {"顺位": "90", "书名": "《Computer Science Distilled》", "英文/原名": "Computer Science Distilled", "作者": "Wladston Ferreira Filho", "核心价值": "算法、数据结构、复杂度、图、数据库", "阅读定位": "知识主干/教材型", "可靠性": "中高", "耐久性": "中高—高", "领域": "计算机与AI"}, {"顺位": "91", "书名": "《算法之美》", "英文/原名": "Algorithms to Live By", "作者": "Brian Christian / Tom Griffiths", "核心价值": "搜索、排序、调度、缓存、探索利用", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "计算机与AI"}, {"顺位": "92", "书名": "《Automate the Boring Stuff with Python》", "英文/原名": "Automate the Boring Stuff with Python", "作者": "Al Sweigart", "核心价值": "用代码自动处理重复任务", "阅读定位": "方法型", "可靠性": "中高：作为科普/框架使用", "耐久性": "高—极高", "领域": "计算机与AI"}, {"顺位": "93", "书名": "《The Pragmatic Programmer》", "英文/原名": "The Pragmatic Programmer", "作者": "Andrew Hunt / David Thomas", "核心价值": "自动化、模块化、反馈、避免重复", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "计算机与AI"}, {"顺位": "94", "书名": "《Computer Networking: A Top-Down Approach》", "英文/原名": "Computer Networking: A Top-Down Approach", "作者": "James Kurose / Keith Ross", "核心价值": "IP、DNS、HTTP、TCP、路由", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "原则耐久，执行细节必须更新", "领域": "计算机与AI"}, {"顺位": "95", "书名": "《Grokking Algorithms》", "英文/原名": "Grokking Algorithms", "作者": "Aditya Bhargava", "核心价值": "搜索、哈希、图、排序、动态规划", "阅读定位": "方法型", "可靠性": "中高", "耐久性": "高—极高", "领域": "计算机与AI"}, {"顺位": "96", "书名": "《The Information》", "英文/原名": "The Information", "作者": "James Gleick", "核心价值": "信息、编码、熵、通信", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "计算机与AI"}, {"顺位": "97", "书名": "《Listen to This》", "英文/原名": "Listen to This", "作者": "Alex Ross", "核心价值": "通过古典、现代、流行音乐的具体作品练习跨风格聆听，体验音乐与时代、情绪和生活的连接", "阅读定位": "音乐随笔/观点型", "可靠性": "中高：作为评论与随笔", "耐久性": "高", "领域": "艺术与精神生活"}, {"顺位": "98", "书名": "《Data and Goliath》", "英文/原名": "Data and Goliath", "作者": "Bruce Schneier", "核心价值": "数据收集、监控、隐私风险", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "原则耐久，执行细节必须更新", "领域": "计算机与AI"}, {"顺位": "99", "书名": "《The Attention Merchants》", "英文/原名": "The Attention Merchants", "作者": "Tim Wu", "核心价值": "注意力如何成为商业资源", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "计算机与AI"}, {"顺位": "100", "书名": "《Amusing Ourselves to Death》", "英文/原名": "Amusing Ourselves to Death", "作者": "Neil Postman", "核心价值": "媒介形式如何改变思维", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "计算机与AI"}, {"顺位": "101", "书名": "《心理学与生活》", "英文/原名": "Psychology and Life", "作者": "Richard Gerrig / Philip Zimbardo", "核心价值": "认知、记忆、学习、人格、社会心理", "阅读定位": "知识主干/教材型", "可靠性": "中高", "耐久性": "高；数据/研究需定期更新", "领域": "自然科学"}, {"顺位": "102", "书名": "《The Invisible Gorilla》", "英文/原名": "The Invisible Gorilla", "作者": "Christopher Chabris / Daniel Simons", "核心价值": "注意力、记忆、自信并不可靠", "阅读定位": "框架/观点型", "可靠性": "中高", "耐久性": "中高—高", "领域": "思维与决策"}, {"顺位": "103", "书名": "《助推》", "英文/原名": "Nudge", "作者": "Richard Thaler / Cass Sunstein", "核心价值": "默认选项、选择架构", "阅读定位": "框架/观点型", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "高；数据/研究需定期更新", "领域": "思维与决策"}, {"顺位": "104", "书名": "《Misbehaving》", "英文/原名": "Misbehaving", "作者": "Richard Thaler", "核心价值": "行为经济学与非理性决策", "阅读定位": "框架/观点型", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "经济与社会"}, {"顺位": "105", "书名": "《思考，快与慢》", "英文/原名": "Thinking, Fast and Slow", "作者": "Daniel Kahneman", "核心价值": "系统1/2、锚定、损失厌恶", "阅读定位": "框架/观点型", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "高；数据/研究需定期更新", "领域": "思维与决策"}, {"顺位": "106", "书名": "《The Black Swan》", "英文/原名": "The Black Swan", "作者": "Nassim Nicholas Taleb", "核心价值": "尾部风险、极端事件、事后解释", "阅读定位": "框架/观点型", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "中高—高", "领域": "风险与安全"}, {"顺位": "107", "书名": "《Against the Gods》", "英文/原名": "Against the Gods", "作者": "Peter L. Bernstein", "核心价值": "概率、保险与风险思想史", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "数学与统计"}, {"顺位": "108", "书名": "《The Drunkard's Walk》", "英文/原名": "The Drunkard's Walk", "作者": "Leonard Mlodinow", "核心价值": "随机性、概率、偶然事件", "阅读定位": "框架/观点型", "可靠性": "中高", "耐久性": "中高—高", "领域": "数学与统计"}, {"顺位": "109", "书名": "《历史是什么？》", "英文/原名": "What Is History?", "作者": "E. H. Carr", "核心价值": "历史事实与解释的关系", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "经济与社会"}, {"顺位": "110", "书名": "《陶庵梦忆》", "英文/原名": "陶庵梦忆", "作者": "张岱", "核心价值": "用极短篇章保存饮食、园林、戏曲、灯会、人物与城市生活，体验古典中文的生活质感", "阅读定位": "文学经典/小品文", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "111", "书名": "《The Sociological Imagination》", "英文/原名": "The Sociological Imagination", "作者": "C. Wright Mills", "核心价值": "私人困扰与公共问题的联系", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "经济与社会"}, {"顺位": "112", "书名": "《正义：该如何做是好？》", "英文/原名": "Justice: What's the Right Thing to Do?", "作者": "Michael Sandel", "核心价值": "功利主义、自由、权利、公平", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "哲学与逻辑"}, {"顺位": "113", "书名": "《唐诗三百首》", "英文/原名": "唐诗三百首", "作者": "蘅塘退士 编", "核心价值": "以相对有限的篇目建立古典汉语的节奏、意象、情感与历史记忆", "阅读定位": "文学经典/诗歌选本", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "114", "书名": "《宋词三百首》", "英文/原名": "宋词三百首", "作者": "朱祖谋 编", "核心价值": "通过短小作品感受中文在声音、节奏、空间与细微情绪上的表达能力", "阅读定位": "文学经典/词选", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "115", "书名": "《沉思录》", "英文/原名": "Meditations", "作者": "Marcus Aurelius", "核心价值": "区分可控与不可控", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "哲学与逻辑"}, {"顺位": "116", "书名": "《Ficciones》", "英文/原名": "Ficciones", "作者": "Jorge Luis Borges", "核心价值": "用极短的小说把图书馆、记忆、时间、身份、无限与虚构变成思想游戏", "阅读定位": "文学经典/短篇小说", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "117", "书名": "《看不见的城市》", "英文/原名": "Invisible Cities", "作者": "Italo Calvino", "核心价值": "以极短城市片段讨论记忆、欲望、城市、语言和想象，训练空间与比喻感", "阅读定位": "文学经典/短篇结构小说", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "118", "书名": "《What Is This Thing Called Science?》", "英文/原名": "What Is This Thing Called Science?", "作者": "Alan Chalmers", "核心价值": "归纳、证伪、理论与观察", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "哲学与逻辑"}, {"顺位": "119", "书名": "《科学革命的结构》", "英文/原名": "The Structure of Scientific Revolutions", "作者": "Thomas S. Kuhn", "核心价值": "范式、常规科学、科学革命", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "哲学与逻辑"}, {"顺位": "120", "书名": "《六个简单的物理问题》", "英文/原名": "Six Easy Pieces", "作者": "Richard Feynman", "核心价值": "原子、能量、运动、量子基本世界观", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "121", "书名": "《宇宙》", "英文/原名": "Cosmos", "作者": "Carl Sagan", "核心价值": "恒星、宇宙尺度、科学史", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "122", "书名": "《The Living Mountain》", "英文/原名": "The Living Mountain", "作者": "Nan Shepherd", "核心价值": "以非常细密的感官观察写一座山，让自然不再只是“景点”，而是身体、天气、光线和时间的经验", "阅读定位": "自然文学/散文", "可靠性": "艺术作品：不以事实可靠性衡量", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "123", "书名": "《A Sand County Almanac》", "英文/原名": "A Sand County Almanac", "作者": "Aldo Leopold", "核心价值": "把季节观察、生态经验和“土地伦理”结合，让自然观察与责任感连接起来", "阅读定位": "自然文学/环境思想型", "可靠性": "中高：生态观察强，伦理部分属规范性论证", "耐久性": "极高", "领域": "文学与精神生活"}, {"顺位": "124", "书名": "《Stuff Matters》", "英文/原名": "Stuff Matters", "作者": "Mark Miodownik", "核心价值": "材料结构如何决定性能", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "125", "书名": "《Why Evolution Is True》", "英文/原名": "Why Evolution Is True", "作者": "Jerry Coyne", "核心价值": "自然选择、共同祖先、进化证据", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "126", "书名": "《自私的基因》", "英文/原名": "The Selfish Gene", "作者": "Richard Dawkins", "核心价值": "基因、自然选择、进化视角", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "127", "书名": "《The Gene》", "英文/原名": "The Gene", "作者": "Siddhartha Mukherjee", "核心价值": "遗传、DNA、基因技术", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "高；数据/研究需定期更新", "领域": "自然科学"}, {"顺位": "128", "书名": "《寂静的春天》", "英文/原名": "Silent Spring", "作者": "Rachel Carson", "核心价值": "生态系统中的连锁效应", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "自然科学"}, {"顺位": "129", "书名": "《The Ghost Map》", "英文/原名": "The Ghost Map", "作者": "Steven Johnson", "核心价值": "霍乱、地图、传播、公共卫生", "阅读定位": "严肃科普/专业入门", "可靠性": "中高", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "130", "书名": "《Behave》", "英文/原名": "Behave", "作者": "Robert Sapolsky", "核心价值": "行为受大脑、激素、环境、文化共同影响", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "高；数据/研究需定期更新", "领域": "自然科学"}, {"顺位": "131", "书名": "《What Is Mathematics?》", "英文/原名": "What Is Mathematics?", "作者": "Richard Courant / Herbert Robbins", "核心价值": "数、几何、极限、数学结构", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "数学与统计"}, {"顺位": "132", "书名": "《数学之美》", "英文/原名": "The Beauty of Mathematics in Computer Science", "作者": "吴军", "核心价值": "数学如何支撑搜索、语言与技术", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "数学与统计"}, {"顺位": "133", "书名": "《从一到无穷大》", "英文/原名": "One Two Three... Infinity", "作者": "George Gamow", "核心价值": "数学、相对论、量子、宇宙", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "自然科学"}, {"顺位": "134", "书名": "《时间简史》", "英文/原名": "A Brief History of Time", "作者": "Stephen Hawking", "核心价值": "时间、黑洞、宇宙起源", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "高；数据/研究需定期更新", "领域": "自然科学"}, {"顺位": "135", "书名": "《写给大家看的设计书》", "英文/原名": "The Non-Designer's Design Book", "作者": "Robin Williams", "核心价值": "亲密、对齐、重复、对比", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "设计与审美"}, {"顺位": "136", "书名": "《艺术的故事》", "英文/原名": "The Story of Art", "作者": "E. H. Gombrich", "核心价值": "用作品与视觉问题串起艺术史，让没有专业背景的人建立观看和历史感", "阅读定位": "严肃科普/艺术史入门", "可靠性": "中高", "耐久性": "高", "领域": "艺术与精神生活"}, {"顺位": "137", "书名": "《The Visual Display of Quantitative Information》", "英文/原名": "The Visual Display of Quantitative Information", "作者": "Edward Tufte", "核心价值": "信息密度、减少视觉噪声", "阅读定位": "知识主干/教材型", "可靠性": "高", "耐久性": "高—极高", "领域": "设计与审美"}, {"顺位": "138", "书名": "《Thinking with Type》", "英文/原名": "Thinking with Type", "作者": "Ellen Lupton", "核心价值": "字体层级、字号、行距、对齐", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "设计与审美"}, {"顺位": "139", "书名": "《摄影师之眼》", "英文/原名": "The Photographer's Eye", "作者": "Michael Freeman", "核心价值": "构图、视觉重量、节奏、视线", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "设计与审美"}, {"顺位": "140", "书名": "《平面设计中的网格系统》", "英文/原名": "Grid Systems in Graphic Design", "作者": "Josef Müller-Brockmann", "核心价值": "网格、比例、视觉秩序", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "设计与审美"}, {"顺位": "141", "书名": "《建筑：形式、空间和秩序》", "英文/原名": "Architecture: Form, Space, and Order", "作者": "Francis D. K. Ching", "核心价值": "比例、轴线、空间与组织", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "设计与审美"}, {"顺位": "142", "书名": "《A Pattern Language》", "英文/原名": "A Pattern Language", "作者": "Christopher Alexander 等", "核心价值": "空间模式、尺度、关系", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "设计与审美"}, {"顺位": "143", "书名": "《The Death and Life of Great American Cities》", "英文/原名": "The Death and Life of Great American Cities", "作者": "Jane Jacobs", "核心价值": "街道、多样性、密度、城市活力", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "经济与社会"}, {"顺位": "144", "书名": "《The Bible: A Very Short Introduction》", "英文/原名": "The Bible: A Very Short Introduction, 2nd Edition", "作者": "John Riches", "核心价值": "从成书、正典、翻译、解释和文化影响理解《圣经》，作为文化文本而非劝信材料", "阅读定位": "知识主干/宗教文化入门", "可靠性": "高（作为学术入门）", "耐久性": "高", "领域": "宗教与文化"}, {"顺位": "145", "书名": "《A Little History of Religion》", "英文/原名": "A Little History of Religion", "作者": "Richard Holloway", "核心价值": "用相对克制的叙事建立主要宗教传统、历史与信仰问题的总体地图", "阅读定位": "严肃通识/宗教史入门", "可靠性": "中高", "耐久性": "高", "领域": "宗教与文化"}, {"顺位": "146", "书名": "《The Penguin Book of Classical Myths》", "英文/原名": "The Penguin Book of Classical Myths", "作者": "Jenny March", "核心价值": "系统了解希腊罗马神话的主要人物、故事、来源与后世影响", "阅读定位": "参考/文化素养型", "可靠性": "中高", "耐久性": "极高（作为古典文化故事索引）", "领域": "宗教与文化"}, {"顺位": "147", "书名": "《Why Geography Matters》", "英文/原名": "Why Geography Matters", "作者": "Harm de Blij", "核心价值": "地理、气候、人口、资源如何塑造社会", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "经济与社会"}, {"顺位": "148", "书名": "《The Language Instinct》", "英文/原名": "The Language Instinct", "作者": "Steven Pinker", "核心价值": "语言作为认知能力", "阅读定位": "框架/观点型", "可靠性": "中：有重要价值，但需带注释阅读", "耐久性": "高；数据/研究需定期更新", "领域": "经济与社会"}, {"顺位": "149", "书名": "《法律的概念》", "英文/原名": "The Concept of Law", "作者": "H. L. A. Hart", "核心价值": "规则、义务、法律体系", "阅读定位": "知识主干/教材型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "中高—高", "领域": "经济与社会"}, {"顺位": "150", "书名": "《To Engineer Is Human》", "英文/原名": "To Engineer Is Human", "作者": "Henry Petroski", "核心价值": "从失败理解工程设计", "阅读定位": "严肃科普/专业入门", "可靠性": "高", "耐久性": "高—极高", "领域": "系统与工程"}, {"顺位": "151", "书名": "《Normal Accidents》", "英文/原名": "Normal Accidents", "作者": "Charles Perrow", "核心价值": "复杂系统中的事故与耦合", "阅读定位": "严肃科普/专业入门", "可靠性": "高", "耐久性": "高—极高", "领域": "系统与工程"}, {"顺位": "152", "书名": "《Complexity: A Guided Tour》", "英文/原名": "Complexity: A Guided Tour", "作者": "Melanie Mitchell", "核心价值": "涌现、自组织、复杂适应系统", "阅读定位": "框架/观点型", "可靠性": "中高", "耐久性": "中高—高", "领域": "系统与工程"}, {"顺位": "153", "书名": "《Understanding Media》", "英文/原名": "Understanding Media", "作者": "Marshall McLuhan", "核心价值": "媒介即讯息", "阅读定位": "经典论证/思想型", "可靠性": "论证型：不以“科学定论”衡量", "耐久性": "极高（作为思想/论证传统）", "领域": "计算机与AI"}, {"顺位": "154", "书名": "《A Technique for Producing Ideas》", "英文/原名": "A Technique for Producing Ideas", "作者": "James Webb Young", "核心价值": "收集、消化、孵化、组合、验证", "阅读定位": "严肃科普/专业入门", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "思维与决策"}, {"顺位": "155", "书名": "《The Flavor Bible》", "英文/原名": "The Flavor Bible", "作者": "Karen Page / Andrew Dornenburg", "核心价值": "食材风味搭配", "阅读定位": "官方/参考工具", "可靠性": "中高：作为科普/框架使用", "耐久性": "中高—高", "领域": "生活技能"}];
+const tbody = document.querySelector('#books-body');
+const search = document.querySelector('#search');
+const domain = document.querySelector('#domain');
+const reliability = document.querySelector('#reliability');
+const count = document.querySelector('#count');
+
+const esc = v => String(v ?? '').replace(/[&<>"']/g, m => ({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[m]));
+
+function render(){
+  const q = search.value.trim().toLowerCase();
+  const d = domain.value;
+  const rel = reliability.value;
+
+  const filtered = rows.filter(r=>{
+    const blob = Object.values(r).join(' ').toLowerCase();
+    return (!q || blob.includes(q)) &&
+           (!d || r['领域']===d) &&
+           (!rel || String(r['可靠性']).includes(rel));
+  });
+
+  tbody.innerHTML = filtered.map(r=>`
+    <tr>
+      <td class="rank">${esc(r['顺位'])}</td>
+      <td class="book">${esc(r['书名'])}</td>
+      <td>${esc(r['英文/原名'])}</td>
+      <td>${esc(r['作者'])}</td>
+      <td class="core">${esc(r['核心价值'])}</td>
+      <td class="role"><span class="pill">${esc(r['阅读定位'])}</span></td>
+      <td>${esc(r['可靠性'])}</td>
+      <td>${esc(r['耐久性'])}</td>
+      <td class="domain">${esc(r['领域'])}</td>
+    </tr>
+  `).join('');
+
+  count.textContent = `${filtered.length} / ${rows.length}`;
+}
+[search,domain,reliability].forEach(el=>{
+  el.addEventListener(el===search ? 'input' : 'change', render);
+});
+render();
+</script>
+</body>
+</html>
