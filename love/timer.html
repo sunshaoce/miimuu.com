@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>专注 · 休息</title>
+<style>
+  :root {
+    --orange: #E87936;
+    --blue: #4772B8;
+    --home-bg: #EEEAE4;
+    --home-fg: #68717C;
+    --white: #FFFFFF;
+    --ui-fade: 380ms;
+    --ui-ease: cubic-bezier(.22,.61,.36,1);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%; margin: 0; overflow: hidden;
+    background: var(--home-bg);
+    font-family: Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC",
+      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  button { font: inherit; }
+  button, [role="button"] { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  :focus-visible { outline: 2px solid currentColor; outline-offset: 7px; }
+  .app { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+  /* 页面本身不做透明度动画。所有进出场只由同一个圆形遮罩负责。 */
+  .page { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .page.hidden { visibility: hidden; pointer-events: none; }
+  .home { z-index: 2; background: var(--home-bg); }
+  .choices {
+    --home-padding: 40px;
+    --choice-gap: clamp(34px, 7vw, 104px);
+    --choice-size: clamp(190px, 27vw, 360px);
+    display: flex; align-items: center; justify-content: center;
+    gap: var(--choice-gap); width: 100%; padding: var(--home-padding);
+  }
+  .choice {
+    width: min(var(--choice-size), calc((100vw - 2 * var(--home-padding) - var(--choice-gap)) / 2), calc(100dvh - 160px));
+    aspect-ratio: 1; flex: 0 0 auto;
+    border: 0; border-radius: 50%; padding: 0;
+    color: var(--white); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    user-select: none;
+    box-shadow: 0 18px 54px rgba(21,31,48,.075);
+    transition: box-shadow 180ms ease;
+  }
+  /* 悬停不再改变圆的位置或大小，确保扩散和收缩使用完全相同的几何边界。 */
+  @media (hover: hover) {
+    .choice:hover { box-shadow: 0 24px 64px rgba(21,31,48,.10); }
+  }
+  .choice.orange { background: var(--orange); }
+  .choice.blue { background: var(--blue); }
+  .choice-label {
+    display: flex; flex-direction: column; align-items: center; gap: 9px;
+    line-height: 1.05; font-weight: 650; letter-spacing: .035em;
+  }
+  .choice-label .main { font-size: clamp(29px, 3vw, 48px); }
+  .choice-label .sub { font-size: clamp(20px, 2vw, 31px); font-weight: 580; opacity: .94; }
+  .unit { margin-left: .18em; }
+
+  /* 提示统一字号、盒模型和基线；计时页只有一个提示槽，不叠放透明链接。 */
+  .hint {
+    position: absolute; left: 50%; bottom: clamp(34px, 7vh, 76px);
+    transform: translateX(-50%); margin: 0; padding: 10px 12px;
+    border: 0; background: transparent; white-space: nowrap;
+    font-size: clamp(13px, 1.15vw, 16px); font-weight: 500;
+    letter-spacing: .055em; line-height: 1; user-select: none;
+  }
+  .hint-line { display: inline-flex; align-items: baseline; gap: .34em; }
+  .hint-key { letter-spacing: .025em; }
+  .home-hint { color: var(--home-fg); cursor: pointer; }
+  .home-hint:hover { color: #525B66; }
+  /* 只移动文字，点击区域保持固定。
+     向下拨动 -> 轻微越界回弹 -> 回到原位；随后留出较长静止时间。 */
+  .app[data-phase="home"] .home-hint .hint-line {
+    animation: homeHintNudge 3.8s infinite;
+    will-change: transform;
+  }
+  @keyframes homeHintNudge {
+    0%, 5%, 34%, 100% {
+      transform: translate3d(0,0,0);
+    }
+    13% {
+      transform: translate3d(0,10px,0);
+      animation-timing-function: cubic-bezier(.22,.72,.28,1);
+    }
+    21% {
+      transform: translate3d(0,-1.8px,0);
+      animation-timing-function: cubic-bezier(.30,0,.42,1);
+    }
+    27% {
+      transform: translate3d(0,.7px,0);
+      animation-timing-function: cubic-bezier(.22,.72,.28,1);
+    }
+  }
+
+  /* 专注和休息共用这一套计时布局。白色前景按用户选择全程保留。 */
+  .timer-view { z-index: 1; background: var(--orange); color: var(--white); }
+  /* 长时渐变以极小步长更新；不再叠加持续运行的全屏背景 CSS 动画。 */
+  .timer-wrap {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transform: translateY(-1vh); opacity: 1;
+    transition: opacity var(--ui-fade) var(--ui-ease);
+  }
+  .timer-view.idle .timer-wrap { opacity: 0; pointer-events: none; }
+  .mode-label {
+    display: flex; align-items: baseline; gap: .62em; margin-bottom: 30px;
+    color: rgba(255,255,255,.70);
+    font-size: clamp(16.25px, 1.5625vw, 22.5px); font-weight: 650; letter-spacing: .14em;
+  }
+  .mode-separator { opacity: .72; letter-spacing: 0; }
+  .mode-duration { display: inline-flex; align-items: baseline; letter-spacing: .06em; }
+  .timer-hint { color: rgba(255,255,255,.72); cursor: pointer; }
+  .timer-view.idle .timer-hint { color: rgba(255,255,255,.68); cursor: default; pointer-events: none; }
+
+  /* 横段、竖段使用同一长度和厚度。单位锚定实际数字组，不用百分比猜位置。 */
+  .compact-clock { padding-bottom: clamp(20px, 2vw, 28px); }
+  .seven {
+    --seg-thickness: clamp(8px, .86vw, 12px);
+    --seg-length: clamp(58px, 7.2vw, 96px);
+    --digit-gap: clamp(8px, 1.1vw, 15px);
+    display: flex; align-items: flex-start; justify-content: center; gap: var(--digit-gap);
+  }
+  .time-group { position: relative; }
+  .digit-pair { display: flex; gap: var(--digit-gap); }
+  .compact-unit {
+    /* 自身右边缘直接锚定本组数字盒子的最右边缘；
+       该边缘正好也是最右侧竖向晶体管的外缘。 */
+    position: absolute; top: calc(100% + 6px); right: 0; left: auto;
+    display: block; width: max-content; margin: 0; padding: 0;
+    text-align: right;
+    color: rgba(255,255,255,.50); font-size: clamp(10px, .86vw, 13px);
+    font-weight: 560; letter-spacing: 0; white-space: nowrap; pointer-events: none;
+  }
+  .digit {
+    position: relative; flex: 0 0 auto;
+    width: calc(var(--seg-length) + 2 * var(--seg-thickness));
+    height: calc(2 * var(--seg-length) + 3 * var(--seg-thickness));
+  }
+  .seg { position: absolute; background: rgba(255,255,255,.035); border-radius: 999px; transition: background-color 50ms linear; }
+  .seg.on { background: rgba(255,255,255,.985); box-shadow: 0 0 20px rgba(255,255,255,.08); }
+  .seg.h { left: var(--seg-thickness); width: var(--seg-length); height: var(--seg-thickness); }
+  .seg.v { width: var(--seg-thickness); height: var(--seg-length); }
+  .a { top: 0; }
+  .g { top: calc(var(--seg-length) + var(--seg-thickness)); }
+  .d { bottom: 0; }
+  .f { left: 0; top: var(--seg-thickness); }
+  .b { right: 0; top: var(--seg-thickness); }
+  .e { left: 0; top: calc(var(--seg-length) + 2 * var(--seg-thickness)); }
+  .c { right: 0; top: calc(var(--seg-length) + 2 * var(--seg-thickness)); }
+  .colon {
+    position: relative; flex: 0 0 auto; width: calc(2.2 * var(--seg-thickness));
+    height: calc(2 * var(--seg-length) + 3 * var(--seg-thickness));
+  }
+  .colon::before, .colon::after {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    width: var(--seg-thickness); aspect-ratio: 1; border-radius: 50%;
+    background: rgba(255,255,255,.985);
+  }
+  .colon::before { top: 32%; }
+  .colon::after { bottom: 32%; }
+
+  /* 休息最后两分钟：前景统一切换为主页提示灰 #68717C。 */
+  .timer-view.rest-ending .mode-label,
+  .timer-view.rest-ending .timer-hint,
+  .timer-view.rest-ending .compact-unit {
+    color: var(--home-fg);
+  }
+
+  .timer-view.rest-ending .seg.on {
+    background: var(--home-fg);
+    box-shadow: 0 0 20px rgba(104,113,124,.08);
+  }
+
+  .timer-view.rest-ending .colon::before,
+  .timer-view.rest-ending .colon::after {
+    background: var(--home-fg);
+  }
+
+  /* 只有这一层承担圆形转场，同时拦截转场期间的点击，避免穿透。 */
+  .transition-layer { position: fixed; inset: 0; z-index: 30; overflow: hidden; touch-action: none; }
+  .transition-layer[hidden] { display: none; }
+  .radial {
+    position: absolute; border-radius: 50%; overflow: hidden;
+    transform-origin: center; will-change: transform; pointer-events: none;
+    backface-visibility: hidden;
+  }
+  .radial-tint { position: absolute; inset: 0; border-radius: inherit; will-change: opacity; }
+  .app[data-busy="true"] .timer-wrap,
+  .app[data-busy="true"] .seg,
+  .app[data-busy="true"] .timer-view { transition: none; }
+
+  @media (max-width: 700px) {
+    .choices { --home-padding: 20px; --choice-gap: 22px; --choice-size: clamp(150px, 41vw, 220px); }
+  }
+  @media (max-width: 480px) {
+    .choices { --choice-gap: 14px; }
+    .choice-label .main { font-size: 25px; }
+    .choice-label .sub { font-size: 18px; }
+    .seven { --seg-length: clamp(40px, 12vw, 58px); --seg-thickness: clamp(6px, 1.8vw, 8px); --digit-gap: clamp(6px, 1.8vw, 8px); }
+  }
+  @media (max-height: 480px) {
+    .choice { width: min(var(--choice-size), calc((100vw - 2 * var(--home-padding) - var(--choice-gap)) / 2), calc(100dvh - 140px)); }
+    .seven { --seg-length: min(60px, 16vh); --seg-thickness: min(8px, 2.5vh); }
+    .mode-label { margin-bottom: 18px; }
+    .hint { bottom: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app" data-phase="home" data-mode="home" data-busy="false">
+  <main class="page home" id="home" aria-hidden="false">
+    <div class="choices">
+      <button type="button" class="choice orange" id="startFocus" aria-label="开始专注">
+        <span class="choice-label"><span class="main">专注</span><span class="sub"><span>30+</span><span class="unit">分钟</span></span></span>
+      </button>
+      <button type="button" class="choice blue" id="startRest" aria-label="开始5分钟休息">
+        <span class="choice-label"><span class="main">休息</span><span class="sub"><span>5</span><span class="unit">分钟</span></span></span>
+      </button>
+    </div>
+    <button type="button" class="hint home-hint" id="homeStartHint" aria-label="开始专注">
+      <span class="hint-line"><span>单击</span><span class="hint-key">空格键␣</span><span>开始。</span></span>
+    </button>
+  </main>
+  <section class="page timer-view hidden" id="timerView" aria-hidden="true" inert>
+    <div class="timer-wrap" id="timerContent">
+      <div class="mode-label"><span id="modeName">专注</span><span class="mode-separator">-</span><span class="mode-duration"><span id="modeDurationValue">30+</span><span class="unit">分钟</span></span></div>
+      <div class="compact-clock">
+        <div class="seven" id="timerDisplay" role="img" aria-label="0分0秒">
+          <div class="time-group"><div class="digit-pair" id="leftDigits" aria-hidden="true"></div><span class="compact-unit" id="unitLeft" aria-hidden="true">分</span></div>
+          <div class="colon" aria-hidden="true"></div>
+          <div class="time-group"><div class="digit-pair" id="rightDigits" aria-hidden="true"></div><span class="compact-unit" id="unitRight" aria-hidden="true">秒</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- 单一提示槽：隐藏态是普通文字；显示态才具有中断/休息/完成的操作语义。 -->
+    <p class="hint timer-hint" id="actionHint" role="button" tabindex="0">
+      <span class="hint-line" id="actionHintLine"><span id="hintPress">双击</span><span class="hint-key">空格键␣</span><span id="hintVerb">中断。</span></span>
+    </p>
+  </section>
+  <div class="transition-layer" id="transitionLayer" aria-hidden="true" hidden>
+    <div class="radial" id="transitionCircle"><div class="radial-tint" id="transitionTint"></div></div>
+  </div>
+</div>
+<script>
+(() => {
+  'use strict';
+
+  // 用户确定的差异只放在配置里。布局、输入、计时渲染和转场共用一套实现。
+  const css = getComputedStyle(document.documentElement);
+  const colors = Object.fromEntries(['orange', 'blue', 'home-bg'].map(name => [name, css.getPropertyValue('--' + name).trim()]));
+  const FOCUS_TARGET = 30 * 60 * 1000;
+  const REST_DURATION = 5 * 60 * 1000;
+  const DISPLAY_CAP = 100 * 60 * 60 * 1000;
+  const DOUBLE_SPACE_MS = 260;
+  // 进入和退出共用 0.5 秒及对称缓动；退出直接反向播放同一组关键帧。
+  const MOTION = Object.freeze({ duration: 500, easing: 'cubic-bezier(.45,0,.55,1)', fill: 'both' });
+  const MODES = Object.freeze({
+    focus: { title: '专注', durationLabel: '30+', start: colors.orange, end: colors.blue, span: FOCUS_TARGET, autoHide: true, button: 'startFocus' },
+    rest: { title: '休息', durationLabel: '5', start: colors.blue, end: colors['home-bg'], span: REST_DURATION, autoHide: false, button: 'startRest' }
+  });
+  const $ = id => document.getElementById(id);
+  const app = $('app'), home = $('home'), timer = $('timerView'), content = $('timerContent');
+  const hint = $('actionHint'), display = $('timerDisplay');
+  const layer = $('transitionLayer'), circle = $('transitionCircle'), tint = $('transitionTint');
+  const state = { mode: 'home', phase: 'home', hidden: false, startedAt: 0, generation: 0 };
+  let loop = null, autoHide = null, pendingSpace = null, lastSpaceAt = 0;
+  let pointerPress = null, motionAnimations = [];
+  let lastBackground = '', lastHint = '', lastDisplay = '';
+
+  const isBusy = () => ['entering', 'leaving', 'switching'].includes(state.phase);
+  const isTimer = () => state.mode === 'focus' || state.mode === 'rest';
+  const elapsed = () => Math.max(0, Date.now() - state.startedAt);
+  const clearSpace = () => { clearTimeout(pendingSpace); pendingSpace = null; lastSpaceAt = 0; };
+  const clearAutoHide = () => { clearTimeout(autoHide); autoHide = null; };
+  const stopLoop = () => { clearTimeout(loop); loop = null; };
+
+  function setPhase(phase) {
+    state.phase = phase;
+    app.dataset.phase = phase;
+    app.dataset.mode = state.mode;
+    app.dataset.busy = String(isBusy());
+    home.inert = phase !== 'home';
+    timer.inert = !['running', 'alarming'].includes(phase);
+    if (isBusy()) {
+      clearSpace();
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && active !== document.body) active.blur();
+    }
+  }
+
+  function showPage(page) {
+    const onHome = page === 'home';
+    home.classList.toggle('hidden', !onHome);
+    timer.classList.toggle('hidden', onHome);
+    timer.classList.toggle('active', !onHome);
+    home.setAttribute('aria-hidden', String(!onHome));
+    timer.setAttribute('aria-hidden', String(onHome));
+  }
+
+  // 数码管骨架只创建一次。更新只改真正变化的段，不删除整组节点。
+  const segments = { '0': 'abcdef', '1': 'bc', '2': 'abdeg', '3': 'abcdg', '4': 'bcfg', '5': 'acdfg', '6': 'acdefg', '7': 'abc', '8': 'abcdefg', '9': 'abcdfg' };
+  const digits = [];
+  for (let index = 0; index < 4; index++) {
+    const node = document.createElement('div'); node.className = 'digit';
+    const parts = [];
+    for (const name of 'abcdefg') {
+      const part = document.createElement('span');
+      part.className = `seg ${'agd'.includes(name) ? 'h' : 'v'} ${name}`;
+      part.dataset.seg = name; node.appendChild(part); parts.push([name, part]);
+    }
+    $(index < 2 ? 'leftDigits' : 'rightDigits').appendChild(node);
+    digits.push({ node, parts, value: '' });
+  }
+
+  function formatTime(mode, value) {
+    const ms = Math.max(0, value);
+    if (mode === 'focus' && ms >= DISPLAY_CAP) return { text: '99:99', left: '时', right: '分' };
+    const hoursMinutes = mode === 'focus' && ms >= 120000;
+    const amount = hoursMinutes ? Math.floor(ms / 60000) : (mode === 'rest' ? Math.ceil(ms / 1000) : Math.floor(ms / 1000));
+    return { text: `${String(Math.floor(amount / 60)).padStart(2, '0')}:${String(amount % 60).padStart(2, '0')}`, left: hoursMinutes ? '时' : '分', right: hoursMinutes ? '分' : '秒' };
+  }
+
+  function renderTime(mode, ms) {
+    const data = formatTime(mode, ms), key = `${data.text}|${data.left}`;
+    if (key === lastDisplay) return;
+    lastDisplay = key;
+    const value = data.text.replace(':', '');
+    digits.forEach((digit, index) => {
+      if (digit.value === value[index]) return;
+      digit.value = value[index]; digit.node.dataset.value = digit.value;
+      digit.parts.forEach(([name, part]) => part.classList.toggle('on', segments[digit.value].includes(name)));
+    });
+    display.dataset.value = data.text;
+    $('unitLeft').textContent = data.left; $('unitRight').textContent = data.right;
+    display.setAttribute('aria-label', `${Number(value.slice(0, 2))}${data.left}${Number(value.slice(2))}${data.right}`);
+  }
+
+  const canMix = CSS.supports('color', 'color-mix(in oklab, #000, #fff)');
+  function mixColor(from, to, progress) {
+    const p = Math.round(Math.max(0, Math.min(1, progress)) * 10000) / 10000;
+    if (p === 0) return from;
+    if (p === 1) return to;
+    if (canMix) return `color-mix(in oklab, ${from} ${(1 - p) * 100}%, ${to} ${p * 100}%)`;
+    const parse = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+    const a = parse(from), b = parse(to);
+    return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * p)).join(',')})`;
+  }
+
+  function actionForCurrentState() {
+    if (state.phase === 'alarming') return 'complete';
+    if (state.mode === 'focus' && elapsed() >= FOCUS_TARGET) return 'rest';
+    return 'interrupt';
+  }
+
+  function updateHint() {
+    const action = state.hidden ? 'show' : actionForCurrentState();
+    if (action === lastHint) return;
+    lastHint = action;
+    const labels = { show: ['单击', '显示。'], complete: ['单击', '完成。'], rest: ['双击', '休息。'], interrupt: ['双击', '中断。'] };
+    $('hintPress').textContent = labels[action][0]; $('hintVerb').textContent = labels[action][1];
+    $('actionHintLine').dataset.action = action;
+    if (state.hidden) { hint.removeAttribute('role'); hint.removeAttribute('tabindex'); }
+    else { hint.setAttribute('role', 'button'); hint.tabIndex = 0; }
+  }
+
+  function setHidden(hidden, byUser = false) {
+    if (byUser) { clearAutoHide(); clearSpace(); }
+    state.hidden = Boolean(hidden);
+    timer.classList.toggle('idle', state.hidden);
+    content.inert = state.hidden;
+    content.setAttribute('aria-hidden', String(state.hidden));
+    if (state.hidden && document.activeElement === hint) hint.blur();
+    if (!state.hidden && isTimer()) renderTime(state.mode, state.mode === 'rest' ? REST_DURATION - elapsed() : elapsed());
+    updateHint();
+  }
+
+  function renderNow() {
+    if (!isTimer()) return;
+    const ms = elapsed(), config = MODES[state.mode];
+    const bg = mixColor(config.start, config.end, ms / config.span);
+    if (bg !== lastBackground) { timer.style.backgroundColor = bg; lastBackground = bg; }
+
+    // 仅休息剩余最后 2 分钟切换为主页提示灰。
+    const restRemaining = state.mode === 'rest' ? Math.max(0, REST_DURATION - ms) : Infinity;
+    timer.classList.toggle('rest-ending', state.mode === 'rest' && restRemaining <= 120000);
+
+    if (state.mode === 'rest' && ms >= REST_DURATION && state.phase === 'running') {
+      finishRest();
+      return;
+    }
+    if (!state.hidden && !document.hidden) renderTime(state.mode, state.mode === 'rest' ? REST_DURATION - ms : ms);
+    updateHint();
+  }
+
+  function runLoop() {
+    stopLoop();
+    if (state.phase !== 'running') return;
+    renderNow();
+    if (state.phase !== 'running') return;
+    // 渐变期间最多 10Hz；颜色固定或标签页不可见时降频。没有逐帧重建 DOM。
+    const stable = state.mode === 'focus' && elapsed() >= FOCUS_TARGET;
+    const interval = document.hidden || stable ? 1000 : 100;
+    const untilEnd = state.mode === 'rest' ? Math.max(1, REST_DURATION - elapsed()) : interval;
+    loop = setTimeout(runLoop, Math.min(interval, untilEnd));
+  }
+
+  function configure(mode) {
+    state.mode = mode; state.startedAt = Date.now();
+    timer.classList.remove('rest-ending');
+    const config = MODES[mode];
+    $('modeName').textContent = config.title; $('modeDurationValue').textContent = config.durationLabel;
+    timer.style.backgroundColor = config.start; lastBackground = config.start;
+    renderTime(mode, mode === 'rest' ? REST_DURATION : 0);
+    setHidden(false);
+    updateHint();
+  }
+
+  function activateTimer() {
+    // 从遮罩交接完毕才开始计时，动画不占用专注/休息时间。
+    state.startedAt = Date.now();
+    setPhase('running'); updateHint(); runLoop();
+    if (MODES[state.mode].autoHide) {
+      const generation = state.generation;
+      autoHide = setTimeout(() => {
+        autoHide = null;
+        if (generation === state.generation && state.phase === 'running') setHidden(true);
+      }, 5000);
+    }
+  }
+
+  /* ---------- 唯一转场流程：同一组关键帧，出场只反向播放 ---------- */
+  function afterPaint() {
+    if (document.hidden) return Promise.resolve();
+    return new Promise(resolve => {
+      let first = 0, second = 0, settled = false;
+      const done = () => {
+        if (settled) return; settled = true;
+        cancelAnimationFrame(first); cancelAnimationFrame(second);
+        document.removeEventListener('visibilitychange', onVisibility); resolve();
+      };
+      const onVisibility = () => { if (document.hidden) done(); };
+      document.addEventListener('visibilitychange', onVisibility);
+      first = requestAnimationFrame(() => { second = requestAnimationFrame(done); });
+    });
+  }
+
+  function prepareCircle(mode, reverse, currentColor) {
+    const config = MODES[mode], rect = $(config.button).getBoundingClientRect();
+    const size = rect.width, x = rect.left + size / 2, y = rect.top + size / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 2;
+    const full = radius / (size / 2);
+    circle.style.width = `${size}px`; circle.style.height = `${size}px`;
+    circle.style.left = `${x - size / 2}px`; circle.style.top = `${y - size / 2}px`;
+    circle.style.backgroundColor = config.start;
+    circle.style.transform = `translateZ(0) scale(${reverse ? full : 1})`;
+    tint.style.backgroundColor = currentColor || config.start;
+    tint.style.opacity = reverse ? '1' : '0';
+    layer.hidden = false;
+    return [{ transform: 'translateZ(0) scale(1)' }, { transform: `translateZ(0) scale(${full})` }];
+  }
+
+  async function playCircle(frames, reverse) {
+    const finalFrame = frames[reverse ? 0 : 1];
+    if (document.hidden || !circle.animate) {
+      circle.style.transform = finalFrame.transform; tint.style.opacity = '0'; return;
+    }
+    const options = { ...MOTION, direction: reverse ? 'reverse' : 'normal' };
+    const transform = circle.animate(frames, options);
+    motionAnimations = [transform];
+    if (reverse) motionAnimations.push(tint.animate([{ opacity: 0 }, { opacity: 1 }], options));
+    // 以动画实际完成为准，不再与 CSS transition、不同的 setTimeout 相互竞争。
+    await Promise.all(motionAnimations.map(animation => animation.finished.catch(() => {})));
+  }
+
+  function clearMotion() {
+    layer.hidden = true; // 先隐藏覆盖层，再取消 fill，杜绝圆突然缩回再消失。
+    motionAnimations.forEach(animation => animation.cancel());
+    motionAnimations = [];
+    circle.removeAttribute('style'); tint.removeAttribute('style');
+  }
+
+  async function enterMode(mode) {
+    if (state.phase !== 'home' || !MODES[mode]) return;
+    state.generation++;
+    setPhase('entering'); clearAutoHide(); stopLoop(); stopAlarm();
+    configure(mode);
+    try {
+      const frames = prepareCircle(mode, false);
+      await playCircle(frames, false);
+      // 遮罩完整铺满后才切页；切页是即时的，不叠加整页淡入淡出。
+      showPage(mode);
+      await afterPaint();
+    } finally {
+      clearMotion(); showPage(mode); activateTimer();
+    }
+  }
+
+  async function goHome() {
+    if (isBusy() || !isTimer()) return;
+    const mode = state.mode;
+    const currentColor = getComputedStyle(timer).backgroundColor;
+    state.generation++;
+    stopLoop(); clearAutoHide(); stopAlarm(); setPhase('leaving');
+    try {
+      const frames = prepareCircle(mode, true, currentColor);
+      // 先用当前色完整盖住时钟，再在下层瞬间准备主页。
+      showPage('home');
+      await afterPaint();
+      await playCircle(frames, true);
+    } finally {
+      clearMotion();
+      state.mode = 'home'; state.startedAt = 0; state.hidden = false;
+      timer.classList.remove('idle');
+      showPage('home'); setPhase('home');
+    }
+  }
+
+  async function switchToRest() {
+    if (state.phase !== 'running' || state.mode !== 'focus') return;
+    state.generation++; clearAutoHide(); stopLoop(); stopAlarm(); setPhase('switching');
+    // 此时专注已达到蓝色终点。只淡换内容，不再蓝色圆扩散到蓝色背景。
+    const items = [content, hint];
+    const opacityAnimations = async (from, to) => {
+      if (document.hidden) return;
+      motionAnimations = items.map(el => el.animate([{ opacity: from }, { opacity: to }], { duration: 140, easing: 'ease-in-out', fill: 'both' }));
+      await Promise.all(motionAnimations.map(a => a.finished.catch(() => {})));
+    };
+    const cancelContentAnimations = () => { motionAnimations.forEach(a => a.cancel()); motionAnimations = []; };
+    try {
+      if (!state.hidden) await opacityAnimations(1, 0);
+      configure('rest');
+      cancelContentAnimations();
+      await opacityAnimations(0, 1);
+    } finally {
+      cancelContentAnimations(); activateTimer();
+    }
+  }
+
+  function performDoubleAction() {
+    if (state.phase !== 'running') return;
+    clearAutoHide(); clearSpace();
+    if (state.mode === 'focus' && elapsed() >= FOCUS_TARGET) void switchToRest();
+    else void goHome();
+  }
+
+  function finishRest() {
+    stopLoop(); clearAutoHide(); clearSpace();
+    setPhase('alarming'); setHidden(false);
+    renderTime('rest', 0); updateHint();
+    startAlarm();
+  }
+
+  /* ---------- 输入：一个路由，先判状态；隐藏态绝不执行结束动作 ---------- */
+  document.addEventListener('pointerdown', () => {
+    pointerPress = { generation: state.generation, blocked: isBusy(), hidden: state.hidden };
+    if (!isBusy()) { clearSpace(); clearAutoHide(); unlockAudio(); }
+  }, { capture: true, passive: true });
+
+  document.addEventListener('click', event => {
+    const press = pointerPress; pointerPress = null;
+    if (isBusy() || event.detail > 1 || (event.detail > 0 && press && (press.blocked || press.generation !== state.generation))) return;
+    clearSpace();
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (state.phase === 'home') {
+      if (target.closest('#startFocus, #homeStartHint')) { unlockAudio(); void enterMode('focus'); }
+      else if (target.closest('#startRest')) { unlockAudio(); void enterMode('rest'); }
+      return;
+    }
+    if (!timer.contains(target)) return;
+    if (state.phase === 'alarming') { void goHome(); return; }
+    if (state.phase !== 'running') return;
+    if (state.hidden || (event.detail > 0 && press?.hidden)) { setHidden(false, true); return; }
+    if (hint.contains(target)) { performDoubleAction(); return; }
+    setHidden(true, true);
+  });
+
+  window.addEventListener('keydown', event => {
+    if (event.code !== 'Space') {
+      if (event.key === 'Enter' && document.activeElement === hint && !state.hidden) {
+        event.preventDefault();
+        if (state.phase === 'alarming') void goHome(); else performDoubleAction();
+      }
+      return;
+    }
+    if (event.altKey || event.ctrlKey || event.metaKey || event.isComposing) return;
+    event.preventDefault(); // 连按事件也阻止默认行为，避免按钮原生点击/页面滚动。
+    if (event.repeat || isBusy()) return;
+    unlockAudio(); clearAutoHide();
+    if (state.phase === 'alarming') { clearSpace(); void goHome(); return; }
+    if (state.phase === 'home') { void enterMode('focus'); return; }
+    if (state.phase !== 'running') return;
+    const now = performance.now();
+    if (pendingSpace !== null && now - lastSpaceAt <= DOUBLE_SPACE_MS) {
+      clearSpace(); performDoubleAction(); return;
+    }
+    if (pendingSpace !== null) { clearSpace(); setHidden(!state.hidden, true); }
+    lastSpaceAt = now;
+    const generation = state.generation;
+    pendingSpace = setTimeout(() => {
+      pendingSpace = null;
+      if (state.phase === 'running' && state.generation === generation) setHidden(!state.hidden, true);
+    }, DOUBLE_SPACE_MS);
+  }, { passive: false });
+  window.addEventListener('keyup', event => { if (event.code === 'Space') event.preventDefault(); }, { passive: false });
+  window.addEventListener('blur', clearSpace); // 只清理未完成的单双击判断，不改变显隐。
+
+  /* ---------- 提示音：三声、间隔两秒，共六轮；单击/空格立即全部停止 ---------- */
+  let audio = null, alarmEpoch = 0, alarmFallback = null;
+  const soundNodes = new Set();
+  function unlockAudio() {
+    try {
+      const Audio = window.AudioContext || window.webkitAudioContext;
+      if (!audio && Audio) audio = new Audio();
+      if (audio?.state === 'suspended') void audio.resume().catch(() => {});
+    } catch (_) { /* 静音环境不阻断计时或返回主页。 */ }
+  }
+
+  function stopAlarm() {
+    alarmEpoch++;
+    clearTimeout(alarmFallback); alarmFallback = null;
+    for (const voice of soundNodes) {
+      try {
+        voice.gain.gain.cancelScheduledValues(audio.currentTime);
+        voice.gain.gain.setValueAtTime(0, audio.currentTime);
+        voice.oscillator.stop(); voice.oscillator.disconnect(); voice.gain.disconnect();
+      } catch (_) {}
+    }
+    soundNodes.clear();
+  }
+
+  function startAlarm() {
+    stopAlarm(); unlockAudio();
+    const epoch = alarmEpoch;
+    const finish = () => { if (epoch === alarmEpoch && state.phase === 'alarming') void goHome(); };
+    const rounds = 6, roundLength = 2.9;
+    const notes = [[523.25, 0, .23, .085], [659.25, .28, .23, .085], [783.99, .56, .34, .095]];
+    const endMs = ((rounds - 1) * roundLength + .92) * 1000;
+    if (audio) {
+      try {
+        const start = audio.currentTime;
+        for (let round = 0; round < rounds; round++) {
+          notes.forEach(([frequency, offset, duration, volume], noteIndex) => {
+            const oscillator = audio.createOscillator(), gain = audio.createGain();
+            const time = start + round * roundLength + offset;
+            oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(frequency, time);
+            gain.gain.setValueAtTime(.0001, time);
+            gain.gain.exponentialRampToValueAtTime(volume, time + .025);
+            gain.gain.exponentialRampToValueAtTime(.0001, time + duration);
+            oscillator.connect(gain); gain.connect(audio.destination);
+            const voice = { oscillator, gain }; soundNodes.add(voice);
+            oscillator.onended = () => {
+              soundNodes.delete(voice); oscillator.disconnect(); gain.disconnect();
+              if (round === rounds - 1 && noteIndex === notes.length - 1) finish();
+            };
+            oscillator.start(time); oscillator.stop(time + duration + .02);
+          });
+        }
+      } catch (_) { /* 仍保留无声自动返回。 */ }
+    }
+    // 无音频设备或 AudioContext 被浏览器暂停时也能正常结束，不滞留完成页。
+    alarmFallback = setTimeout(finish, endMs + 100);
+  }
+
+  function settleMotion() {
+    motionAnimations.forEach(animation => { try { animation.finish(); } catch (_) {} });
+  }
+  window.addEventListener('resize', () => { if (isBusy()) settleMotion(); });
+  document.addEventListener('visibilitychange', () => {
+    clearSpace();
+    if (document.hidden) { if (isBusy()) settleMotion(); }
+    else if (state.phase === 'running') runLoop();
+  });
+  window.addEventListener('pagehide', () => { stopAlarm(); clearSpace(); });
+
+  renderTime('focus', 0);
+  setPhase('home');
+})();
+</script>
+</body>
+</html>
