@@ -1000,7 +1000,7 @@
           height: `${size}px`,
           left: `${x - size / 2}px`,
           top: `${y - size / 2}px`,
-          backgroundColor: config.start,
+          backgroundColor: currentColor || config.start,
           transform: `translateZ(0) scale(${reverse ? fullScale : 1})`
         });
 
