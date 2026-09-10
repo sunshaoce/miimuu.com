@@ -100,13 +100,24 @@
       justify-content: center;
       user-select: none;
       box-shadow: 0 18px 54px rgba(21, 31, 48, .075);
-      transition: box-shadow 180ms ease;
+      filter: brightness(1) saturate(1);
+      transition:
+        box-shadow 180ms ease,
+        filter 180ms ease;
     }
 
-    /* 悬停不再改变圆的位置或大小，确保扩散和收缩使用完全相同的几何边界。 */
+    /*
+    悬停只改变光感、阴影和圆内文字，不移动或缩放圆本身。
+    这样既有“已选中”的反馈，又不会破坏圆形扩散/收缩的几何一致性。
+  */
     @media (hover: hover) {
       .choice:hover {
-        box-shadow: 0 24px 64px rgba(21, 31, 48, .10);
+        box-shadow: 0 24px 64px rgba(21, 31, 48, .11);
+        filter: brightness(1.018) saturate(1.025);
+      }
+
+      .choice:hover .choice-label {
+        transform: translateY(-2px) scale(1.018);
       }
     }
 
@@ -126,6 +137,9 @@
       line-height: 1.05;
       font-weight: 650;
       letter-spacing: .035em;
+      transform: translateY(0) scale(1);
+      transition: transform 180ms cubic-bezier(.2, .8, .2, 1);
+      will-change: transform;
     }
 
     .choice-label .main {
@@ -514,13 +528,13 @@
           <span class="choice-label"><span class="main">休息</span><span class="sub"><span>5</span><span
                 class="unit">分钟</span></span></span>
         </button>
-        </div>
-        <button type="button" class="hint home-hint" id="homeStartHint" aria-label="开始专注">
-          <span class="hint-line"><span>单击</span><span class="hint-key">空格键␣</span><span>开始。</span></span>
-        </button>
-        </main>
-        <section class="page timer-view hidden" id="timerView" aria-hidden="true" inert>
-          <div class="timer-wrap" id="timerContent">
+      </div>
+      <button type="button" class="hint home-hint" id="homeStartHint" aria-label="开始专注">
+        <span class="hint-line"><span>单击</span><span class="hint-key">空格键␣</span><span>开始。</span></span>
+      </button>
+      </main>
+      <section class="page timer-view hidden" id="timerView" aria-hidden="true" inert>
+        <div class="timer-wrap" id="timerContent">
         <div class="mode-label"><span id="modeName">专注</span><span class="mode-separator">-</span><span
             class="mode-duration"><span id="modeDurationValue">30+</span><span class="unit">分钟</span></span></div>
         <div class="compact-clock">
@@ -535,10 +549,10 @@
                 aria-hidden="true">秒</span>
             </div>
           </div>
-          </div>
-          </div>
-          <!-- 单一提示槽：隐藏态是普通文字；显示态才具有中断/休息/完成的操作语义。 -->
-          <p class="hint timer-hint" id="actionHint" role="button" tabindex="0">
+        </div>
+        </div>
+        <!-- 单一提示槽：隐藏态是普通文字；显示态才具有中断/休息/完成的操作语义。 -->
+        <p class="hint timer-hint" id="actionHint" role="button" tabindex="0">
         <span class="hint-line" id="actionHintLine"><span id="hintPress">双击</span><span class="hint-key">空格键␣</span><span
             id="hintVerb">中断。</span></span>
         </p>
@@ -548,8 +562,8 @@
         <div class="radial-tint" id="transitionTint"></div>
       </div>
     </div>
-    </div>
-    <script>
+  </div>
+  <script>
       (() => {
         'use strict';
 
