@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#eeeee5">
-  <meta name="description" content="我希望你能带来暴雨的讯息。不知道你会到哪里，不知道你的万千身影。">
+  <meta name="description" content="我期待着你能带来暴雨的气息">
   <title>风之诗</title>
   <!--
     A moving landscape with the original poem, and no interface.
@@ -67,9 +67,9 @@
   </svg>
   <main aria-label="风之诗">
     <article class="poem">
-      <p><span class="line">我希望你能带来暴雨的讯息</span><span class="line">我又躲藏在屋墙之中，避开你的侵扰</span></p>
-      <p><span class="line">不知道你会到哪里</span><span class="line">不知道你的万千身影</span></p>
-      <p><span class="line">你是你，我是我，</span><span class="line">我们有所交集，而又匆匆路过</span></p>
+      <p><span class="line">我期待着你能带来暴雨的气息</span><span class="line">却又躲藏在屋墙之中，忧烦你的侵扰</span></p>
+      <p><span class="line">你会到哪里</span><span class="line">你的万千身影</span></p>
+      <p><span class="line">你与你们、我</span><span class="line">猝然交集，彼此路过</span></p>
     </article>
   </main>
   <script>
@@ -94,6 +94,35 @@
   let paused = motionPreference.matches;
   let grasses = [], seeds = [], ribbons = [], gusts = [];
   let nextGust = 24;
+
+  // Seed heads keep their local shape while the whole head sways. Retain the
+  // individual strokes and their order so translucent overlaps stay identical.
+  function cacheGrassShape(grass) {
+    const alpha = .2 + grass.depth * .42;
+    grass.stroke = `hsla(${grass.hue}, 19%, ${grass.light}%, ${alpha})`;
+    grass.strokeWidth = .5 + grass.depth * .7;
+    if (!grass.head) return;
+    const length = (9 + grass.depth * 13) * grass.headSize;
+    grass.headStroke = `rgba(104, 116, 72, ${alpha * .74})`;
+    grass.seedStroke = `rgba(225, 222, 170, ${alpha * .85})`;
+    grass.hairStroke = `rgba(242, 237, 197, ${alpha * .55})`;
+    grass.seedWidth = 1.1 + grass.depth * .55;
+    grass.headStem = new Path2D();
+    grass.headStem.moveTo(0, 2); grass.headStem.lineTo(0, -length);
+    grass.headDetails = [];
+    for (let j = 0; j < 7; j++) {
+      const f = j / 7, spread = Math.sin(f * Math.PI) * length * .22;
+      const y = -f * length;
+      const seedPath = new Path2D();
+      seedPath.moveTo(0, y + 2); seedPath.lineTo(-spread, y - length * .18);
+      seedPath.moveTo(0, y + 1); seedPath.lineTo(spread, y - length * .2);
+      const hairPath = new Path2D();
+      hairPath.moveTo(-spread, y - length * .18); hairPath.lineTo(-spread * 1.4, y - length * .36);
+      hairPath.moveTo(spread, y - length * .2); hairPath.lineTo(spread * 1.3, y - length * .38);
+      grass.headDetails.push({ seedPath, hairPath });
+    }
+  }
+
   // Cache the still landscape. Only wind and plants are redrawn every frame.
   function paintBackdrop() {
     bg.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -154,6 +183,7 @@
         headSize: range(.7, 1.25), leaf: random() < .6 });
     }
     grasses.sort((a, b) => a.depth - b.depth);
+    grasses.forEach(cacheGrassShape);
     for (let i = 0; i < (mobile ? 17 : 29); i++) {
       seeds.push({ x: range(-40, width), y: range(height * .34, height * .9), phase: range(0, TAU),
         size: range(.65, 1.4), depth: range(.35, 1), spin: range(-.8, .8), kind: i % 4 });
@@ -163,7 +193,9 @@
     for (let i = 0; i < (mobile ? 9 : 14); i++) {
       ribbons.push({ phase: range(0, 1), duration: range(11, 19), lane: i / (mobile ? 9 : 14),
         length: range(.24, .42), amplitude: range(.014, .032), phaseY: range(0, TAU),
-        curl: i % 3 === 0, strands: i % 3 === 0 ? 5 : 3, opacity: range(.46, .76) });
+        curl: i % 3 === 0, strands: i % 3 === 0 ? 5 : 3, opacity: range(.46, .76),
+        samples: Array.from({ length: 66 }, () => ({ x: 0, y: 0, spread: 0, wave: 0, gustOffsets: [] }))
+      });
     }
     paintBackdrop();
   }
@@ -189,7 +221,7 @@
     return value;
   }
 
-  function flowPoint(u, ribbon, strand) {
+  function sampleFlow(u, ribbon, point) {
     const curlEnvelope = Math.exp(-Math.pow((u - .76) / .18, 2));
     const curlPhase = (u - .6) * 26 - time * .22 + ribbon.phaseY;
     const curl = ribbon.curl ? 1 : .12;
@@ -198,16 +230,25 @@
     const base = mobile ? .75 + ribbon.lane * .12 : .64 + ribbon.lane * .19;
     const lift = mobile ? .13 : .17;
     const aspect = Math.min(1, width / height);
-    let y = height * (base - arch * lift
+    point.y = height * (base - arch * lift
       + aspect * (Math.sin(u * 8.5 + ribbon.phaseY + time * .14) * ribbon.amplitude
       + Math.sin(u * 17 - time * .21 + ribbon.phaseY) * .009
       + Math.cos(curlPhase) * curlEnvelope * .038 * curl));
-    y += strand * (1.4 + arch * 2.8) * Math.sin(u * 3 + ribbon.phaseY + time * .16);
-    for (const gust of gusts) {
+    point.x = x;
+    point.spread = 1.4 + arch * 2.8;
+    point.wave = Math.sin(u * 3 + ribbon.phaseY + time * .16);
+    point.gustOffsets.length = gusts.length;
+    for (let i = 0; i < gusts.length; i++) {
+      const gust = gusts[i];
       const falloff = Math.exp(-Math.pow((x - gust.x) / (width * .2 + 70), 2));
-      y -= falloff * gust.power * 15 * Math.sin(u * 9 + ribbon.phaseY);
+      point.gustOffsets[i] = falloff * gust.power * 15 * Math.sin(u * 9 + ribbon.phaseY);
     }
-    return { x, y };
+  }
+
+  function strandY(point, strand) {
+    let y = point.y + strand * point.spread * point.wave;
+    for (const offset of point.gustOffsets) y -= offset;
+    return y;
   }
 
   function drawWind() {
@@ -217,25 +258,31 @@
       const head = progress * (1.5 + ribbon.length) - .16;
       const tail = head - ribbon.length;
       const life = Math.pow(Math.sin(progress * Math.PI), .65);
+      const points = ribbon.samples;
+      sampleFlow(tail, ribbon, points[0]);
+      for (let step = 1; step <= 64; step++) {
+        sampleFlow(mix(tail, head, step / 64), ribbon, points[step]);
+      }
+      sampleFlow(head, ribbon, points[65]);
+      const center = (tail + head) / 2;
+      const textFade = mobile ? .83 : clamp((center - .25) * 2.1, .12, 1);
       for (let strand = 0; strand < ribbon.strands; strand++) {
-        const p = flowPoint(tail, ribbon, strand);
-        const end = flowPoint(head, ribbon, strand);
-        const center = (tail + head) / 2;
-        const textFade = mobile ? .83 : clamp((center - .25) * 2.1, .12, 1);
+        const p = points[0], end = points[65];
+        const startY = strandY(p, strand), endY = strandY(end, strand);
         const opacity = ribbon.opacity * life * textFade * (strand === 0 ? 1 : .5);
         const color = strand === 1 ? '109, 139, 116' : '255, 255, 241';
         const alpha = strand === 1 ? opacity * .62 : opacity;
         // Continuous transparency avoids visible joins in the dissolving tail.
-        const fade = ctx.createLinearGradient(p.x, p.y, end.x, end.y);
+        const fade = ctx.createLinearGradient(p.x, startY, end.x, endY);
         fade.addColorStop(0, `rgba(${color}, 0)`);
         fade.addColorStop(.2, `rgba(${color}, ${alpha * .3})`);
         fade.addColorStop(.62, `rgba(${color}, ${alpha})`);
         fade.addColorStop(.85, `rgba(${color}, ${alpha * .6})`);
         fade.addColorStop(1, `rgba(${color}, 0)`);
-        ctx.beginPath(); ctx.moveTo(p.x, p.y);
+        ctx.beginPath(); ctx.moveTo(p.x, startY);
         for (let step = 1; step <= 64; step++) {
-          const q = flowPoint(mix(tail, head, step / 64), ribbon, strand);
-          ctx.lineTo(q.x, q.y);
+          const q = points[step];
+          ctx.lineTo(q.x, strandY(q, strand));
         }
         ctx.strokeStyle = fade;
         ctx.lineWidth = (strand === 0 ? 1.4 : .65) * (mobile ? .85 : 1);
@@ -255,9 +302,8 @@
       const tipX = grass.x + length * Math.sin(bend);
       const tipY = grass.y - length * Math.cos(bend * .73);
       const cx = grass.x + length * bend * .2, cy = grass.y - length * .6;
-      const alpha = .2 + grass.depth * .42;
-      ctx.strokeStyle = `hsla(${grass.hue}, 19%, ${grass.light}%, ${alpha})`;
-      ctx.lineWidth = .5 + grass.depth * .7;
+      ctx.strokeStyle = grass.stroke;
+      ctx.lineWidth = grass.strokeWidth;
       ctx.beginPath(); ctx.moveTo(grass.x, grass.y);
       ctx.quadraticCurveTo(cx, cy, tipX, tipY); ctx.stroke();
       if (grass.leaf) {
@@ -269,21 +315,14 @@
       }
       if (!grass.head) continue;
       const angle = Math.atan2(tipY - cy, tipX - cx) + Math.PI / 2;
-      const headLength = (9 + grass.depth * 13) * grass.headSize;
       ctx.save(); ctx.translate(tipX, tipY); ctx.rotate(angle);
-      ctx.strokeStyle = `rgba(104, 116, 72, ${alpha * .74})`;
-      ctx.lineWidth = .55; ctx.beginPath(); ctx.moveTo(0, 2); ctx.lineTo(0, -headLength); ctx.stroke();
-      for (let j = 0; j < 7; j++) {
-        const f = j / 7, spread = Math.sin(f * Math.PI) * headLength * .22;
-        const y = -f * headLength;
-        ctx.strokeStyle = `rgba(225, 222, 170, ${alpha * .85})`;
-        ctx.lineWidth = 1.1 + grass.depth * .55;
-        ctx.beginPath(); ctx.moveTo(0, y + 2); ctx.lineTo(-spread, y - headLength * .18);
-        ctx.moveTo(0, y + 1); ctx.lineTo(spread, y - headLength * .2); ctx.stroke();
-        ctx.strokeStyle = `rgba(242, 237, 197, ${alpha * .55})`;
-        ctx.lineWidth = .45;
-        ctx.beginPath(); ctx.moveTo(-spread, y - headLength * .18); ctx.lineTo(-spread * 1.4, y - headLength * .36);
-        ctx.moveTo(spread, y - headLength * .2); ctx.lineTo(spread * 1.3, y - headLength * .38); ctx.stroke();
+      ctx.strokeStyle = grass.headStroke;
+      ctx.lineWidth = .55; ctx.stroke(grass.headStem);
+      for (const detail of grass.headDetails) {
+        ctx.strokeStyle = grass.seedStroke;
+        ctx.lineWidth = grass.seedWidth; ctx.stroke(detail.seedPath);
+        ctx.strokeStyle = grass.hairStroke;
+        ctx.lineWidth = .45; ctx.stroke(detail.hairPath);
       }
       ctx.restore();
     }
