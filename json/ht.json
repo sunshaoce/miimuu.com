@@ -2,6 +2,19 @@
   "version": 3,
   "rules": [
     {
+      "domain_suffix": [
+        "zhangle.com",
+        "htsc.com",
+        "htsc.com.cn",
+        "htzq.com.cn",
+        "zhangleglobal.com",
+        "ihtfin.com",
+        "cmpassport.com",
+        "finet.com.cn",
+        "roadshowing.com"
+      ]
+    },
+    {
       "ip_cidr": [
         "180.101.48.0/24",
         "180.101.228.0/24",
@@ -24,21 +37,7 @@
         "124.70.163.0/24",
         "124.70.143.0/24",
         "113.44.79.0/24"
-      ],
-      "domain": [],
-      "domain_keyword": [],
-      "domain_suffix": [
-        "zhangle.com",
-        "htsc.com",
-        "htsc.com.cn",
-        "htzq.com.cn",
-        "zhangleglobal.com",
-        "ihtfin.com",
-        "cmpassport.com",
-        "finet.com.cn",
-        "roadshowing.com"
-      ],
-      "domain_regex": []
+      ]
     }
   ]
 }
