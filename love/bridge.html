@@ -1,0 +1,1689 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="paper" data-size="medium">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2e9" id="theme-color">
+  <meta name="description" content="《过桥费》：桥头住着一头收故事的兽。有一天，它想去看看海。十九章完整故事，留一盏灯，慢慢读。">
+  <title>过桥费 · 留一盏灯，慢慢读</title>
+  <script>
+  (() => {
+    document.documentElement.classList.add('js');
+    try {
+      const p = JSON.parse(localStorage.getItem('bridge-book.preferences.v1') || '{}');
+      if (['paper', 'night'].includes(p.theme)) document.documentElement.dataset.theme = p.theme;
+      if (['small', 'medium', 'large'].includes(p.size)) document.documentElement.dataset.size = p.size;
+    } catch (_) {}
+  })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f2e9; --paper-raised: #faf8f1; --ink: #283e34;
+      --body-ink: #3d443a; --muted: #66705f; --line: #d8dacd;
+      --soft: #e9ecdf; --accent: #a9573e; --button: #304b3d;
+      --on-button: #f7f5eb; --shade: rgb(35 49 39 / 22%); --header: rgb(245 242 233 / 95%);
+      --serif: 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', 'STSong', 'SimSun', serif;
+      --sans: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --mono: 'SFMono-Regular', Consolas, monospace;
+      --reading-size: 21px; --reader-width: 690px;
+    }
+    :root[data-theme="night"] {
+      color-scheme: dark;
+      --paper: #192920; --paper-raised: #203329; --ink: #e2e7d6;
+      --body-ink: #d3d9c8; --muted: #a1b09b; --line: #3e5141;
+      --soft: #2c4030; --accent: #e1a081; --button: #c7d3b9;
+      --on-button: #24392b; --shade: rgb(0 0 0 / 45%); --header: rgb(25 41 32 / 96%);
+    }
+    :root[data-size="small"] { --reading-size: 18px; }
+    :root[data-size="large"] { --reading-size: 24px; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html.dialog-open { overflow: hidden; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    ::selection { background: #d4c293; color: #233b2d; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button, .button { -webkit-tap-highlight-color: transparent; }
+    button { color: inherit; cursor: pointer; }
+    button:disabled { opacity: .3; cursor: default; }
+    a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+    [hidden] { display: none !important; }
+    .js-only { display: none; }
+    .js .js-only { display: inline-flex; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .skip-link { position: fixed; z-index: 100; top: 8px; left: 12px; padding: 12px 20px; background: var(--paper-raised); border: 1px solid var(--ink); transform: translateY(-160%); }
+    .skip-link:focus { transform: translateY(0); }
+    .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .topbar { position: sticky; top: 0; z-index: 15; height: 78px; background: var(--header); border-bottom: 1px solid var(--line); }
+    .topbar-inner { height: 100%; max-width: 1440px; margin: auto; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .brand .icon { width: 34px; height: 26px; }
+    .brand-name { font-family: var(--serif); font-size: 23px; font-weight: 600; letter-spacing: .14em; }
+    .topbar-note { font-size: 11px; color: var(--muted); letter-spacing: .22em; }
+    .topbar-actions { display: flex; align-items: center; gap: 12px; }
+    .text-control { border: 0; background: none; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 8px; min-height: 44px; font-size: 13px; letter-spacing: .08em; }
+    .text-control:hover { color: var(--accent); }
+    .settings-trigger { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; align-items: center; justify-content: center; padding: 0; font-family: var(--serif); font-size: 22px; background: none; }
+    .settings-trigger:hover { background: var(--soft); }
+    .top-progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; transform: scaleX(0); transform-origin: left; background: var(--accent); pointer-events: none; }
+    .cover { max-width: 1320px; padding: 64px 48px 44px; margin: auto; scroll-margin-top: 78px; }
+    .cover-grid { display: grid; grid-template-columns: .88fr 1.12fr; align-items: center; gap: 30px; min-height: 575px; }
+    .cover-copy { padding: 0 0 24px 22px; }
+    .eyebrow { display: flex; align-items: center; gap: 14px; color: var(--muted); font: 10px var(--mono); letter-spacing: .2em; }
+    .eyebrow::before { content: ''; height: 1px; width: 28px; background: var(--accent); }
+    h1 { font-family: var(--serif); font-size: clamp(72px, 8.5vw, 112px); font-weight: 600; letter-spacing: .06em; margin: 29px 0 23px; line-height: 1.17; white-space: nowrap; }
+    .cover-invitation { font-family: var(--serif); font-size: 25px; line-height: 1.8; letter-spacing: .08em; margin: 0; }
+    .cover-description { color: var(--muted); font-size: 13px; line-height: 2.2; margin: 23px 0 27px; }
+    .cover-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 17px; }
+    .button { border: 1px solid var(--button); background: var(--button); color: var(--on-button); padding: 15px 22px; min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 28px; font-size: 13px; letter-spacing: .1em; border-radius: 2px; transition: background .2s, transform .2s; }
+    .button:hover { transform: translateY(-2px); }
+    .resume-button { font-size: 12px; border: 0; border-bottom: 1px solid var(--line); background: none; padding: 12px 0; color: var(--muted); }
+    .resume-button:hover { color: var(--ink); }
+    .cover-meta { display: flex; align-items: center; gap: 13px; color: var(--muted); font-size: 10px; letter-spacing: .12em; margin-top: 26px; }
+    .cover-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--accent); }
+    .cover-art { margin: 0; position: relative; }
+    .landscape { display: block; width: 100%; height: auto; max-height: 550px; overflow: visible; }
+    .cover-caption { color: var(--muted); display: flex; justify-content: space-between; font-size: 10px; letter-spacing: .1em; padding: 5px 28px 0; }
+    .cover-caption span:last-child { font-family: var(--mono); font-size: 9px; letter-spacing: .15em; }
+    .cover-foot { margin-top: 45px; padding: 25px 22px 8px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .cover-foot p { margin: 0; font-family: var(--serif); font-size: 16px; letter-spacing: .1em; }
+    .cover-foot span { color: var(--muted); font-size: 10px; letter-spacing: .12em; }
+    .scroll-note { display: inline-flex; align-items: center; gap: 14px; }
+    .scroll-note .icon { width: 16px; height: 20px; }
+    .reader-layout { max-width: 1200px; margin: auto; padding: 88px 48px 0; display: grid; grid-template-columns: 170px minmax(0, var(--reader-width)); gap: 70px; justify-content: center; align-items: start; }
+    html:not(.js) .reader-layout { display: block; max-width: 790px; }
+    html:not(.js) .reading-rail { display: none; }
+    .reading-rail { position: sticky; top: 128px; padding-top: 24px; }
+    .rail-label { color: var(--muted); font-size: 10px; letter-spacing: .17em; margin: 0 0 19px; }
+    .rail-count { font-family: var(--serif); font-size: 56px; font-weight: 400; line-height: 1; }
+    .rail-count span { font: 12px var(--mono); color: var(--muted); letter-spacing: .08em; margin-left: 6px; }
+    .rail-title { font-family: var(--serif); font-size: 16px; line-height: 1.75; margin: 15px 0 24px; min-height: 56px; }
+    .rail-navigation { display: flex; gap: 10px; }
+    .round-control { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; background: none; border: 1px solid var(--line); border-radius: 50%; }
+    .round-control:not(:disabled):hover { background: var(--soft); }
+    .rail-rule { width: 110px; height: 1px; background: var(--line); margin: 30px 0 17px; }
+    .rail-progress { color: var(--muted); font-size: 10px; letter-spacing: .04em; }
+    .rail-note { color: var(--muted); font-family: var(--serif); font-size: 12px; line-height: 2; margin-top: 30px; }
+    .chapters { min-width: 0; }
+    .chapter { scroll-margin-top: 112px; margin-bottom: 104px; }
+    .chapter-heading { margin-bottom: 47px; }
+    .chapter-label { display: flex; align-items: center; justify-content: space-between; font: 10px var(--mono); letter-spacing: .15em; color: var(--muted); border-top: 1px solid var(--line); padding-top: 24px; }
+    .chapter-label .chapter-ordinal { font-family: var(--sans); font-size: 11px; letter-spacing: .2em; }
+    .chapter h2 { font-family: var(--serif); font-size: 37px; font-weight: 600; letter-spacing: .08em; line-height: 1.5; margin: 19px 0 0; text-wrap: balance; }
+    .chapter-text { font-family: var(--serif); font-size: var(--reading-size); color: var(--body-ink); line-height: 2.05; letter-spacing: .035em; overflow-wrap: break-word; }
+    .chapter-text p { margin: 0 0 1.05em; scroll-margin-top: 110px; }
+    .chapter-text p:last-child { margin-bottom: 0; }
+    .chapter-text .story-end { font-size: 14px; letter-spacing: .3em; text-align: center; color: var(--muted); margin-top: 48px; }
+    .chapter-bottom { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); margin-top: 55px; }
+    .chapter-bottom::before, .chapter-bottom::after { content: ''; width: 25px; height: 1px; background: var(--line); }
+    .chapter-bottom span { font-size: 9px; }
+    .afterword { max-width: 940px; margin: 0 auto 0; padding: 75px 32px 100px; text-align: center; border-top: 1px solid var(--line); }
+    .end-lamp { width: 55px; height: 80px; color: var(--accent); margin-bottom: 15px; }
+    .afterword h2 { font-family: var(--serif); font-size: 28px; line-height: 1.8; font-weight: 400; letter-spacing: .1em; margin: 0 0 12px; }
+    .afterword p { font-size: 12px; line-height: 2; color: var(--muted); letter-spacing: .08em; }
+    .end-actions { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 30px; }
+    .end-link { font-size: 12px; border: 0; background: none; padding: 12px 0; border-bottom: 1px solid var(--line); display: inline-flex; gap: 12px; align-items: center; }
+    .end-link:hover { color: var(--accent); border-color: var(--accent); }
+    .footer { display: flex; justify-content: space-between; gap: 20px; max-width: 1320px; margin: auto; padding: 27px 48px 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; letter-spacing: .12em; }
+    .mobile-dock { position: fixed; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 12; display: none; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 40px; padding: 6px 8px; background: var(--header); box-shadow: 0 5px 25px var(--shade); }
+    .dock-title { border: 0; background: none; min-width: 150px; max-width: 220px; min-height: 40px; font-size: 12px; padding: 0 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .mobile-dock .round-control { border: 0; }
+    dialog { background: var(--paper); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 20px 80px var(--shade); padding: 0; }
+    dialog::backdrop { background: rgb(20 32 25 / 35%); backdrop-filter: blur(3px); }
+    dialog[open] { animation: arrive .2s ease-out; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .dialog-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+    .dialog-kicker { font: 9px var(--mono); letter-spacing: .15em; color: var(--muted); margin: 2px 0 14px; }
+    .dialog-top h2 { font-family: var(--serif); font-weight: 500; font-size: 30px; letter-spacing: .08em; margin: 0; }
+    .close-dialog { border: 1px solid var(--line); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; }
+    .close-dialog:hover { background: var(--soft); }
+    .toc-dialog { margin: 0 0 0 auto; height: 100%; height: 100dvh; max-height: none; width: min(470px, 100%); max-width: 100%; border-width: 0 0 0 1px; }
+    .toc-inner { display: flex; flex-direction: column; height: 100%; padding: 34px 32px 22px; }
+    .toc-intro { color: var(--muted); font-size: 12px; line-height: 1.8; margin: 20px 0 25px; }
+    .toc-list { overflow: auto; overscroll-behavior: contain; padding: 0 4px 0 0; margin: 0; list-style: none; }
+    .toc-entry { display: grid; grid-template-columns: 31px 1fr 18px; align-items: center; gap: 15px; min-height: 51px; padding: 9px 12px; border-bottom: 1px solid var(--line); border-left: 2px solid transparent; }
+    .toc-entry:hover { background: var(--soft); }
+    .toc-entry[aria-current="location"] { background: var(--soft); border-left-color: var(--accent); }
+    .toc-number { font: 10px var(--mono); color: var(--muted); }
+    .toc-title { font-family: var(--serif); font-size: 17px; }
+    .toc-entry .icon { opacity: 0; width: 15px; }
+    .toc-entry:hover .icon, .toc-entry[aria-current="location"] .icon { opacity: 1; }
+    .toc-footer { padding: 20px 12px 0; font-size: 10px; color: var(--muted); letter-spacing: .1em; }
+    .settings-dialog { width: min(410px, calc(100% - 32px)); border-radius: 4px; padding: 30px; }
+    .setting-group { border: 0; padding: 0; margin: 30px 0 0; }
+    .setting-group legend { font-size: 12px; margin-bottom: 14px; color: var(--muted); }
+    .choice-row { display: grid; grid-auto-columns: 1fr; grid-auto-flow: column; gap: 10px; }
+    .choice { border: 1px solid var(--line); background: none; min-height: 47px; padding: 10px 8px; border-radius: 3px; font-size: 13px; display: inline-flex; gap: 8px; align-items: center; justify-content: center; }
+    .choice[aria-pressed="true"] { border-color: var(--ink); background: var(--soft); box-shadow: inset 0 0 0 1px var(--ink); }
+    .choice:hover { border-color: var(--ink); }
+    .swatch { width: 14px; height: 14px; display: inline-block; border-radius: 50%; border: 1px solid #818977; }
+    .swatch-paper { background: #f5f2e9; }
+    .swatch-night { background: #233b2d; }
+    .settings-note { color: var(--muted); font-family: var(--serif); font-size: 13px; line-height: 1.8; margin: 26px 0 0; }
+    .nojs-index { margin: 40px auto; max-width: 690px; padding: 20px; border: 1px solid var(--line); }
+    .nojs-index ol { line-height: 2; padding-left: 24px; }
+    .status { position: fixed; z-index: 40; bottom: 85px; left: 50%; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 3px; padding: 12px 20px; background: var(--paper-raised); font-size: 12px; box-shadow: 0 5px 24px var(--shade); white-space: nowrap; }
+    @media (min-width: 1450px) { .cover { padding-top: 86px; } .cover-grid { min-height: 600px; } }
+    @media (max-width: 1100px) {
+      .cover { padding: 44px 32px 32px; }
+      .cover-grid { min-height: 520px; gap: 16px; }
+      .cover-copy { padding-left: 8px; }
+      .cover-invitation { font-size: 22px; }
+      .topbar-inner { padding: 0 32px; }
+      .reader-layout { display: block; max-width: 790px; padding: 80px 40px 0; }
+      .reading-rail { display: none; }
+      .mobile-dock:not([hidden]) { display: flex; }
+    }
+    @media (max-width: 720px) {
+      .topbar { height: 66px; }
+      .topbar-inner { padding: 0 20px; gap: 10px; }
+      .brand { gap: 8px; }
+      .brand-name { font-size: 20px; }
+      .brand .icon { width: 28px; }
+      .topbar-note { display: none; }
+      .topbar-actions { gap: 8px; }
+      .text-control { font-size: 12px; padding: 10px 5px; }
+      .settings-trigger { width: 38px; height: 38px; font-size: 20px; }
+      .cover { padding: 39px 24px 24px; scroll-margin-top: 66px; }
+      .cover-grid { display: flex; flex-direction: column; gap: 24px; }
+      .cover-copy { align-self: stretch; padding: 0 4px; }
+      .eyebrow { font-size: 9px; letter-spacing: .17em; }
+      h1 { font-size: clamp(64px, 19vw, 98px); margin: 24px 0 18px; letter-spacing: .09em; }
+      .cover-invitation { font-size: 21px; }
+      .cover-description { font-size: 12px; margin: 18px 0 22px; line-height: 2; }
+      .cover-actions { gap: 12px; }
+      .button { padding: 13px 18px; min-height: 48px; font-size: 12px; gap: 22px; }
+      .cover-meta { margin-top: 19px; font-size: 9px; gap: 12px; }
+      .cover-art { width: 100%; max-width: 460px; margin-top: 7px; }
+      .cover-caption { padding: 0 10px; font-size: 9px; }
+      .cover-caption span:last-child { font-size: 8px; }
+      .cover-foot { padding: 22px 4px 0; margin-top: 31px; }
+      .cover-foot p { font-size: 14px; letter-spacing: .05em; }
+      .cover-foot span { font-size: 9px; }
+      .scroll-note { gap: 7px; }
+      .reader-layout { padding: 69px 25px 0; }
+      .chapter { margin-bottom: 78px; scroll-margin-top: 94px; }
+      .chapter-heading { margin-bottom: 32px; }
+      .chapter h2 { font-size: 29px; letter-spacing: .04em; margin-top: 18px; }
+      .chapter-label { font-size: 9px; padding-top: 20px; }
+      .chapter-text { font-size: calc(var(--reading-size) - 1px); line-height: 2; letter-spacing: .015em; }
+      .chapter-text p { margin-bottom: 1em; scroll-margin-top: 94px; }
+      .chapter-bottom { margin-top: 45px; }
+      .afterword { padding: 58px 25px 70px; margin: 0 25px; }
+      .afterword h2 { font-size: 23px; letter-spacing: .04em; }
+      .afterword p { font-size: 11px; }
+      .end-actions { gap: 20px; }
+      .end-link { font-size: 11px; }
+      .footer { padding: 24px 25px 29px; font-size: 9px; letter-spacing: .05em; }
+      .toc-inner { padding: 27px 22px 20px; }
+      .toc-title { font-size: 17px; }
+      .toc-entry { padding-left: 7px; gap: 12px; }
+      .settings-dialog { padding: 26px; }
+      .dialog-top h2 { font-size: 27px; }
+    }
+    @media (max-width: 350px) {
+      .topbar-inner { padding: 0 14px; }
+      .cover { padding-left: 20px; padding-right: 20px; }
+      .cover-foot { align-items: flex-start; }
+      .cover-foot .scroll-note span { display: none; }
+      .reader-layout { padding-left: 20px; padding-right: 20px; }
+      .dock-title { min-width: 135px; max-width: 160px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    @media print {
+      :root, :root[data-theme], :root[data-size] { color-scheme: light; --paper: white; --ink: #111; --body-ink: #111; --muted: #555; --line: #ddd; --reading-size: 12pt; }
+      body { background: white; color: black; }
+      .topbar, .reading-rail, .mobile-dock, dialog, .afterword, .footer, .cover-art, .cover-actions, .cover-foot, .cover-meta, .cover-description, .skip-link, .status { display: none !important; }
+      .cover { padding: 30px 0 50px; }
+      .cover-grid { display: block; min-height: 0; }
+      .cover-copy { padding: 0; }
+      .eyebrow { display: none; }
+      h1 { font-size: 46pt; }
+      .cover-invitation { font-size: 16pt; }
+      .reader-layout { display: block; padding: 0; max-width: none; }
+      .chapter { margin-bottom: 0; break-before: page; }
+      .chapter h2 { font-size: 24pt; }
+      .chapter-heading { margin-bottom: 25px; break-after: avoid; }
+      .chapter-text { font-size: 12pt; line-height: 1.8; }
+      .chapter-text p { orphans: 2; widows: 2; }
+      .chapter-bottom { margin: 25px 0; }
+      @page { margin: 22mm 20mm; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#chapter-01" class="skip-link">直接开始阅读</a>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs>
+    <symbol id="i-bridge" viewBox="0 0 36 28"><path d="M2 22h32M5 22V12m26 10V12M5 14Q18 1 31 14M5 18Q18 5 31 18M11 10v12m7-15v15m7-12v12M2 12h4m24 0h4"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M20 12H5m6-6-6 6 6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v17m-6-6 6 6 6-6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  </defs></svg>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#cover" aria-label="过桥费，回到封面"><svg class="icon" aria-hidden="true"><use href="#i-bridge"/></svg><span class="brand-name">过桥费</span></a>
+      <span class="topbar-note">留一盏灯，慢慢读</span>
+      <nav class="topbar-actions" aria-label="阅读工具">
+        <button class="text-control js-only" data-open="contents" aria-haspopup="dialog" aria-controls="contents"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>目录</button>
+        <button class="settings-trigger js-only" data-open="reading-settings" aria-label="阅读设置" aria-haspopup="dialog" aria-controls="reading-settings">字</button>
+        <noscript><a class="text-control" href="#plain-contents">目录</a></noscript>
+      </nav>
+    </div>
+    <div class="top-progress" id="top-progress" aria-hidden="true"></div>
+  </header>
+  <main>
+    <section class="cover" id="cover" aria-labelledby="book-title">
+      <div class="cover-grid">
+        <div class="cover-copy">
+          <div class="eyebrow">THE BRIDGE · A STORY</div>
+          <h1 id="book-title">过桥费</h1>
+          <p class="cover-invitation">我想听故事，<br>也可以讲给你听。</p>
+          <p class="cover-description">桥下的水很浅。<br>但大家还是走桥，因为桥上住着一头兽。</p>
+          <div class="cover-actions">
+            <a class="button" href="#chapter-01">从第一页开始<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <button class="resume-button" id="resume-reading" hidden>接着上次读</button>
+          </div>
+          <div class="cover-meta"><span>十九章</span><span class="dot" aria-hidden="true"></span><span>约 1.7 万字</span><span class="dot" aria-hidden="true"></span><span>一个完整的故事</span></div>
+        </div>
+        <figure class="cover-art">
+          <svg class="landscape" viewBox="0 0 640 580" role="img" aria-labelledby="landscape-title landscape-description">
+            <title id="landscape-title">桥头的一盏灯</title>
+            <desc id="landscape-description">暮色里的小河与木桥，一头有弯角的兽坐在桥上。桥头的小屋亮着灯，月亮升在远处的山上。</desc>
+            <defs>
+              <clipPath id="scene-window"><path d="M54 310V276C54 125 163 35 320 35s266 90 266 241v254H54Z"/></clipPath>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#253f3b"/><stop offset="1" stop-color="#577363"/></linearGradient>
+              <linearGradient id="river" x1="0" y1="0" x2=".25" y2="1"><stop stop-color="#9aa990"/><stop offset="1" stop-color="#c9cfb4"/></linearGradient>
+              <radialGradient id="lamp-glow"><stop stop-color="#f2d79b" stop-opacity=".55"/><stop offset="1" stop-color="#e7c57d" stop-opacity="0"/></radialGradient>
+              <pattern id="fine-grain" width="11" height="13" patternUnits="userSpaceOnUse"><circle cx="2" cy="3" r=".55" fill="#e6e4c7" opacity=".13"/><circle cx="8" cy="10" r=".45" fill="#172e29" opacity=".1"/></pattern>
+            </defs>
+            <path d="M40 298V274C40 118 155 21 320 21s280 97 280 253v270H40Z" fill="none" stroke="currentColor" stroke-opacity=".17" stroke-width="1"/>
+            <g clip-path="url(#scene-window)">
+              <path d="M40 25h560v530H40Z" fill="url(#sky)"/>
+              <circle cx="435" cy="140" r="39" fill="#e5dfb8"/>
+              <circle cx="422" cy="129" r="3" fill="#d4d2ad" opacity=".7"/>
+              <circle cx="446" cy="154" r="5" fill="#d4d2ad" opacity=".4"/>
+              <g fill="#e6e5c7" opacity=".7"><circle cx="207" cy="107" r="1.3"/><circle cx="329" cy="78" r="1.2"/><circle cx="360" cy="147" r="1.1"/><circle cx="150" cy="167" r="1"/><circle cx="513" cy="216" r="1.5"/><circle cx="283" cy="156" r="1"/></g>
+              <path d="M247 107h6m-3-3v6M497 114h5m-2.5-2.5v5" stroke="#d4dbc5" stroke-width="1" opacity=".65"/>
+              <path d="M30 271Q115 162 206 220T369 226T615 229V394H30Z" fill="#66806a"/>
+              <path d="M26 305Q124 226 225 258T386 257T610 282V450H26Z" fill="#809179"/>
+              <path d="M337 272C307 300 349 318 322 341S218 381 250 423s151 49 181 131H184c-11-76-70-96-50-137s113-69 141-94 6-41 62-51" fill="url(#river)"/>
+              <path d="M36 329q73-62 150-35t118 40q-43 22-97 40T80 443H29Z" fill="#405b45"/>
+              <path d="M383 324q82-35 229-24v251H420q-22-63-90-100t-2-87Z" fill="#465e47"/>
+              <path d="M56 419q74-39 124-8t92 44q-47 28-36 87H40Z" fill="#344e3c"/>
+              <path d="M425 406q98-32 193 5v144H444q-2-35-39-59t20-90" fill="#354f3d"/>
+              <g fill="#243f33">
+                <path d="M65 344v-91l-38 19 38-62-28 10 28-49-20 5 20-41 19 41-18-5 30 49-28-10 38 62-35-19v91Z"/>
+                <path d="M113 330V205l-32 17 32-57-22 8 22-48-16 4 16-38 18 38-15-4 25 48-23-8 34 57-34-17v125Z"/>
+                <path d="M154 339v-85l-24 13 24-45-18 6 18-35 15 35-13-6 25 45-24-13v85Z"/>
+                <path d="M567 347V219l-32 16 32-59-21 7 21-44 18 44-15-7 32 59-30-16v128Z"/>
+              </g>
+              <g stroke="#8a9b78" stroke-width="1.2" opacity=".38" fill="none"><path d="M112 314V158m0 78-15-12m15-9 16-14M64 323v-95m0 32 12-10M567 319v-97m0 38 15-9"/></g>
+              <g>
+                <path d="M434 278h88v78h-88Z" fill="#a5a18a"/>
+                <path d="m420 283 57-49 58 49Z" fill="#2d4435"/>
+                <path d="m417 285 60-53 60 53" stroke="#c0b995" stroke-width="3" fill="none"/>
+                <path d="M500 248v-21h10v30" fill="#71836a"/>
+                <path d="M450 304h22v25h-22Z" fill="#e6c17d"/>
+                <path d="M461 304v25m-11-12h22" stroke="#7e7958" stroke-width="2"/>
+                <path d="M488 303h21v53h-21Z" fill="#52634c"/>
+                <circle cx="503" cy="332" r="1.5" fill="#c3bf94"/>
+                <path d="M515 216q-9-10-4-21t-5-20" stroke="#b6bca1" stroke-width="3" stroke-linecap="round" fill="none" opacity=".32"/>
+              </g>
+              <g stroke="#b3a482" fill="none" stroke-linecap="round">
+                <path d="M112 367q177-90 353-8" stroke="#594f3a" stroke-width="15"/>
+                <path d="M111 359q178-86 354-9" stroke="#b7a67f" stroke-width="10"/>
+                <path d="M118 325q171-79 339-11" stroke-width="4"/>
+                <path d="M120 329v32m48-51v34m48-47v35m49-39v33m49-32v33m49-26v34m48-18v36m46-31v33" stroke-width="4"/>
+                <path d="M156 350v70m246-77v78" stroke="#615d45" stroke-width="10"/>
+                <path d="m157 412 47-76m197 78-47-85" stroke="#79745a" stroke-width="5"/>
+              </g>
+              <g stroke="#796f53" stroke-width="1.4"><path d="m137 349 4 14m20-23 5 14m20-22 5 14m21-20 4 14m22-18 3 14m22-17 2 15m24-16v14m23-13-1 14m24-10-2 14m24-9-3 14m24-6-4 14m23-3-4 13m24-2-4 13"/></g>
+              <g transform="translate(255 271)">
+                <path d="M-16-36q-16-8-15-23 9 12 18 10m25 8q17-9 15-23-8 13-18 13" fill="#b8ae8b" stroke="#d3c9a4" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M-29 13q-12-23 1-49 8-19 25-17 26-1 31 24 4 19-3 39 17 17 6 37h-65q-9-19 5-34" fill="#b9bdab"/>
+                <path d="M-14 18q-12 13-6 29H15q8-20-5-31Z" fill="#dedec9"/>
+                <ellipse cx="4" cy="-21" rx="20" ry="13" fill="#c8cbb6"/>
+                <path d="M-21 44q-7 18 5 20h11l1-16m14 1 2 14h13q8-7-1-20" fill="#a9b29d"/>
+                <path d="M-25 12q-7 9-5 21m51-17q5 7 2 16" fill="none" stroke="#818f7b" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="13" cy="-27" r="1.6" fill="#2a4034"/>
+                <path d="m22-18 4 1m-6 5q-4 3-8 0" fill="none" stroke="#657961" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M-29-3q22 8 52 0l-2 10q-24 9-46-1Z" fill="#a46143"/>
+                <path d="m-22 5-7 22 10 2 7-21" fill="#a46143"/>
+              </g>
+              <circle cx="429" cy="296" r="49" fill="url(#lamp-glow)"/>
+              <g stroke="#c4b68b" stroke-width="2" fill="none"><path d="M423 356v-79q0-12 9-12t9 12h-4"/><path d="M428 281h15l2 22h-19Z" fill="#e6c880" stroke="#514f36"/><path d="M426 304h20m-16-27h12" stroke="#c7bc91"/></g>
+              <g stroke="#e0e0bb" stroke-width="1.2" fill="none" opacity=".55"><path d="M247 395h42m-11 11h25m-57 18h29m22 53h48m-19 12h31m18 26h26M315 292h17"/></g>
+              <g stroke="#a0ac83" stroke-width="1.5" fill="none" opacity=".65"><path d="m101 474-4-23m4 23 8-15m-8 15-12-11m394 30 2-26m-2 26-9-15m9 15 14-11M525 424l-3-21m3 21 9-13"/></g>
+              <path d="M40 25h560v530H40Z" fill="url(#fine-grain)"/>
+            </g>
+            <g fill="none" stroke="currentColor" stroke-width="1" opacity=".35"><path d="M22 501q-5-24-3-39m3 39-12-12m12 4 9-13m-9 21 3 20M610 474q10-18 12-36m-5 23 12-5m-15 10-4-14"/></g>
+            <path d="M40 545h560" stroke="currentColor" stroke-opacity=".2"/>
+            <text x="320" y="566" fill="currentColor" opacity=".65" text-anchor="middle" font-size="9" font-family="monospace" letter-spacing="5">STORIES WELCOME HERE</text>
+          </svg>
+          <figcaption class="cover-caption"><span>桥头有盏灯，走累了就坐一会儿。</span><span>PLATE 01 / THE BRIDGE</span></figcaption>
+        </figure>
+      </div>
+      <div class="cover-foot"><p>“过桥费：一个故事。”</p><a href="#chapter-01" class="scroll-note"><span>故事长短不限</span><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></a></div>
+    </section>
+    <noscript><details class="nojs-index" id="plain-contents"><summary>十九章目录</summary><ol><li><a href="#chapter-01">看不见对岸的水</a></li>
+<li><a href="#chapter-02">不想讲故事的人</a></li>
+<li><a href="#chapter-03">旧桥板</a></li>
+<li><a href="#chapter-04">一下午的雨</a></li>
+<li><a href="#chapter-05">信封上的名字</a></li>
+<li><a href="#chapter-06">借出去的本子</a></li>
+<li><a href="#chapter-07">修伞铺的门</a></li>
+<li><a href="#chapter-08">雨先下在上游</a></li>
+<li><a href="#chapter-09">豆腐已经做出来了</a></li>
+<li><a href="#chapter-10">阿禾的箱子</a></li>
+<li><a href="#chapter-11">穿着鞋的夜晚</a></li>
+<li><a href="#chapter-12">轮到谁</a></li>
+<li><a href="#chapter-13">九步</a></li>
+<li><a href="#chapter-14">车窗里的灯</a></li>
+<li><a href="#chapter-15">阿禾画到一半的图</a></li>
+<li><a href="#chapter-16">空出来的一天</a></li>
+<li><a href="#chapter-17">寄回去的信</a></li>
+<li><a href="#chapter-18">桥还在那里</a></li>
+<li><a href="#chapter-19">灯下</a></li></ol></details></noscript>
+    <div class="reader-layout" id="reader">
+      <aside class="reading-rail" aria-label="当前阅读位置">
+        <p class="rail-label">此刻，读到这里</p>
+        <div class="rail-count"><b id="rail-number" style="font-weight:400">01</b><span>/ 19</span></div>
+        <p class="rail-title" id="rail-title">看不见对岸的水</p>
+        <div class="rail-navigation js-only"><button class="round-control" data-step="-1" aria-label="上一章" disabled><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button class="round-control" data-step="1" aria-label="下一章"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button></div>
+        <div class="rail-rule"></div>
+        <span class="rail-progress" id="rail-progress">全书 · 0%</span>
+        <p class="rail-note">赶路的请直接过桥。<br>读故事的，可以慢一点。</p>
+      </aside>
+      <div class="chapters" id="chapters"><article class="chapter" id="chapter-01" data-title="看不见对岸的水" data-ordinal="一" aria-labelledby="heading-01">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 01 / 19</span><span class="chapter-ordinal">第一章</span></div><h2 id="heading-01" tabindex="-1">看不见对岸的水</h2></header>
+<div class="chapter-text">
+<p id="c01-p001">桥下的水很浅。</p>
+<p id="c01-p002">夏天的时候，卷起裤脚就能走过去。到了冬天，村里人往水里摆几块石头，连裤脚都不用卷。</p>
+<p id="c01-p003">但大家还是走桥，因为桥上住着一头兽。</p>
+<p id="c01-p004">它有两只向后弯的角，肚皮上长着灰白色的软毛。下雨时，它穿一件雨衣，角从帽子上戳出去。它自己剪的洞，位置不太准，所以总有一只耳朵淋着。</p>
+<p id="c01-p005">桥头竖着一块木牌：</p>
+<p id="c01-p006">“过桥费：一个故事。”</p>
+<p id="c01-p007">故事长短不限。</p>
+<p id="c01-p008">卖豆腐的说，今早有只猫在门口蹲了半天，他给它豆腐，它不吃。他走到哪儿，它跟到哪儿。最后发现自己踩着它的尾巴。</p>
+<p id="c01-p009">兽听完，把这件事记进本子里，抬起栏杆。</p>
+<p id="c01-p010">一个小孩说，昨晚梦见自己长得比屋顶还高。</p>
+<p id="c01-p011">“后来呢？”兽问。</p>
+<p id="c01-p012">“后来我妈叫我起床，说上学要迟到了。”</p>
+<p id="c01-p013">兽想了想，也抬起了栏杆。</p>
+<p id="c01-p014">邮差每天经过。他的故事很多，却总说自己没什么可讲。有一次，兽从他嘴里问出了一个把信寄给自己的老人。</p>
+<p id="c01-p015">“他为什么给自己写信？”</p>
+<p id="c01-p016">“他说这样每天都有盼头。”</p>
+<p id="c01-p017">兽低头记了很久。</p>
+<p id="c01-p018">它有十七本本子，装在桥洞上方一个干燥的木箱里。最早的一本被翻得松了线，里面有一页专门记着海：</p>
+<p id="c01-p019">“海：很大的水。咸的。会自己来，又自己走。有些鱼大得要命。”</p>
+<p id="c01-p020">它在“大得要命”下面画了一条鱼，画到纸边，只好把尾巴折到背面。</p>
+<p id="c01-p021">有一天，一个从海边回来的女孩经过。</p>
+<p id="c01-p022">她说，海上有时会起雾，船在里面开着，四周白茫茫的，只能听见船底下的水声。</p>
+<p id="c01-p023">兽问：“那怎么知道自己走没走？”</p>
+<p id="c01-p024">“有罗盘。”</p>
+<p id="c01-p025">“罗盘坏了呢？”</p>
+<p id="c01-p026">“还有别的办法。不过我们那次没坏。”</p>
+<p id="c01-p027">兽点点头，又问：</p>
+<p id="c01-p028">“从岸上，能看见对岸吗？”</p>
+<p id="c01-p029">“看不见。”</p>
+<p id="c01-p030">“天气好的时候呢？”</p>
+<p id="c01-p031">“也看不见。”</p>
+<p id="c01-p032">兽没有马上抬栏杆。</p>
+<p id="c01-p033">它站起来，走到桥这头，又走到桥那头。桥一共九步，它每天扫两遍。</p>
+<p id="c01-p034">“我还没见过看不见对岸的水。”它说。</p>
+<p id="c01-p035">女孩问：“你为什么不去看看？”</p>
+<p id="c01-p036">兽用爪子敲了敲木牌。</p>
+<p id="c01-p037">女孩看了一眼。</p>
+<p id="c01-p038">“这上面只写了过桥费。”</p>
+<p id="c01-p039">“总得有人守着。”</p>
+<p id="c01-p040">“我明天可以帮你守。我放假了。”</p>
+<p id="c01-p041">兽想了想，打开小屋的门，取出一张很旧的纸。它受聘那天，村长写给它的，上面有每月的工钱、修桥的钱从哪里领，以及最后一行：</p>
+<p id="c01-p042">“遇到拿不准的事，可以来问我。”</p>
+<p id="c01-p043">第二天，兽去问了。</p>
+<p id="c01-p044">村长戴上眼镜，把纸看了一遍。</p>
+<p id="c01-p045">“你干了多少年了？”</p>
+<p id="c01-p046">“二十三年。”</p>
+<p id="c01-p047">村长摘下眼镜。</p>
+<p id="c01-p048">“你先去收拾东西吧。这里我来安排。”</p>
+<p id="c01-p049">兽收拾了很久。</p>
+<p id="c01-p050">它带上杯子、毛巾、一小包盐，又把盐拿出来。它听说海边多的是这个。</p>
+<p id="c01-p051">十七本本子太沉。它一本一本翻，想选一本带走，最后全放回了木箱，只带了一个空本子。</p>
+<p id="c01-p052">临走前，它给女孩解释怎么抬栏杆，怎样记账，以及碰到说不出故事的人怎么办。</p>
+<p id="c01-p053">“怎么办？”女孩问。</p>
+<p id="c01-p054">“就多等一会儿。有些人说话慢。”</p>
+<p id="c01-p055">兽出了村。</p>
+<p id="c01-p056">它走过一直能从桥上望见的那道山坡，才发现山坡后面有一座磨坊。磨坊旁边种着一棵很大的梨树。</p>
+<p id="c01-p057">它在梨树下坐了坐。</p>
+<p id="c01-p058">过去二十三年，它不知道这里还有地方可以坐。</p>
+<p id="c01-p059">去海边的路上，它投宿过一家面包店。老板娘没有合适的枕头，给了它一袋没发好的面团。第二天，面团把枕套撑破了。</p>
+<p id="c01-p060">它迷过一次路，问了一个扛锄头的人。那个人给它指完，又想起前面修路，追上来重新指了一遍。</p>
+<p id="c01-p061">它把这些都记在空本子里。</p>
+<p id="c01-p062">第五天下午，它闻到了一股陌生的气味。</p>
+<p id="c01-p063">路边有卖草帽的、晒干鱼的，还有一家铺子，门口挂着好几件被风吹得鼓起来的衬衫。</p>
+<p id="c01-p064">走过那家铺子，海就在前面。</p>
+<p id="c01-p065">兽把包放下。</p>
+<p id="c01-p066">水一直铺到远处，远处又低低地压着天。它沿着那条交界找了半天，确实没有找到对岸。</p>
+<p id="c01-p067">它往前走了一点。</p>
+<p id="c01-p068">浪涌过来，漫过它的脚背，又退下去，把脚边的沙带走。它赶紧挪了一下，还是站稳了。</p>
+<p id="c01-p069">第二道浪来的时候，它没动。</p>
+<p id="c01-p070">它在那里站到太阳快落山，才想起找住处。</p>
+<p id="c01-p071">晚上，旅店老板问它房间朝街还是朝海。</p>
+<p id="c01-p072">“朝海。”</p>
+<p id="c01-p073">“贵两个铜子。”</p>
+<p id="c01-p074">兽付了钱。</p>
+<p id="c01-p075">半夜醒来，它听见窗外还在响，就披着毯子去看。黑暗里什么也看不清，水声一阵接着一阵。</p>
+<p id="c01-p076">它在窗边坐了很久，后来回床上拿来枕头。</p>
+<p id="c01-p077">兽一共离开了十九天。</p>
+<p id="c01-p078">回村那天，它晒黑了一点，雨衣的一个破洞缝好了，另一个洞仍然会漏水。</p>
+<p id="c01-p079">它走到桥头，女孩放下了栏杆。</p>
+<p id="c01-p080">“过桥费。”</p>
+<p id="c01-p081">兽愣了一下，随后把包搁在脚边。</p>
+<p id="c01-p082">“我见到海了。”</p>
+<p id="c01-p083">女孩搬来一只凳子。</p>
+<p id="c01-p084">兽从路上那家面包店讲起。讲到面团半夜从枕套里挤出来，粘住了它的一只角，女孩笑得差点连凳子一起翻过去。</p>
+<p id="c01-p085">卖豆腐的停下了车。</p>
+<p id="c01-p086">邮差本来已经走远，听见笑声，也掉头回来。</p>
+<p id="c01-p087">兽讲那个重新追来指路的人，讲海边晾着的衬衫，讲第一次有浪过来时，它以为海想把它拽倒。</p>
+<p id="c01-p088">“后来我发现，脚往下踩一点就好了。”</p>
+<p id="c01-p089">它说着，低头看了看自己的脚。</p>
+<p id="c01-p090">天慢慢暗了。</p>
+<p id="c01-p091">桥头停了三辆车、两头驴，还有一个抱着西瓜的人。</p>
+<p id="c01-p092">那个人等了一会儿，从车上取来一把刀，把西瓜切开了。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-02" data-title="不想讲故事的人" data-ordinal="二" aria-labelledby="heading-02">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 02 / 19</span><span class="chapter-ordinal">第二章</span></div><h2 id="heading-02" tabindex="-1">不想讲故事的人</h2></header>
+<div class="chapter-text">
+<p id="c02-p001">有个人不愿意交过桥费。</p>
+<p id="c02-p002">那是一个修伞的女人，穿着褐色外衣，手里提着空篮子。</p>
+<p id="c02-p003">“一个故事。”兽照例说。</p>
+<p id="c02-p004">“今天不想讲。”</p>
+<p id="c02-p005">“讲以前的也行。”</p>
+<p id="c02-p006">“以前的也不想讲。”</p>
+<p id="c02-p007">兽的爪子还搭在栏杆上。</p>
+<p id="c02-p008">女人站着等了一会儿。</p>
+<p id="c02-p009">“我就想过去买点面粉。”她说。</p>
+<p id="c02-p010">兽抬起了栏杆。</p>
+<p id="c02-p011">这原本是一件很小的事。女人走过去，买了面粉，回来的时候冲它点点头。它也点点头。</p>
+<p id="c02-p012">到了晚上，兽却把那块木牌翻来覆去看了好几遍。</p>
+<p id="c02-p013">牌子是它自己写的。</p>
+<p id="c02-p014">上岗的第一个星期，它还不认识村里的人。每天有人走过，它都想说点什么，又不知道怎么开口。后来，它想到了收故事这个办法。</p>
+<p id="c02-p015">二十三年过去，它已经把这条规矩记得比上岗那天签的合同还熟。</p>
+<p id="c02-p016">它找出合同，铺在桌上。</p>
+<p id="c02-p017">里面写着检查桥板，清理积雪，涨水的时候提醒行人。最后仍然是那句：“遇到拿不准的事，可以来问我。”</p>
+<p id="c02-p018">第二天，它把木牌上的字刮掉，重新写：</p>
+<p id="c02-p019">“我想听故事，也可以讲给你听。<br>赶路的请直接过桥。”</p>
+<p id="c02-p020">写完以后，它站远了一点看。</p>
+<p id="c02-p021">“我想”两个字有些歪。它的爪子不太适合握笔，以前写“过桥费”的时候，练过整整半天。</p>
+<p id="c02-p022">它这次没有重写。</p>
+<p id="c02-p023">事情也没有因此立刻变得热闹。</p>
+<p id="c02-p024">卖豆腐的点点头，推着车过去了。他今天出门晚，再耽搁一会儿，豆腐就赶不上早市。</p>
+<p id="c02-p025">邮差远远挥了挥手，骑得飞快。</p>
+<p id="c02-p026">兽好几次把爪子伸向栏杆，又收回来。</p>
+<p id="c02-p027">上午它扫完桥，检查了桥底的木梁。下午，它坐在小屋门口，摊开那个从海边带回来的本子。</p>
+<p id="c02-p028">讲给大家听的时候，它讲了破掉的枕套、迷路的经历，还有第一次被浪冲到脚背。每讲一次，人们都会在差不多的地方笑起来。</p>
+<p id="c02-p029">现在桥头很安静，它慢慢写起了另一些细节。</p>
+<p id="c02-p030">旅店的门闩很松，要往上提一下才能锁好。</p>
+<p id="c02-p031">床边有一块地板，踩上去会响。</p>
+<p id="c02-p032">第一天晚上，它一直没有脱鞋。它担心海水半夜涨进来，自己来不及跑。后来它去问老板，老板带它看了门外的台阶，说水到不了这里。</p>
+<p id="c02-p033">兽写到这儿，用爪背蹭了蹭鼻子。</p>
+<p id="c02-p034">这个它还没有讲给谁听。</p>
+<p id="c02-p035">傍晚，修伞的女人又来了。</p>
+<p id="c02-p036">兽抬头看她。</p>
+<p id="c02-p037">女人指了指挂在门边的雨衣。</p>
+<p id="c02-p038">“你这个洞，剪偏了。”</p>
+<p id="c02-p039">“我知道。”</p>
+<p id="c02-p040">“下雨漏不漏？”</p>
+<p id="c02-p041">“漏。”</p>
+<p id="c02-p042">“拿下来吧。我带回去补。两个铜子。”</p>
+<p id="c02-p043">兽进屋取了钱，把雨衣递给她。</p>
+<p id="c02-p044">女人收进篮子，却没有马上走。她看见了摊开的本子。</p>
+<p id="c02-p045">“你在写海？”</p>
+<p id="c02-p046">“嗯。”</p>
+<p id="c02-p047">“我听他们说，你在那里住了好几天。”</p>
+<p id="c02-p048">“五天。”</p>
+<p id="c02-p049">“那边晚上冷吗？”</p>
+<p id="c02-p050">“有一点。窗户关上就好多了。”</p>
+<p id="c02-p051">女人在门槛另一头坐下来，把篮子挪到脚边。</p>
+<p id="c02-p052">兽低头看了一眼本子。</p>
+<p id="c02-p053">“我第一天睡觉没脱鞋。”它说。</p>
+<p id="c02-p054">女人看着它。</p>
+<p id="c02-p055">“我怕海水进屋。”</p>
+<p id="c02-p056">她笑了。</p>
+<p id="c02-p057">兽也笑了一下。</p>
+<p id="c02-p058">“后来我去问老板。他领我出去，数给我看，旅店门口有十三级台阶。他说，水要是能到这儿，先着急的肯定是他。”</p>
+<p id="c02-p059">这时，有人赶着一头驴从桥上经过。</p>
+<p id="c02-p060">兽把凳子往旁边挪了挪，给他们让出路，接着讲了下去。</p>
+<p id="c02-p061">“我第二天还是出去看了一次。”</p>
+<p id="c02-p062">“看水？”</p>
+<p id="c02-p063">“数台阶。我夜里有点没听清，以为他说的是三十级。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-03" data-title="旧桥板" data-ordinal="三" aria-labelledby="heading-03">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 03 / 19</span><span class="chapter-ordinal">第三章</span></div><h2 id="heading-03" tabindex="-1">旧桥板</h2></header>
+<div class="chapter-text">
+<p id="c03-p001">傍晚那段话还没讲完，桥那头来了一辆拉木料的车。</p>
+<p id="c03-p002">车轮在土路上压出两道深印。赶车的人停在桥前，把鞭子插进车辕，问：</p>
+<p id="c03-p003">“守桥的在吗？”</p>
+<p id="c03-p004">兽站起来。</p>
+<p id="c03-p005">那人从怀里掏出一张折了四折的纸。</p>
+<p id="c03-p006">“木料到了。明天先拆旧桥，后天开工。村长让我来跟你核尺寸。”</p>
+<p id="c03-p007">兽快步走过去。</p>
+<p id="c03-p008">“批下来了？”</p>
+<p id="c03-p009">“批了。”</p>
+<p id="c03-p010">“全换？”</p>
+<p id="c03-p011">“全换。”</p>
+<p id="c03-p012">兽两只爪子接过图纸，摊在桥头的石墩上。它半个身子压着纸，怕晚风吹跑。</p>
+<p id="c03-p013">修伞的女人也走了过来。</p>
+<p id="c03-p014">“要造新桥了？”</p>
+<p id="c03-p015">“我申请两年了。”兽说，“去年冬天，下面那根梁裂了一道缝。我填过一次，开春又裂了。我写了三封申请。”</p>
+<p id="c03-p016">它用爪尖点着图纸。</p>
+<p id="c03-p017">新桥比现在宽，能让两辆小车错身。桥两侧有护栏，中间还有一截遮雨的顶棚。</p>
+<p id="c03-p018">“这里能挡雨？”它问。</p>
+<p id="c03-p019">“能。”</p>
+<p id="c03-p020">“雪呢？”</p>
+<p id="c03-p021">“也能。”</p>
+<p id="c03-p022">兽点了好几次头。</p>
+<p id="c03-p023">核完尺寸，赶车的人走了，说明早带人来。女人也提起篮子，把兽的雨衣带回去修。</p>
+<p id="c03-p024">兽把图纸收进屋，出来扫桥。</p>
+<p id="c03-p025">它每天扫两遍。这天扫到最后一块桥板的时候，停了下来。</p>
+<p id="c03-p026">板上有一道浅浅的凹痕。</p>
+<p id="c03-p027">几年前，有个人挑着两筐南瓜过桥，扁担断了。最大的一只南瓜砸在这里，滚到兽脚下。那个人心疼得蹲在地上，兽以为瓜摔坏了，也跟着蹲下来看。</p>
+<p id="c03-p028">后来那人说：“瓜没事。我这扁担用了十一年。”</p>
+<p id="c03-p029">兽用扫帚把凹痕里的灰扫净。</p>
+<p id="c03-p030">又往前走了两步，蹲下，摸了摸最靠近小屋的那块桥板。它刚来时，晚上住不惯，常常坐在这里，把两只脚悬在水面上。</p>
+<p id="c03-p031">它在那里坐了一会儿。</p>
+<p id="c03-p032">然后回屋，找出一截炭，在几块木板上做了记号。</p>
+<p id="c03-p033">第二天，木匠带着人来了。</p>
+<p id="c03-p034">兽先领他们去看裂开的梁，又指出哪几处钉子松了。说完，它指了指自己画过炭记的地方。</p>
+<p id="c03-p035">“这几块拆的时候，能给我留下吗？”</p>
+<p id="c03-p036">木匠弯下腰检查。</p>
+<p id="c03-p037">“桥面上这些还能用。你要做什么？”</p>
+<p id="c03-p038">兽还没想好。</p>
+<p id="c03-p039">“先留下。”</p>
+<p id="c03-p040">拆桥比它想的快。</p>
+<p id="c03-p041">上午它还站在桥上跟木匠说话，下午，两岸之间就只剩下几根露出来的旧梁。</p>
+<p id="c03-p042">兽站在岸边，忽然看见对面小屋的全貌。以前从这里看过去，桥头的护栏总会挡住门口那截墙。</p>
+<p id="c03-p043">原来墙角长了那么多草。</p>
+<p id="c03-p044">接下来的四天，它比平时还忙。</p>
+<p id="c03-p045">河水浅，大家能踩石头过去。兽搬来几块平一些的大石头，在岸边铺了条临时的路。有人挑着担子来，它就帮着扶一把。</p>
+<p id="c03-p046">那头每天过桥的驴不肯下水。</p>
+<p id="c03-p047">兽蹲在水里，拿了半根胡萝卜等它。驴伸长脖子，把萝卜吃了，仍旧站着不动。</p>
+<p id="c03-p048">赶驴的人笑得直不起腰。</p>
+<p id="c03-p049">最后还是给驴蒙上眼，才牵过去。</p>
+<p id="c03-p050">兽把这件事记在本子里，写了两行，又添上一句：</p>
+<p id="c03-p051">“下次过了河再给。”</p>
+<p id="c03-p052">新桥造好的那天，木匠把最后一颗钉子敲进去，让兽先走一趟。</p>
+<p id="c03-p053">兽从这头走到那头，又走回来。</p>
+<p id="c03-p054">“怎么样？”</p>
+<p id="c03-p055">“很稳。”</p>
+<p id="c03-p056">“还有呢？”</p>
+<p id="c03-p057">兽低头看了看脚下。</p>
+<p id="c03-p058">新木板颜色很浅，踩上去没有熟悉的响声。它走到中间，抬起一只脚，换了个地方落下。</p>
+<p id="c03-p059">“挺好。”它说。</p>
+<p id="c03-p060">木匠站在旁边看了一会儿。</p>
+<p id="c03-p061">“旧桥板给你堆在屋后了。我下午还有半天空，你要用，就给你做出来。”</p>
+<p id="c03-p062">兽回头看向小屋门口。</p>
+<p id="c03-p063">那里放着它的一张凳子。别人来坐，通常得再搬一块石头，或是直接坐门槛。</p>
+<p id="c03-p064">“做张桌子吧。”</p>
+<p id="c03-p065">它比画了一个宽度。</p>
+<p id="c03-p066">“放得下本子、茶杯，最好还能放个西瓜。”</p>
+<p id="c03-p067">木匠看看它。</p>
+<p id="c03-p068">“那得再宽点。”</p>
+<p id="c03-p069">“好，再宽点。”</p>
+<p id="c03-p070">傍晚，桌子做好了。</p>
+<p id="c03-p071">桌腿用的是剩下的新木料，桌面拼了三块旧桥板。砸过南瓜的那道凹痕，被木匠刨浅了一些，还能看见。</p>
+<p id="c03-p072">修伞的女人过来送雨衣。</p>
+<p id="c03-p073">她把雨衣展开。两个歪洞都补好了，帽子上重新开了洞，洞边缝着一圈结实的线。</p>
+<p id="c03-p074">“穿上试试。”</p>
+<p id="c03-p075">兽套进去，晃了晃头，又低头，把两只角往前探。</p>
+<p id="c03-p076">耳朵都在帽子里面。</p>
+<p id="c03-p077">“行吗？”女人问。</p>
+<p id="c03-p078">“行。”</p>
+<p id="c03-p079">兽付了两个铜子，又从屋里搬出另一张凳子。</p>
+<p id="c03-p080">女人在新桌旁坐下，伸手摸了摸那道凹痕。</p>
+<p id="c03-p081">“这儿不平。”</p>
+<p id="c03-p082">“砸过一个南瓜。”</p>
+<p id="c03-p083">“多大？”</p>
+<p id="c03-p084">兽张开两只爪子。</p>
+<p id="c03-p085">女人看看它比画的大小，往后挪了挪杯子。</p>
+<p id="c03-p086">兽笑起来，进屋拿了茶壶。</p>
+<p id="c03-p087">坐下以后，它把那个空了大半的本子也摆上桌，翻到写海的那页。</p>
+<p id="c03-p088">风从新桥中间穿过去。卖豆腐的推着空车回家，在遮雨棚下停了一会儿，抬头看了看屋顶。</p>
+<p id="c03-p089">“这个好。”他说，“冬天卖剩的豆腐，能放这儿冻一会儿。”</p>
+<p id="c03-p090">兽刚端起杯子，又放下了。</p>
+<p id="c03-p091">它在本子空白处写了一行：</p>
+<p id="c03-p092">“新桥第一天，已经有人替它找到了另一份工作。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-04" data-title="一下午的雨" data-ordinal="四" aria-labelledby="heading-04">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 04 / 19</span><span class="chapter-ordinal">第四章</span></div><h2 id="heading-04" tabindex="-1">一下午的雨</h2></header>
+<div class="chapter-text">
+<p id="c04-p001">新桥落成后的第一场雨，下在一个原本该晴的下午。</p>
+<p id="c04-p002">兽早上洗了床单，挂在屋后。它在桌旁写字，听见顶棚响，先以为是鸟，抬头看了片刻，才想起床单。</p>
+<p id="c04-p003">它跑到屋后，抱着一团湿布回来。桥上已经站了六个人。</p>
+<p id="c04-p004">卖豆腐的把两桶豆腐往里面挪。一个背着娃娃的妇人站在旁边，侧过身，让孩子的脚也能躲进来。木匠的徒弟刚给人送完两把椅子，一把顶在自己头上，另一把抱在胸前。</p>
+<p id="c04-p005">兽把床单搁进盆里，去烧水。</p>
+<p id="c04-p006">水还没开，那个妇人便走了。她家灶上煨着东西，不敢多等，拿一块布盖住孩子，低头跑进雨里。</p>
+<p id="c04-p007">兽探出头：“要不要借件雨衣？”</p>
+<p id="c04-p008">她没听见。</p>
+<p id="c04-p009">它迟了一步，又坐回来。</p>
+<p id="c04-p010">木匠的徒弟问：“你这儿能坐吗？”</p>
+<p id="c04-p011">兽指指门口。</p>
+<p id="c04-p012">“那把。”</p>
+<p id="c04-p013">“我说我送的这把。反正都淋过了。”</p>
+<p id="c04-p014">两人坐着看雨。椅子的一条腿短了，徒弟坐下以后，前后摇了摇，皱起眉头，从口袋里拿出一片木楔。</p>
+<p id="c04-p015">“送过去也得挨骂。”他说。</p>
+<p id="c04-p016">他把木楔垫在下面，椅子稳了。过一会儿，又把木楔抽出来，翻过椅子，盯着四条腿看。</p>
+<p id="c04-p017">兽找来尺子，替他扶着量。</p>
+<p id="c04-p018">“我师父下午还问我，量过没有。”</p>
+<p id="c04-p019">“你怎么说？”</p>
+<p id="c04-p020">“我说量过了。”</p>
+<p id="c04-p021">兽没接话。它自己记账时，也有过一时懒得检查，便在格子里画勾的事。</p>
+<p id="c04-p022">徒弟把尺子贴着椅腿，量了两遍。</p>
+<p id="c04-p023">“回去还得告诉他。”</p>
+<p id="c04-p024">雨停时，水刚烧好。桥上的人纷纷走了，徒弟也提起两把椅子，说要趁天亮送过去。</p>
+<p id="c04-p025">“你不先修？”</p>
+<p id="c04-p026">“先跟人家说。说好了再带回来。”</p>
+<p id="c04-p027">兽拿了两个杯子，最后只倒了一杯。</p>
+<p id="c04-p028">它坐在桌旁，听见桥下雨水滴进河里。盆里的床单仍在淌水，屋子里有股潮湿的棉布味。</p>
+<p id="c04-p029">它打开本子，写：</p>
+<p id="c04-p030">“今天来避雨的有六个人。”</p>
+<p id="c04-p031">写完，它想了一会儿，划掉了数字。它记不得后来从桥另一头走进来的那个老人，究竟是第六个还是第七个。</p>
+<p id="c04-p032">它也没有写椅子的事。</p>
+<p id="c04-p033">晚上，徒弟回来还尺子，带了一包热栗子。</p>
+<p id="c04-p034">“师父说该谢你。”</p>
+<p id="c04-p035">“椅子呢？”</p>
+<p id="c04-p036">“修好了。他叫我以后哪条腿没量，就老实说哪条没量。”</p>
+<p id="c04-p037">两个人剥栗子吃。兽的爪子很大，剥坏了好几个，徒弟给它示范怎样先从开口处捏一下。</p>
+<p id="c04-p038">月亮出来以后，兽去把床单重新挂好。</p>
+<p id="c04-p039">徒弟在身后问：“你那个本子，什么都记吗？”</p>
+<p id="c04-p040">“也不是什么都记。”</p>
+<p id="c04-p041">“那就好。”</p>
+<p id="c04-p042">兽转过身，看见他正偷偷把最后一个栗子塞进口袋。</p>
+<p id="c04-p043">“给我妹妹。”他解释。</p>
+<p id="c04-p044">“我还没问呢。”兽说。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-05" data-title="信封上的名字" data-ordinal="五" aria-labelledby="heading-05">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 05 / 19</span><span class="chapter-ordinal">第五章</span></div><h2 id="heading-05" tabindex="-1">信封上的名字</h2></header>
+<div class="chapter-text">
+<p id="c05-p001">几天以后，邮差把一封信搁在桌上。</p>
+<p id="c05-p002">“给你的。”</p>
+<p id="c05-p003">兽看着信封。</p>
+<p id="c05-p004">上面写的是：</p>
+<p id="c05-p005">“往北走，过磨坊和梨树，村口小河边，守桥的兽收。”</p>
+<p id="c05-p006">地址里的“梨”字被雨洇开了，有人用另一种墨水补过一遍。</p>
+<p id="c05-p007">“这也能送到？”兽问。</p>
+<p id="c05-p008">“前面写了镇名。”邮差说，“再说，你还想往哪里送？”</p>
+<p id="c05-p009">兽认出了旅店老板的字。</p>
+<p id="c05-p010">老板说，它走后第二天，那个吱呀响的地板被修好了。工人掀起木板，在下面找到一把勺子、两枚旧铜子和一颗小孩的牙。牙不知道是谁的，放在柜台上三天，也没人来领。</p>
+<p id="c05-p011">他还说，兽忘了一条毛巾。洗干净了，下次来拿。</p>
+<p id="c05-p012">信末附着一个问题：</p>
+<p id="c05-p013">“你们那边冬天河会冻住吗？冻住以后，鱼在哪儿？”</p>
+<p id="c05-p014">兽读到这里，出门去看河。</p>
+<p id="c05-p015">河水清清地流着。</p>
+<p id="c05-p016">它蹲在岸边，想了很久。</p>
+<p id="c05-p017">冬天鱼在哪儿，它竟然也不知道。</p>
+<p id="c05-p018">它原本准备立刻回信。纸摊开了，第一行写着“这里很好”，下面却迟迟没有落笔。</p>
+<p id="c05-p019">下午，一个提鱼篓的老人经过，兽把他请进来，问起河里的鱼。</p>
+<p id="c05-p020">老人说了些深水、淤泥、草根底下的地方，又说这得看什么鱼，自己也只认得常捉的几种。</p>
+<p id="c05-p021">兽听完，问能不能记。</p>
+<p id="c05-p022">“你记吧。要寄出去，记得写上，我也没把它们冬天一条条捞出来看过。”</p>
+<p id="c05-p023">兽写了整整三页。</p>
+<p id="c05-p024">讲河写了一页，讲修桥写了一页，最后一页讲自己现在有张桌子，桌面上有一道凹痕，放杯子得避开。</p>
+<p id="c05-p025">它写得慢，第三页写完，手已经酸了。收信人的名字抄错一次，用小刀刮掉，纸上起了毛。</p>
+<p id="c05-p026">第二天，它把信交给邮差。</p>
+<p id="c05-p027">邮差掂了掂，说邮钱得多两个铜子。</p>
+<p id="c05-p028">兽掏钱。</p>
+<p id="c05-p029">“你以前收到过别人寄来的信吗？”邮差问。</p>
+<p id="c05-p030">“有。补木料的回执，工钱的通知，桥下那段河道改过一次编号。”</p>
+<p id="c05-p031">邮差看看它，把信装进邮包。</p>
+<p id="c05-p032">“这种呢？”</p>
+<p id="c05-p033">兽摇头。</p>
+<p id="c05-p034">那封从海边来的信，它当天读了五遍。睡觉前，又取出来看了一次信封。</p>
+<p id="c05-p035">它一直住在桥边，别人寄东西，知道桥就够了。它从没觉得这有什么不妥。</p>
+<p id="c05-p036">现在它想给自己找一个名字。</p>
+<p id="c05-p037">它试着在纸上写了几个。有一个写出来很神气，念出来像是在吓唬人；另一个听起来不错，仔细想想，是镇上一家粮铺的字号。</p>
+<p id="c05-p038">最后，它把纸收进抽屉，暂时作罢。</p>
+<p id="c05-p039">第二次回信时，它在末尾写：</p>
+<p id="c05-p040">“我还没想好叫什么。你先照旧寄。毛巾替我留着，谢谢。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-06" data-title="借出去的本子" data-ordinal="六" aria-labelledby="heading-06">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 06 / 19</span><span class="chapter-ordinal">第六章</span></div><h2 id="heading-06" tabindex="-1">借出去的本子</h2></header>
+<div class="chapter-text">
+<p id="c06-p001">女孩来借本子，说学校里要办一次小小的朗读会。</p>
+<p id="c06-p002">“我自己的呢？”兽问。</p>
+<p id="c06-p003">“你的也行。以前听来的也行。读完就还你。”</p>
+<p id="c06-p004">兽给她挑了第三本。</p>
+<p id="c06-p005">第三本最厚，里面夹着树叶，树叶下面压着一张糖纸。它翻了半天，翻到一个年轻人第一次卖菜的故事，说这篇很有意思。年轻人认不得秤，把半筐萝卜便宜卖了，回家路上才算明白，气得又折回去，找了半天，找不着买的人。</p>
+<p id="c06-p006">“他后来怎么样？”女孩问。</p>
+<p id="c06-p007">“后来学会看秤了。”</p>
+<p id="c06-p008">朗读会在三天以后。</p>
+<p id="c06-p009">第四天，卖豆腐的经过，问兽是不是把他哥的事给孩子们讲了。</p>
+<p id="c06-p010">“是你哥？”</p>
+<p id="c06-p011">“你不记得了？从前跟我一起挑担子的那个。”</p>
+<p id="c06-p012">兽想起来了。</p>
+<p id="c06-p013">“大家笑了？”它问。</p>
+<p id="c06-p014">“笑了。我儿子昨晚回家还问他大伯，后来是不是又赔了一筐。”</p>
+<p id="c06-p015">卖豆腐的说这话时，也没发火，只把桶盖掀开，看看里面还剩多少。</p>
+<p id="c06-p016">“我哥说，你记性倒好。”</p>
+<p id="c06-p017">兽当天下午去了一趟豆腐坊。</p>
+<p id="c06-p018">哥哥正在洗桶。兽站在水沟边等他把桶洗完。</p>
+<p id="c06-p019">“那件事，”兽说，“我借给人看了。”</p>
+<p id="c06-p020">“我知道。”</p>
+<p id="c06-p021">“我没想过先来问你。”</p>
+<p id="c06-p022">哥哥把水倒出去。</p>
+<p id="c06-p023">“我早忘了自己还讲过这个。”</p>
+<p id="c06-p024">兽的爪子在衣角上搓了搓。</p>
+<p id="c06-p025">“要不要我把那页拿掉？”</p>
+<p id="c06-p026">“你拿掉干什么？我又不是没干过。”</p>
+<p id="c06-p027">哥哥把桶倒扣在架子上，重新拧紧一根绳。</p>
+<p id="c06-p028">“就是别再说我认不得秤。我那时候认得。我爹的秤跟借来的那把不一样，我一着急，看错了。”</p>
+<p id="c06-p029">兽点头。</p>
+<p id="c06-p030">“还有，卖的是白菜。”</p>
+<p id="c06-p031">兽又点头。</p>
+<p id="c06-p032">“下次讲之前来问我。我自己都能添两句。”</p>
+<p id="c06-p033">回去以后，兽取出第三本。</p>
+<p id="c06-p034">它当年写得很肯定：“有个认不得秤的人，去卖萝卜。”</p>
+<p id="c06-p035">那天还有谁从桥上走过，它已经不记得。年轻人原先怎么说的，它也记不得了。只记得自己听完，笑了好一阵。</p>
+<p id="c06-p036">它用新纸把那一页重写了一遍，夹在原页后面。</p>
+<p id="c06-p037">女孩来还书时，它把这件事告诉她。</p>
+<p id="c06-p038">女孩坐下，挨页看了看。</p>
+<p id="c06-p039">“我也讲错了。”她说，“我说他赔了一筐。这样读起来更好笑。”</p>
+<p id="c06-p040">两个人在桌边坐了一会儿。</p>
+<p id="c06-p041">最后，女孩说：“明天我跟大家说。”</p>
+<p id="c06-p042">兽送她到桥头。</p>
+<p id="c06-p043">“你以后还办朗读会吗？”</p>
+<p id="c06-p044">“办。得等下学期。”</p>
+<p id="c06-p045">“那我自己写一篇。”</p>
+<p id="c06-p046">“写什么？”</p>
+<p id="c06-p047">兽想起海边那十三级台阶。</p>
+<p id="c06-p048">“写一件我也挺不好意思的事。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-07" data-title="修伞铺的门" data-ordinal="七" aria-labelledby="heading-07">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 07 / 19</span><span class="chapter-ordinal">第七章</span></div><h2 id="heading-07" tabindex="-1">修伞铺的门</h2></header>
+<div class="chapter-text">
+<p id="c07-p001">修伞的女人姓何。</p>
+<p id="c07-p002">村里人叫她何师傅。兽知道这个称呼，是因为它提着一只漏水的茶壶去找她，门口正好有人来取伞。</p>
+<p id="c07-p003">何师傅没接茶壶。</p>
+<p id="c07-p004">“我修伞。”</p>
+<p id="c07-p005">“你上回把雨衣也修好了。”</p>
+<p id="c07-p006">“雨衣能缝。”</p>
+<p id="c07-p007">兽看看壶底的小洞。</p>
+<p id="c07-p008">“这个不能？”</p>
+<p id="c07-p009">何师傅接过去，翻过来，叹了口气。</p>
+<p id="c07-p010">“我给你问问补锅的。先搁那儿。”</p>
+<p id="c07-p011">店里比兽以为的窄。它进去时，一只角碰响了门上的铃铛。墙边有两排伞，颜色深的在外，颜色浅的靠里，桌上摆着细铁丝、油布和剪下来的旧伞面。</p>
+<p id="c07-p012">兽低头看那些布。</p>
+<p id="c07-p013">“这些还要吗？”</p>
+<p id="c07-p014">“做补片。”</p>
+<p id="c07-p015">“这个蓝色的呢？”</p>
+<p id="c07-p016">“也要。”</p>
+<p id="c07-p017">兽收回爪子。</p>
+<p id="c07-p018">何师傅看了它一眼，把那块蓝布推给它。</p>
+<p id="c07-p019">“你想做什么？”</p>
+<p id="c07-p020">“本子的封皮起毛了，想包一下。”</p>
+<p id="c07-p021">她量了量，说这块不够，得拼。</p>
+<p id="c07-p022">兽坐着等。何师傅剪布时，门不停地被风吹开。她起身关了两次，第三次索性拿一块砖顶住。</p>
+<p id="c07-p023">“门闩坏了？”兽问。</p>
+<p id="c07-p024">“没坏。关紧了别人以为我不在。”</p>
+<p id="c07-p025">“挂个牌子呢？”</p>
+<p id="c07-p026">“挂过。来的人还是敲。手里都拿着活，得起身给他们开。”</p>
+<p id="c07-p027">兽盯着那扇门。</p>
+<p id="c07-p028">它说可以做一根绳，从里面绕过去，开门的时候拉一下。说到一半，它想起自己也不知道绳该拴在哪儿，便停住了。</p>
+<p id="c07-p029">何师傅没有笑它。她把剪刀放下，跟它一起研究了一会儿。</p>
+<p id="c07-p030">最后，两个人约了木匠来看。</p>
+<p id="c07-p031">木匠说换个合页就行。</p>
+<p id="c07-p032">他看了一眼兽，又看了一眼何师傅，问：“你们那根绳，原先打算绕到哪里去？”</p>
+<p id="c07-p033">兽把想好的路线给他指了一遍。</p>
+<p id="c07-p034">木匠沿着它的爪尖看过去。</p>
+<p id="c07-p035">“我个子矮，来一次得勒一次脖子。”</p>
+<p id="c07-p036">何师傅先笑了，兽也跟着笑。木匠拿出工具，边拆合页边笑，掉了一颗螺丝，三个人又蹲下去找。</p>
+<p id="c07-p037">壶隔了两天补好。本子也包好了，是深蓝和灰色拼在一起的，夹页的位置留得很宽。</p>
+<p id="c07-p038">兽付过钱，提着壶往回走。走到门口，何师傅叫住它。</p>
+<p id="c07-p039">“这星期日你忙不忙？”</p>
+<p id="c07-p040">“怎么？”</p>
+<p id="c07-p041">“我要去镇上进油布。顺路有一家卖纸的。你不是总说这儿买不到厚纸？”</p>
+<p id="c07-p042">兽立刻想起自己星期日要做的事：扫桥、查木梁、把领来的钉子数清楚。查木梁可以提前，钉子也能星期一再数。</p>
+<p id="c07-p043">它站在门边算了半天。</p>
+<p id="c07-p044">何师傅已经重新拿起针，等着它的答复。</p>
+<p id="c07-p045">“去。”兽说。</p>
+<p id="c07-p046">它走出门，那扇门在身后慢慢合上。铃铛响了一声，停住了。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-08" data-title="雨先下在上游" data-ordinal="八" aria-labelledby="heading-08">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 08 / 19</span><span class="chapter-ordinal">第八章</span></div><h2 id="heading-08" tabindex="-1">雨先下在上游</h2></header>
+<div class="chapter-text">
+<p id="c08-p001">星期六夜里，兽被窗外一阵沉闷的撞击声惊醒。</p>
+<p id="c08-p002">兽披上衣服，推开门，看见一根树枝从桥下冲过去。</p>
+<p id="c08-p003">河水是浑的。</p>
+<p id="c08-p004">村里只落了几滴雨，屋檐下面的土还是干的。上游的山却从黄昏开始，一直闷着雷。</p>
+<p id="c08-p005">兽提灯去看桥墩。石头缝里那一丛它前两天还准备拔掉的草，已经被水压住。水往桥底的木梁上打，发出密密的拍击声。</p>
+<p id="c08-p006">它回屋，取出两根刷过红漆的横木。</p>
+<p id="c08-p007">天亮以前，两边的路口都拦好了。</p>
+<p id="c08-p008">卖豆腐的第一个来。</p>
+<p id="c08-p009">他推着两桶新做的豆腐，看见横木，把车停住。</p>
+<p id="c08-p010">“什么时候能过？”</p>
+<p id="c08-p011">“还不知道。”</p>
+<p id="c08-p012">“我从这儿到镇上，半个时辰就够。你让我先过去。”</p>
+<p id="c08-p013">兽没有搬横木。</p>
+<p id="c08-p014">“水还在涨。”</p>
+<p id="c08-p015">两人隔着车站着。卖豆腐的往桥底看了一眼，回来又握住车把。</p>
+<p id="c08-p016">“我过了就不过来。傍晚水退了再回。”</p>
+<p id="c08-p017">兽摇头。</p>
+<p id="c08-p018">卖豆腐的嘴唇动了动，把车掉过头。木轮卡在路旁的石头上，他推了两次，才推出去。</p>
+<p id="c08-p019">兽想上前帮忙，他抬手挡了一下。</p>
+<p id="c08-p020">天亮后，村长带人来了。女孩也来，头发没梳整齐，一边系鞋带，一边问还缺什么。</p>
+<p id="c08-p021">兽让她去河弯那边提醒挑水的人。另一岸的木匠领了横木，守在路口。大家沿着高处把警示牌摆好，退回岸边。</p>
+<p id="c08-p022">到午前，河里的石头全看不见了。</p>
+<p id="c08-p023">一棵连根拔起的小树从水面斜斜地冲过来，枝杈撞上桥墩，猛地转了一圈。树根挂在那里，后面又积起草和烂枝。</p>
+<p id="c08-p024">兽抓起长杆，往前走了一步。</p>
+<p id="c08-p025">村长拉住它的雨衣。</p>
+<p id="c08-p026">“够不着。”</p>
+<p id="c08-p027">它试着比了一下距离，停住了。</p>
+<p id="c08-p028">水从树根两边挤过去，泡沫越来越密。过了很久，那棵树才一点点转开，整团杂物往下一沉，冲出了桥洞。</p>
+<p id="c08-p029">兽一直盯着，直到再也看不见。</p>
+<p id="c08-p030">它的爪子还紧紧攥着长杆。</p>
+<p id="c08-p031">下午，何师傅送来一锅饭。</p>
+<p id="c08-p032">星期日去镇上的事，谁也没提。</p>
+<p id="c08-p033">女孩来吃饭时，裙摆上全是泥。她说河弯有个老人已经把桶放下去了，好在绳子没解，她喊了一声，对方才抬头。</p>
+<p id="c08-p034">“我就一直站那儿。”她说，“他也不走。我问他为什么，他说怕我一个人站着没意思。”</p>
+<p id="c08-p035">兽低头扒了一口饭。</p>
+<p id="c08-p036">女孩掀开锅盖，发现底下还有一个荷包蛋。</p>
+<p id="c08-p037">“给你的。”何师傅说，“你早上没吃。”</p>
+<p id="c08-p038">天黑以后，水开始慢慢往下退。</p>
+<p id="c08-p039">兽仍然睡不着，每隔一会儿便出来照一次。雨衣里暖暖的，两只耳朵都干着。</p>
+<p id="c08-p040">后半夜，它困得坐在门槛上点头。木匠过来接班，把灯从它爪子里拿走。</p>
+<p id="c08-p041">“醒了再说。”</p>
+<p id="c08-p042">兽进屋时，长杆还靠在墙边。它把杆子往里面推了推，免得明早有人被绊着，才躺了下去。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-09" data-title="豆腐已经做出来了" data-ordinal="九" aria-labelledby="heading-09">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 09 / 19</span><span class="chapter-ordinal">第九章</span></div><h2 id="heading-09" tabindex="-1">豆腐已经做出来了</h2></header>
+<div class="chapter-text">
+<p id="c09-p001">桥在星期一中午重新开放。</p>
+<p id="c09-p002">木匠和兽查了半天，换掉一块被杂物撞裂的侧板，又把岸边松动的石块垫稳。</p>
+<p id="c09-p003">人们开始过桥。一个赶路的商人走到中间，回头问：“这不挺结实的吗？”</p>
+<p id="c09-p004">兽把拆下来的侧板搬到屋后，没有回答。</p>
+<p id="c09-p005">卖豆腐的傍晚来了，车上只有空桶。</p>
+<p id="c09-p006">“昨天倒了一桶半。”他说。</p>
+<p id="c09-p007">兽让开路。</p>
+<p id="c09-p008">他却停在桌子旁边，坐下了。</p>
+<p id="c09-p009">“水是午前才涨到那么高的。我早上过去，能卖半天。”</p>
+<p id="c09-p010">“我早上不知道后面会涨多快。”</p>
+<p id="c09-p011">“你不知道，我也不知道。可豆腐已经做出来了。”</p>
+<p id="c09-p012">兽给他倒水。他没喝，站起来，把杯子往桌子里面挪了挪。</p>
+<p id="c09-p013">“算了。”他说。</p>
+<p id="c09-p014">这两个字让兽难受了很久。</p>
+<p id="c09-p015">晚上它算了自己的钱。付完修雨衣、寄信和壶的钱，抽屉里还有一些。赔半桶，勉强够；赔一桶半，得等下月工钱。</p>
+<p id="c09-p016">它把铜子摊在桌上，又收回去。</p>
+<p id="c09-p017">第二天，何师傅来借火。兽把这件事讲给她听。</p>
+<p id="c09-p018">“你要给，就想好自己为什么给。”她说，“以后每回涨水都照这么办？”</p>
+<p id="c09-p019">兽摇头。</p>
+<p id="c09-p020">“那你怎么跟下一家说？”</p>
+<p id="c09-p021">兽又没说出话。</p>
+<p id="c09-p022">何师傅把引着的炭拨进小炉，没有替它再往下想。</p>
+<p id="c09-p023">过了两天，兽去了豆腐坊。</p>
+<p id="c09-p024">卖豆腐的在磨豆子。石磨压着湿豆，发出低低的声音。他没抬头，兽便在旁边站着。</p>
+<p id="c09-p025">“我想过，”兽说，“我还是得拦。那天再来一次，我也得拦。”</p>
+<p id="c09-p026">卖豆腐的手停了一下，又推起来。</p>
+<p id="c09-p027">“我知道你要说这个。”</p>
+<p id="c09-p028">“我也想过赔你的豆腐。可我赔不起所有人的。”</p>
+<p id="c09-p029">石磨又转了一圈。</p>
+<p id="c09-p030">“我没找你要。”</p>
+<p id="c09-p031">兽低下头。</p>
+<p id="c09-p032">水顺着磨盘淌进木桶。两个人隔着磨子，一个站，一个推。窗外有人晒着淋湿的被褥，竹竿的一头伸进窗框。</p>
+<p id="c09-p033">“往后关桥，”卖豆腐的说，“能不能尽早让人来喊我一声？我哥听见河响了，还说没事。那时候一锅豆浆正热着，另一锅还没点。”</p>
+<p id="c09-p034">兽认真问了他每天什么时辰起床，什么时辰开始磨豆子。</p>
+<p id="c09-p035">他一项项说，说完又补充，冬天晚一点，赶庙会还得早。</p>
+<p id="c09-p036">回去以后，兽找村长商量报信的办法。上游能传来的消息先传；夜里真要拦桥，村里各条路也得有人去叫。纸上列了几户早起做生意的人，空了半行，留着以后添。</p>
+<p id="c09-p037">这些事忙了几天。卖豆腐的仍旧从桥上过，点点头，不怎么停。</p>
+<p id="c09-p038">兽也没再问他消气没有。</p>
+<p id="c09-p039">有一天，那两只桶的绳子松了，兽过去帮他抬了一下。他让兽搭了手。</p>
+<p id="c09-p040">等桶放稳，他说：“小心，底下有豆渣，滑。”</p>
+<p id="c09-p041">兽把爪子移开，扶住车辕。卖豆腐的重新绑紧绳，两人一道，把车推上了桥。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-10" data-title="阿禾的箱子" data-ordinal="十" aria-labelledby="heading-10">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 10 / 19</span><span class="chapter-ordinal">第十章</span></div><h2 id="heading-10" tabindex="-1">阿禾的箱子</h2></header>
+<div class="chapter-text">
+<p id="c10-p001">暑气退下去的时候，女孩拖着一只箱子来到桥头。</p>
+<p id="c10-p002">她叫阿禾。兽平常总在她赶路时听见别人喊这个名字：阿禾，把你家的篮子带回去；阿禾，明天上学别忘了那把尺。</p>
+<p id="c10-p003">她这次带了尺，也带了书、两套衣服和一双新鞋。</p>
+<p id="c10-p004">箱盖合不上。</p>
+<p id="c10-p005">“帮我按一下。”她说。</p>
+<p id="c10-p006">兽一只爪子按住箱盖，另一只扶住底。阿禾扣上搭扣，退后看了看，箱子靠近铰链的地方，仍然鼓着。</p>
+<p id="c10-p007">“得拿点出来。”兽说。</p>
+<p id="c10-p008">阿禾不肯。</p>
+<p id="c10-p009">她要去城里的工艺学校，夏天才收到补录的信。信来以前，她说过要在原来的学校办朗读会，也说过冬天帮家里做豆腐架子。信来以后，家里人围着桌子算了三个晚上。</p>
+<p id="c10-p010">“你怕不怕？”兽问。</p>
+<p id="c10-p011">“怕钱带得不够。”</p>
+<p id="c10-p012">“还有呢？”</p>
+<p id="c10-p013">“怕去晚了，只能睡靠茅厕那间。我表姐说那间特别潮。”</p>
+<p id="c10-p014">兽想起她说海上起雾的样子。那时候它觉得，她大概什么都懂。</p>
+<p id="c10-p015">阿禾蹲下来，把箱子重新打开。</p>
+<p id="c10-p016">“我可能学不好。”她说。</p>
+<p id="c10-p017">兽刚想说不会，阿禾便把一把折扇抽了出来，又抽出一本硬皮书。</p>
+<p id="c10-p018">“他们有人已经会画整套机器了。我连学校的量具都没摸过。”</p>
+<p id="c10-p019">兽嘴边的话停了停。</p>
+<p id="c10-p020">“我第一次给桥钉木板，把两块连脚手架一起钉住了。”</p>
+<p id="c10-p021">阿禾抬头。</p>
+<p id="c10-p022">“真的？”</p>
+<p id="c10-p023">“后来拆的时候才发现。多忙了一下午。”</p>
+<p id="c10-p024">“这件事你也没记？”</p>
+<p id="c10-p025">“没记。”</p>
+<p id="c10-p026">阿禾笑了。她把书翻开，犹豫很久，还是放回箱子。</p>
+<p id="c10-p027">最后留在桌上的，是一只沉沉的玻璃杯。</p>
+<p id="c10-p028">“那边买得着。”她说。</p>
+<p id="c10-p029">兽把杯子收进柜子。</p>
+<p id="c10-p030">“回来还给你。”</p>
+<p id="c10-p031">“你先用。别放在那个坑上，会歪。”</p>
+<p id="c10-p032">她出发那天，兽送到磨坊。</p>
+<p id="c10-p033">车还没来，两人坐在梨树下。梨已经摘得差不多，树顶剩了几个，鸟啄过了，风一吹，叶子翻出浅色的一面。</p>
+<p id="c10-p034">阿禾掰开一个烧饼，分给兽一半。</p>
+<p id="c10-p035">“你的故事写了吗？”她问。</p>
+<p id="c10-p036">“写了开头。”</p>
+<p id="c10-p037">“写完寄给我。”</p>
+<p id="c10-p038">兽从衣袋里拿出一张纸，让她写地址。纸的背面是给它自己列的清单，上面有“钉子”和“灯油”。她避开透过来的字，把地址一笔一画写清楚。</p>
+<p id="c10-p039">车来时，她把笔还给它，提起箱子。</p>
+<p id="c10-p040">兽又伸出爪子，替她托了一下箱底。箱子上车，阿禾也上车。车夫收好凳子，吆喝一声，车便动了。</p>
+<p id="c10-p041">它送过许多人。这次却往前追了两步。</p>
+<p id="c10-p042">阿禾从窗口探头：“还有什么？”</p>
+<p id="c10-p043">兽想不出自己要喊什么。</p>
+<p id="c10-p044">最后它指指她那半个烧饼。</p>
+<p id="c10-p045">“拿好了。”</p>
+<p id="c10-p046">阿禾把饼举起来，给它看。她的另一只手已经压在箱子上，免得它一路颠着往下掉。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-11" data-title="穿着鞋的夜晚" data-ordinal="十一" aria-labelledby="heading-11">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 11 / 19</span><span class="chapter-ordinal">第十一章</span></div><h2 id="heading-11" tabindex="-1">穿着鞋的夜晚</h2></header>
+<div class="chapter-text">
+<p id="c11-p001">阿禾走后，兽把故事的开头抄了一遍。</p>
+<p id="c11-p002">“我第一次去看海，走了五天。”</p>
+<p id="c11-p003">抄完，它发现不对。</p>
+<p id="c11-p004">出发那天，为什么没有坐车？它记得自己原先打算在镇上搭车，也记得背包的带子勒得肩膀疼，却想不起在哪个岔路改了主意。</p>
+<p id="c11-p005">它去翻旅行的本子。</p>
+<p id="c11-p006">里面记着磨坊和梨树，记着面包店的面团，唯独没有这件事。</p>
+<p id="c11-p007">它把那一行划掉，重新写：</p>
+<p id="c11-p008">“我到了海边，先去找住处。”</p>
+<p id="c11-p009">这次顺利得多。</p>
+<p id="c11-p010">它写老板怎么把钥匙给它，自己上楼的时候，角又怎么碰了一下楼梯拐弯处的灯罩。灯罩摇晃，老板在底下喊小心，它立刻站住，以为要赔钱。</p>
+<p id="c11-p011">它写窗外的浪声越来越近，自己把床边的包搬到椅子上，过一会儿又搬到柜顶。</p>
+<p id="c11-p012">它写去问老板时，故意先要了一壶热水，等水烧开，才顺便提起海水会不会涨进屋。</p>
+<p id="c11-p013">它慢慢记起，当时老板正给女儿扎头发。</p>
+<p id="c11-p014">小孩坐在柜台上，手里攥着一截红绳。老板一边回答兽，一边想把她歪掉的辫子重新拆开。小孩忍了半天，说：“爹，你别说了，你又把这边扯长了。”</p>
+<p id="c11-p015">兽写到这里，笑出了声。</p>
+<p id="c11-p016">它原先只记得那十三级台阶。</p>
+<p id="c11-p017">故事写了六天。</p>
+<p id="c11-p018">它本来想在最后加一句，解释自己后来怎样懂得不必害怕。可是它知道，倘若换一个陌生地方，夜里听见很大的水声，自己大概还是要出去问问。</p>
+<p id="c11-p019">它便写到第二天早上。</p>
+<p id="c11-p020">早上，鞋已经脱了，整齐地摆在床下。它一只脚踩进鞋里，另一只袜子不见了，在床底找了一圈，最后发现挂在自己的角上。</p>
+<p id="c11-p021">前一晚它怕袜子落进水里，特地找了一个高处。</p>
+<p id="c11-p022">寄信前，它拿给何师傅看。</p>
+<p id="c11-p023">何师傅读得很慢。她读完，翻回第一页，又读了一小段。</p>
+<p id="c11-p024">“你这里写，掌柜扎好辫子才带你下楼。”</p>
+<p id="c11-p025">“嗯。”</p>
+<p id="c11-p026">“后面又说，你们上来时，他女儿正等着他扎另一边。”</p>
+<p id="c11-p027">兽接过来，看了半天。</p>
+<p id="c11-p028">“那就是没扎好。”</p>
+<p id="c11-p029">它取来笔，改了几个字。</p>
+<p id="c11-p030">何师傅把稿子推回来，端起杯子。</p>
+<p id="c11-p031">“挂袜子那儿，你给别人讲过吗？”</p>
+<p id="c11-p032">兽摇头。</p>
+<p id="c11-p033">“我刚想起来。”</p>
+<p id="c11-p034">那一回，兽把稿子抄了两份，一份留给自己，一份寄去城里。</p>
+<p id="c11-p035">阿禾的回信来得很快。</p>
+<p id="c11-p036">她说宿舍不靠茅厕，不过窗子推不开，一开就碰隔壁伸出来的晾衣杆。她和室友正在商量怎么改。</p>
+<p id="c11-p037">她还说，她把故事读给了同屋的人听，问过兽能不能让她们再抄一份。信的最后，有人添了一行不同的字：</p>
+<p id="c11-p038">“请问角上还能挂几只袜子？”</p>
+<p id="c11-p039">兽拿起尺子，比了比。</p>
+<p id="c11-p040">回信时，它写：“没试过。左边大概还能多挂一只。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-12" data-title="轮到谁" data-ordinal="十二" aria-labelledby="heading-12">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 12 / 19</span><span class="chapter-ordinal">第十二章</span></div><h2 id="heading-12" tabindex="-1">轮到谁</h2></header>
+<div class="chapter-text">
+<p id="c12-p001">第一场雪来的时候，兽病了。</p>
+<p id="c12-p002">它半夜还出去铲过一次雪，早上醒来，觉得屋子一阵近，一阵远。伸爪子去够杯子，爪子碰到了桌沿，杯子却像又往前挪了一点。</p>
+<p id="c12-p003">它躺回去，等屋子停稳。</p>
+<p id="c12-p004">门被敲响时，它才发现天已经大亮。</p>
+<p id="c12-p005">木匠的徒弟站在门外，提着一把铲子。</p>
+<p id="c12-p006">“你怎么没出来？”</p>
+<p id="c12-p007">兽坐起来，刚要解释，打了个喷嚏。</p>
+<p id="c12-p008">徒弟往后一躲。</p>
+<p id="c12-p009">“知道了。”</p>
+<p id="c12-p010">他铲了桥上的雪，又去找村长。何师傅听见消息，送了热饭来。卖豆腐的把车停在门口，问要不要捎大夫。最后大夫也来了，让兽安心躺着。</p>
+<p id="c12-p011">他们商量事情时，兽在屋里听得清清楚楚。</p>
+<p id="c12-p012">第二天谁来，第三天谁没空，木匠的徒弟下午还要送一套窗框，邮差只能早上替着看一眼，何师傅有两把赶着交的伞。</p>
+<p id="c12-p013">兽很想出去说，自己明天就能起来。</p>
+<p id="c12-p014">它掀开被子，刚穿上一只鞋，忽然困了。等再次醒来，鞋还在脚上，另一只被谁整齐地搁在床边。</p>
+<p id="c12-p015">它养了四天。</p>
+<p id="c12-p016">第五天出来，桥上扫得很干净，灯油少了半壶，钉子一颗没丢。桌上却多了一张纸，密密麻麻记着这几天谁来过桥。</p>
+<p id="c12-p017">“这个不用记。”兽对徒弟说。</p>
+<p id="c12-p018">“不是怕你回来想知道吗？”</p>
+<p id="c12-p019">兽拿起那张纸。</p>
+<p id="c12-p020">上面写着：</p>
+<p id="c12-p021">“早上，赶驴的人。驴不想走。”</p>
+<p id="c12-p022">“中午，两个赶驴的人。商量完，驴还是不想走。”</p>
+<p id="c12-p023">兽笑得咳了一会儿，把纸留了下来。</p>
+<p id="c12-p024">病好以后，它去了一趟村长家。</p>
+<p id="c12-p025">两个人算了一下午账。</p>
+<p id="c12-p026">村长起初想定一个替班的人，逢兽有事便去。兽问那个替班的人平时做什么，村长翻翻名单，划掉两个有固定活计的，又添上一个，觉得也不妥。</p>
+<p id="c12-p027">最后谈成的是每星期歇两天，另请人按天领工钱。兽自己的工钱照旧。村长说还得在月会上过一遍，河两岸的两组人都要来。</p>
+<p id="c12-p028">月会没有一遍就过。</p>
+<p id="c12-p029">有人觉得天晴时用不着守，有人说冬天铲雪得早，也有人问，新桥刚修好，为什么又要添一笔钱。</p>
+<p id="c12-p030">兽把日常检查的本子拿给他们看，一项项讲。讲到半夜涨水时，它又讲了一遍报信的办法。</p>
+<p id="c12-p031">会开到灯芯结花。村长拨了两次灯，才把账做完。</p>
+<p id="c12-p032">木匠的徒弟后来接下了其中一天，另一天由磨坊的人轮着来。几个人一起学怎样查桥，哪里放横木，出事去找谁。要紧的步骤写在纸上，用油布包好，挂在屋里。</p>
+<p id="c12-p033">兽第一次正式休息，是个晴天。</p>
+<p id="c12-p034">它站在门口，看徒弟检查灯，检查栏杆，又把横木搬出来看了一眼。</p>
+<p id="c12-p035">“你去吧。”徒弟说。</p>
+<p id="c12-p036">“我就在这儿。”</p>
+<p id="c12-p037">“那你把铲子放下。”</p>
+<p id="c12-p038">兽看看自己的爪子。</p>
+<p id="c12-p039">它放下铲子，沿着河走了一段，找了块背风的石头坐着。坐了不久，它觉得该回去看看，又想起徒弟皱眉的样子，便多坐了一会儿。</p>
+<p id="c12-p040">石头晒热了，透过衣服贴着后背。</p>
+<p id="c12-p041">它后来睡着了。醒来时，太阳已经绕到另一边，磨坊的人正推着车从远处经过。</p>
+<p id="c12-p042">对方问它坐这儿做什么。</p>
+<p id="c12-p043">“晒太阳。”</p>
+<p id="c12-p044">“这会儿？”</p>
+<p id="c12-p045">兽起身，绕到石头的另一面，又坐下。</p>
+<p id="c12-p046">“刚才这边没有。”它说。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-13" data-title="九步" data-ordinal="十三" aria-labelledby="heading-13">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 13 / 19</span><span class="chapter-ordinal">第十三章</span></div><h2 id="heading-13" tabindex="-1">九步</h2></header>
+<div class="chapter-text">
+<p id="c13-p001">冬天很长。</p>
+<p id="c13-p002">河边冻住了一圈，水在中间细细地流。兽没有忘记旅店老板问的鱼，偶尔还会去看，只是隔着冰和黑水，仍然一条也看不到。</p>
+<p id="c13-p003">它在信里如实写了。</p>
+<p id="c13-p004">老板回信说，今年海边也冷，女儿的两条辫子已经能扎得一样长。信纸背面是小孩画的海，天是绿的，鱼和房子差不多大。</p>
+<p id="c13-p005">另一个信封从城里来，里面掉出两张画。</p>
+<p id="c13-p006">阿禾画了一辆火车。她旁边有个室友总往车站跑，回来便讲轮轴、汽笛和时刻表。阿禾听得烦，陪她去了一次，回来也想画。</p>
+<p id="c13-p007">画的角落写着：“从南站往城里来，最后一段会过很长的高架。傍晚看得见窗子一扇扇亮。”</p>
+<p id="c13-p008">兽把画展开，压在桌面上。</p>
+<p id="c13-p009">火车比它见过的车都长。它沿着窗子一格一格看过去，在其中一格里，想象了一下自己的角。</p>
+<p id="c13-p010">开春以后，它开始存钱。</p>
+<p id="c13-p011">它打算坐一次火车，去城里看看。顺便给阿禾送回玻璃杯，再买几沓厚纸。</p>
+<p id="c13-p012">村长问它去几天。</p>
+<p id="c13-p013">“七天。”</p>
+<p id="c13-p014">“哪天走？”</p>
+<p id="c13-p015">“下个月十六。”</p>
+<p id="c13-p016">村长把替班的时间排好，递给它一张纸，让它看有没有错。</p>
+<p id="c13-p017">兽接过来，上面写着“桥务交接”。日期、灯油、工具都列得明白，最后有一个空格，要它签名。</p>
+<p id="c13-p018">它在空格里写下“守桥的兽”，看了看，又停住。</p>
+<p id="c13-p019">村长等它签完，去灶间添水。</p>
+<p id="c13-p020">兽把笔蘸了墨，在废纸上写字。</p>
+<p id="c13-p021">它早先给自己想的那些名字，还在抽屉里。这个太长，那个像粮铺，还有一个念起来不错，却总写错最后一笔。</p>
+<p id="c13-p022">它望着窗外，想起旧桥。</p>
+<p id="c13-p023">它刚来那天，村长的女儿还小，带着它从桥上走过去，一边走，一边数。数到九，两个人到了对岸。小孩说：“我得走十五步。你的腿真长。”</p>
+<p id="c13-p024">它回来又走了一遍，确实是九步。</p>
+<p id="c13-p025">后来每次打扫，扫到桥那头，它总能正好数完。</p>
+<p id="c13-p026">村长端着水回来，看见纸上的两个字。</p>
+<p id="c13-p027">“九步？”</p>
+<p id="c13-p028">兽点头。</p>
+<p id="c13-p029">村长念了一遍，说好记，接过纸，放在最上面。</p>
+<p id="c13-p030">名字定下以后，兽没有立刻到处告诉人。</p>
+<p id="c13-p031">它先给海边回信，在末尾签了九步，又在括号里注明，就是原来那头兽。</p>
+<p id="c13-p032">邮差看见信封，问：“改名了？”</p>
+<p id="c13-p033">“刚起的。”</p>
+<p id="c13-p034">邮差低头找了一下自己的小册子，把那两个字添进去。</p>
+<p id="c13-p035">“那我以后喊九步，你可得应。”</p>
+<p id="c13-p036">兽说会。</p>
+<p id="c13-p037">出发前一天，何师傅陪它到镇上买票。</p>
+<p id="c13-p038">买票的人问要去哪里，何师傅刚想替它答，兽已经把城名说了出来。它数好钱，推过小窗口。</p>
+<p id="c13-p039">车票很薄，拿在爪子里，甚至不像够让那么大的车走一小段。</p>
+<p id="c13-p040">它小心地把票收进新缝的衣袋，扣好搭扣。</p>
+<p id="c13-p041">回去的路上，何师傅问：“你这次最想看什么？”</p>
+<p id="c13-p042">“火车。”</p>
+<p id="c13-p043">“坐完呢？”</p>
+<p id="c13-p044">兽想了想。</p>
+<p id="c13-p045">“到了再看。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-14" data-title="车窗里的灯" data-ordinal="十四" aria-labelledby="heading-14">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 14 / 19</span><span class="chapter-ordinal">第十四章</span></div><h2 id="heading-14" tabindex="-1">车窗里的灯</h2></header>
+<div class="chapter-text">
+<p id="c14-p001">火车还没来，月台已经响了起来。</p>
+<p id="c14-p002">先是脚底下微微一震，随后远处传来很长的一声汽笛。兽提着包，跟着人群往前挪，挪到白线后面，便不敢再动。</p>
+<p id="c14-p003">车停下，车门开了。</p>
+<p id="c14-p004">一个搬行李的催它上去。它抬起脚，踩上一级台阶，忽然想起自己是特意来坐这辆车的，便又低头看了看。</p>
+<p id="c14-p005">后面的人等得不耐烦，轻轻咳了一声。</p>
+<p id="c14-p006">兽赶紧进了车厢。</p>
+<p id="c14-p007">座位比想象中小。它的两只角刚好能避开行李架，但要往前低一点头。它把包塞进座位下面，坐下，再调整一次，给旁边的人让出地方。</p>
+<p id="c14-p008">旁边是个提着瓦罐的男人，罐口用好几层布扎着。</p>
+<p id="c14-p009">“头一回？”男人问。</p>
+<p id="c14-p010">兽点头。</p>
+<p id="c14-p011">“走的时候会响一下，别怕。”</p>
+<p id="c14-p012">火车响了一下，男人自己倒赶紧抱住罐子。</p>
+<p id="c14-p013">兽也抱住了膝盖。</p>
+<p id="c14-p014">窗外的月台一点点往后滑。站着的人退得越来越快，柱子一根根过去，最后只剩一截低墙，墙头上有一只猫。</p>
+<p id="c14-p015">兽盯着那只猫，猫也看着它。很快，连墙也没有了。</p>
+<p id="c14-p016">田野展开。</p>
+<p id="c14-p017">它经过了许多看起来相似的树。刚觉得树都一样，又发现远处有一棵歪得特别厉害，树下拴着一匹马。</p>
+<p id="c14-p018">它想看清马的颜色，马却已经过去了。</p>
+<p id="c14-p019">接着是屋顶、晒场、一片积着水的田。有个人在田里抬起头，兽还没来得及举爪子，便看不见那个人了。</p>
+<p id="c14-p020">半路停站，提瓦罐的男人下了车。</p>
+<p id="c14-p021">“罐里是什么？”兽终于问。</p>
+<p id="c14-p022">“我娘腌的菜。上回摔了一罐，她到现在还念叨。”</p>
+<p id="c14-p023">男人站稳，把罐子换到另一只手里，往出口走去。</p>
+<p id="c14-p024">空出来的座位后来上了一个睡觉的人。那个人把帽檐拉低，从坐下到下车，只抬头问过一次到没到站。</p>
+<p id="c14-p025">兽一个人看了很久窗外。</p>
+<p id="c14-p026">它原想路上写点什么，取出本子才发现，车一晃，字就跟着歪。它写了半行，停笔，把本子合上。</p>
+<p id="c14-p027">太阳落下去时，火车开上高处。</p>
+<p id="c14-p028">阿禾说的那些窗子出现了。</p>
+<p id="c14-p029">先是一家厨房，灯罩很低，照着一个人在切菜。再过去是一排晾着衣服的窗，有个小孩趴在窗台上，正在等火车。</p>
+<p id="c14-p030">兽抬起爪子。</p>
+<p id="c14-p031">小孩也抬手，飞快地挥了几下。</p>
+<p id="c14-p032">更多的灯亮起来。窗框把房间截成一块一块，每一块里都有它来不及看清的东西。它把脸转向前面，想多留住一会儿，火车却已经慢下来。</p>
+<p id="c14-p033">站台比出发时长。</p>
+<p id="c14-p034">兽拿好包，下车，顺着人群走到出口。阿禾在那里等，手里举着一张写了“九步”的纸，举得手酸，时不时换一下。</p>
+<p id="c14-p035">兽走到她面前。</p>
+<p id="c14-p036">她把纸放下来，先看见它衣角沾着一点白灰。</p>
+<p id="c14-p037">“你靠哪儿了？”</p>
+<p id="c14-p038">“不知道。”</p>
+<p id="c14-p039">她替它拍了两下。兽也抬起爪子，指指她鼻尖的一道黑印。</p>
+<p id="c14-p040">阿禾用手背蹭过，又多了一道。</p>
+<p id="c14-p041">“先吃饭。”她说。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-15" data-title="阿禾画到一半的图" data-ordinal="十五" aria-labelledby="heading-15">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 15 / 19</span><span class="chapter-ordinal">第十五章</span></div><h2 id="heading-15" tabindex="-1">阿禾画到一半的图</h2></header>
+<div class="chapter-text">
+<p id="c15-p001">他们在一家面铺坐下。</p>
+<p id="c15-p002">阿禾很熟练地点面，要了两份小菜。兽看着墙上的价钱，心里把自己带的钱重新数了一遍。</p>
+<p id="c15-p003">阿禾也看了一眼，说：“这顿我请。我替人誊过几张图，领到钱了。”</p>
+<p id="c15-p004">面上来以后，两个人都低头吃了一阵。</p>
+<p id="c15-p005">兽的肚子比它以为的饿。吃完第一碗，它有些犹豫，阿禾已经叫来店家，又添了半碗。</p>
+<p id="c15-p006">“你在信里没说这里这么贵。”兽小声说。</p>
+<p id="c15-p007">“我刚来也没想到。”</p>
+<p id="c15-p008">她给它找了一家住处，离学校两条街，房间不朝海，窗外是一堵长满爬藤的墙。</p>
+<p id="c15-p009">兽放下包，把阿禾的玻璃杯拿出来。</p>
+<p id="c15-p010">杯子包在毛巾里，里面还塞着两只干净袜子。</p>
+<p id="c15-p011">阿禾小心地捧起来。</p>
+<p id="c15-p012">“你真带了。”</p>
+<p id="c15-p013">“我怕路上碎。”</p>
+<p id="c15-p014">她把杯子放在桌上。兽取出袜子，想找地方挂，一抬头，正看见阿禾望着它的角。</p>
+<p id="c15-p015">两个人都笑了。</p>
+<p id="c15-p016">第二天，阿禾带它去看学校。</p>
+<p id="c15-p017">她原先说过，院子里有一座做得极细的钟，走到门口，却发现钟拆了，只剩下空架子。园丁在旁边锄草，说修了半个月，还没修好。</p>
+<p id="c15-p018">阿禾又领它去看展室，展室正换东西，门也锁着。</p>
+<p id="c15-p019">“上星期明明还开。”她说。</p>
+<p id="c15-p020">兽把鼻子凑近窗子，看见里面一堆盖着布的架子。</p>
+<p id="c15-p021">“那个像船。”</p>
+<p id="c15-p022">“那就是清洁的水桶。”</p>
+<p id="c15-p023">他们绕到工房。</p>
+<p id="c15-p024">阿禾在里面有一张桌子。桌上压着图，尺子横放着，边上是几个磨坏的木块。她拿起其中一个，又放下，似乎想收起来。</p>
+<p id="c15-p025">“这个是什么？”兽问。</p>
+<p id="c15-p026">“我的作业。”</p>
+<p id="c15-p027">兽等她往下说。</p>
+<p id="c15-p028">“还不成。”</p>
+<p id="c15-p029">她把一张纸拖过来，给兽看自己想做的东西。图上有齿轮、轴和一只可以升降的小台子。兽看了很久，试着转动桌上的木轮，木轮只动了半圈，便卡住。</p>
+<p id="c15-p030">“我以为能做出来，写信时就说了。”阿禾说，“结果一直卡在这儿。”</p>
+<p id="c15-p031">“今天也要做？”</p>
+<p id="c15-p032">“今天下午得交一次。”</p>
+<p id="c15-p033">兽把爪子收回来。</p>
+<p id="c15-p034">“那你先做。”</p>
+<p id="c15-p035">阿禾看看它，又看看窗外。</p>
+<p id="c15-p036">“还说带你去看大桥。”</p>
+<p id="c15-p037">“你每天在哪儿吃中饭？”</p>
+<p id="c15-p038">她指了一个方向。</p>
+<p id="c15-p039">兽问清楚时辰，便自己出去走。它在校园里找了张长凳，看了半天人搬东西。有人抱着图纸匆匆跑过去，掉了一卷，跑回来捡，嘴里念着什么，又跑走了。</p>
+<p id="c15-p040">到了中午，阿禾从工房出来，额头上有细细的汗。</p>
+<p id="c15-p041">她的东西还是卡着。</p>
+<p id="c15-p042">兽没有问这次为什么。两人端着饭找位置，坐在窗边，一只鸟隔着玻璃看他们吃。阿禾说它已经在这里讨过一个月，专挑吃得慢的人。</p>
+<p id="c15-p043">下午，兽去逛了一家旧书铺。</p>
+<p id="c15-p044">晚上阿禾来找它，告诉它作业被退了，要改三个地方。她累得不想再介绍景点，坐在椅子上，喝完一整杯水。</p>
+<p id="c15-p045">兽翻开在书铺买的旧册子，让她看里面一幅画。</p>
+<p id="c15-p046">画着一只很小的船，船上却放了一张极大的床。</p>
+<p id="c15-p047">“你说，”它问，“这个船走起来，会不会把人晃下来？”</p>
+<p id="c15-p048">阿禾凑过来，认真看了一会儿。</p>
+<p id="c15-p049">“得看床脚怎么固定。”</p>
+<p id="c15-p050">她拿出铅笔，在旁边的废纸上画了几笔。画着画着，便把自己的那张图也铺开，给兽讲起另外三个还没改好的地方。</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-16" data-title="空出来的一天" data-ordinal="十六" aria-labelledby="heading-16">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 16 / 19</span><span class="chapter-ordinal">第十六章</span></div><h2 id="heading-16" tabindex="-1">空出来的一天</h2></header>
+<div class="chapter-text">
+<p id="c16-p001">第三天，阿禾要上课。</p>
+<p id="c16-p002">兽自己出门，照着店家指的路，想去看城里的大钟。</p>
+<p id="c16-p003">它走错了一个街口，到了另一个卖钟的地方。铺子里挂着大大小小的钟，有一个钟每隔一会儿，就钻出一只鸟，喊两声，又缩回去。</p>
+<p id="c16-p004">兽站在橱窗外，等那只鸟再出来。</p>
+<p id="c16-p005">店家出来问要买什么。</p>
+<p id="c16-p006">兽说自己想看广场上的钟。</p>
+<p id="c16-p007">店家有些失望，仍给它指了路。它道过谢，再走出去，刚转过街角，便听见身后的鸟又喊了两声。</p>
+<p id="c16-p008">广场上的钟很高。</p>
+<p id="c16-p009">兽看了一会儿，觉得确实很高，又不知道该做什么。它在台阶上坐下，拆开早上买的面包，边吃边看鸽子。</p>
+<p id="c16-p010">鸽子也看着它。</p>
+<p id="c16-p011">它把面包收回袋里，鸽子便走远一点。</p>
+<p id="c16-p012">原先安排的一天，过了不到半天，便没什么可做。</p>
+<p id="c16-p013">兽取出本子，想看看还能去哪里。地图被它折得有些乱，上面画了一座塔、三座桥和一片小树林。树林在城的另一边，走过去大概要很久。</p>
+<p id="c16-p014">它把地图合上，往有树荫的地方走。</p>
+<p id="c16-p015">午后，它在一处小花园听见音乐。</p>
+<p id="c16-p016">先是一根很细的声音，停住，重来。接着有几声低的，慢慢往前走。它顺着声音找到一排椅子，椅子前面坐着五个人，各自拿着它认得或认不得的乐器。</p>
+<p id="c16-p017">他们好像没有准备好。</p>
+<p id="c16-p018">一个人总慢半拍。另一个的弦出了问题，低头拨了半天。最年长的那个戴着眼镜，敲敲谱架，让大家从刚才的地方再来。</p>
+<p id="c16-p019">兽坐在最后一排。</p>
+<p id="c16-p020">它起初想，这段像河，那段像火车。想了一会儿，几个人又停下，低声商量，所有东西都断了。</p>
+<p id="c16-p021">它等着。</p>
+<p id="c16-p022">重新响起来的时候，那根细细的声音先走了一小段，低的声音从后面接上去。兽把包往脚边挪，坐得舒服一点。</p>
+<p id="c16-p023">这一次它没有想该像什么。</p>
+<p id="c16-p024">树叶在椅子上投下不停变化的影子。有人推着小车从远处经过，轮子咯噔一声，音乐仍旧往前走。</p>
+<p id="c16-p025">兽一直听到他们收拾东西。</p>
+<p id="c16-p026">戴眼镜的那个人走过来，问它是不是在等谁。</p>
+<p id="c16-p027">“我听这个。”兽说。</p>
+<p id="c16-p028">“今天是排练。后天才正式演。”</p>
+<p id="c16-p029">“后天几点？”</p>
+<p id="c16-p030">那个人告诉它，又问它住得远不远。</p>
+<p id="c16-p031">兽把住处说了，对方点点头，说很好找，沿原路来就成。</p>
+<p id="c16-p032">回去时，兽在本子上添了一行时间。</p>
+<p id="c16-p033">那天晚上，它没有记广场上的钟有多高。它写下花园的名字，试着把下午听到的调子哼出来，哼了两声，自己先皱起鼻子。</p>
+<p id="c16-p034">阿禾来敲门，隔着门板问：“你这屋的水管也坏了？”</p>
+<p id="c16-p035">兽把本子合上，走去开门。</p>
+<p id="c16-p036">“没有。”</p>
+<p id="c16-p037">“我听见响。”</p>
+<p id="c16-p038">“是我。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-17" data-title="寄回去的信" data-ordinal="十七" aria-labelledby="heading-17">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 17 / 19</span><span class="chapter-ordinal">第十七章</span></div><h2 id="heading-17" tabindex="-1">寄回去的信</h2></header>
+<div class="chapter-text">
+<p id="c17-p001">兽后来还是去了那座大桥。</p>
+<p id="c17-p002">桥下的船慢慢往前开，一艘很低，一艘很高。它靠在栏杆旁，研究水是怎么从桥墩两边绕过去的，又看工人在桥底吊着的架子上补漆。</p>
+<p id="c17-p003">它看得太专心，站了快一个时辰，才发现桥边还有张长凳。</p>
+<p id="c17-p004">它坐下来，吃掉最后半块面包。</p>
+<p id="c17-p005">那家卖厚纸的店也找到了。纸很厚，比村里的贵。兽原先想买十沓，数过钱，只买了四沓。店家用绳捆紧，提起来，居然比它想的沉。</p>
+<p id="c17-p006">离开店门时，它看见柜台边摆着一种绿皮本子，纸薄一些，中间缝着线。</p>
+<p id="c17-p007">它已经付完钱，站了片刻，又走回来。</p>
+<p id="c17-p008">“再要一本这个。”</p>
+<p id="c17-p009">绿皮本子的第一页，它写给自己。</p>
+<p id="c17-p010">“我听过五个人一起演奏。里面有一段，我想再听一次。”</p>
+<p id="c17-p011">它把这一页小心撕下，重新抄进信纸。接着写了花园在哪里，旁边哪条路正在挖，门口有一棵矮树，树下的椅子下午会晒着。</p>
+<p id="c17-p012">写完，它装进信封，写下桥边的地址。</p>
+<p id="c17-p013">收信人是九步。</p>
+<p id="c17-p014">寄信时，它想起那个给自己写信的老人。它仍然不知道老人平时写什么。邮差只讲过那么一句，它就记了二十多年，连对方住在镇上还是村外，也没问清。</p>
+<p id="c17-p015">这次回去，可以问问邮差，愿不愿意替它带句话。</p>
+<p id="c17-p016">兽寄完信，又给何师傅买了一枚顶针。顶针很便宜，不过得挑大小。它对着自己的爪子比了半天，店家让它别比了，拿出几种，说可以回去换。</p>
+<p id="c17-p017">兽看看身后的街，问：“能不能先量量？”</p>
+<p id="c17-p018">店家给了它一小片纸。它想起何师傅教它捏针的样子，在纸上画出一个大概的指圈。</p>
+<p id="c17-p019">“我不保证。”店家说。</p>
+<p id="c17-p020">兽点头，付了钱。</p>
+<p id="c17-p021">阿禾收到的是一支便宜的笔。她试了一下，说笔尖有点硬，但画细线正好。</p>
+<p id="c17-p022">她给兽的，是一张画到一半的小图。</p>
+<p id="c17-p023">图上画着那张旧桥板做的桌子，凹痕也在。她记得桌子多宽，却记不准左边的腿离边缘有多远，留了一截虚线。</p>
+<p id="c17-p024">“回去量给我。”她说。</p>
+<p id="c17-p025">她没有一直陪它。还有课，有吃饭时才见得到的室友，也有一张改了几遍还要改的作业。兽有两天自己吃饭，一个晚上独自坐在房间里，觉得有一点无聊，便下楼问店家哪里能买到热水和烧饼。</p>
+<p id="c17-p026">后天的演出，它按时去了。</p>
+<p id="c17-p027">人比排练时多，前面的椅子坐满了，它仍坐最后一排。熟悉的那一小段响起来时，它认出了前两个音，往前坐了坐。</p>
+<p id="c17-p028">这次没有停。</p>
+<p id="c17-p029">演完以后，人们起身，椅子挪动，有小孩在找掉到地上的糖。兽站了一会儿，等人散开，才出去。</p>
+<p id="c17-p030">它终于问到那支曲子的名字。名字有些绕口，它请人写在票的背面，收好。</p>
+<p id="c17-p031">临走前一晚，阿禾陪它去吃面。</p>
+<p id="c17-p032">这回兽请客。阿禾把小菜的价钱看了看，选了一盘，两人分着吃。</p>
+<p id="c17-p033">她说自己的小台子已经能升起来，不过往下降，还会有些歪。</p>
+<p id="c17-p034">兽把筷子放下，用两只爪子在桌上比画了一下。</p>
+<p id="c17-p035">阿禾摇头。</p>
+<p id="c17-p036">“那样会更歪。”</p>
+<p id="c17-p037">它把爪子收回来，继续吃面。</p>
+<p id="c17-p038">第二天，阿禾送它到车站。进站前，兽低头查看衣袋：票在，零钱在，那张图也在。</p>
+<p id="c17-p039">“下回我有新地址再告诉你。”阿禾说。</p>
+<p id="c17-p040">兽点头。</p>
+<p id="c17-p041">“我还在那里。”</p>
+<p id="c17-p042">它说完，又想了一下，补充：“有时候也出去。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-18" data-title="桥还在那里" data-ordinal="十八" aria-labelledby="heading-18">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 18 / 19</span><span class="chapter-ordinal">第十八章</span></div><h2 id="heading-18" tabindex="-1">桥还在那里</h2></header>
+<div class="chapter-text">
+<p id="c18-p001">回程的火车晚了一点。</p>
+<p id="c18-p002">九步没有再一直盯着窗子。它看过一阵田野，靠在座位上睡着了，醒来时，怀里的纸还抱得很紧。</p>
+<p id="c18-p003">从镇上到村口，它搭了一段木料车。车上坐不稳，厚纸的角硌着肚皮，它挪了三次，才找到合适的位置。</p>
+<p id="c18-p004">磨坊的梨树已经开过花。</p>
+<p id="c18-p005">它下车，沿坡往下走，看见桥，桥头的小屋，还有自己留在门边的那把铲子。</p>
+<p id="c18-p006">木匠的徒弟正蹲在那里修一只凳子。</p>
+<p id="c18-p007">“回来了？”</p>
+<p id="c18-p008">九步点头。</p>
+<p id="c18-p009">“我坐断的。”徒弟先指了指凳子，“已经修好了，胶还没干。”</p>
+<p id="c18-p010">他又给九步看这几天的账。买过一回灯油，桥北边的排水沟清过一次。有个人捡到一把钥匙，放在窗台上。还有一个人来借锤子，到现在没还，说了名字，记在后面。</p>
+<p id="c18-p011">九步一项项看完，接过钥匙。</p>
+<p id="c18-p012">它没有立刻讲火车。</p>
+<p id="c18-p013">包太重，脚也有点酸。它先提水洗了脸，又煮一锅面，把放了七天的葱择去坏叶。徒弟收好工具走了，天色暗下来，桥上陆续有人回家。</p>
+<p id="c18-p014">它吃完，把纸放进柜子，倒在床上睡了一觉。</p>
+<p id="c18-p015">第二天，邮差送来它写给自己的信。</p>
+<p id="c18-p016">信封上多了几道戳，边角压得有些皱。它剪开，读了一遍，从包里找出那张音乐会的票，夹进绿皮本子。</p>
+<p id="c18-p017">邮差站在门口，等它说话。</p>
+<p id="c18-p018">“怎么？”九步问。</p>
+<p id="c18-p019">“我看着像你的字，又想，这不就是你吗？”</p>
+<p id="c18-p020">“是我寄的。”</p>
+<p id="c18-p021">邮差笑着摇摇头，跨上车。</p>
+<p id="c18-p022">九步叫住他，问起多年前那个给自己写信的老人。</p>
+<p id="c18-p023">邮差想了好久。</p>
+<p id="c18-p024">“哦，那一个。后来搬去跟女儿住了。信我没再送过。”</p>
+<p id="c18-p025">“你有他的地址吗？”</p>
+<p id="c18-p026">“旧册子里可能有，得找。”</p>
+<p id="c18-p027">“那你见到他的时候，替我说一声，我也试过了。”</p>
+<p id="c18-p028">邮差说好，但没保证哪天能见着。九步也没催。</p>
+<p id="c18-p029">何师傅来时，九步把顶针拿给她。她试了一下，偏小。</p>
+<p id="c18-p030">九步有些懊恼，把店里能换的事说了，又想起自己已经回来。</p>
+<p id="c18-p031">何师傅取下来，换了一根手指。</p>
+<p id="c18-p032">“这个正好。”</p>
+<p id="c18-p033">她照旧付了钱。九步想说是送她的，何师傅已经把钱压在桌上，问它厚纸买到没有。</p>
+<p id="c18-p034">它便把纸取出来给她看。</p>
+<p id="c18-p035">她用指尖捻了捻，说可以画伞样，正要问买几张，九步已经分出一小叠。</p>
+<p id="c18-p036">“这个给你。”</p>
+<p id="c18-p037">她想了一下，收了。</p>
+<p id="c18-p038">后来桥边的人慢慢听说，它在城里听了一场演奏。</p>
+<p id="c18-p039">卖豆腐的问用了什么乐器，九步有两样叫不上来，把样子画在纸上。卖豆腐的对着看，说其中一个像他舅舅从前吹过的，回头去问问。</p>
+<p id="c18-p040">九步问他哪天有空，想听他舅舅吹一次。</p>
+<p id="c18-p041">“早不吹了。牙掉了几颗，说吹着漏气。”</p>
+<p id="c18-p042">“哦。”</p>
+<p id="c18-p043">“不过有一把旧琴。我去问问还能不能响。”</p>
+<p id="c18-p044">那天没有西瓜，也没有许多人等着听完。赶路的人照旧赶路，坐下的人喝一会儿茶。九步讲到阿禾的作业，想起没问她愿不愿意给别人听，便只说她在学校有一张自己的桌子，窗台上放着以前留在这里的玻璃杯。</p>
+<p id="c18-p045">晚上，它拿尺子量了旧桌左边那条腿。</p>
+<p id="c18-p046">量完，写信告诉阿禾，又添了一句：</p>
+<p id="c18-p047">“琴还没问着。问着了再写。”</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article>
+<article class="chapter" id="chapter-19" data-title="灯下" data-ordinal="十九" aria-labelledby="heading-19">
+<header class="chapter-heading"><div class="chapter-label"><span>CHAPTER 19 / 19</span><span class="chapter-ordinal">第十九章</span></div><h2 id="heading-19" tabindex="-1">灯下</h2></header>
+<div class="chapter-text">
+<p id="c19-p001">九步开始写一篇长一点的故事。</p>
+<p id="c19-p002">它给自己留了一摞纸，放在桌子靠墙的一头。下雨就收进屋里，天气好，再搬出来。</p>
+<p id="c19-p003">开始写得很快。</p>
+<p id="c19-p004">它想起自己刚来时，把锅放在灶上，生了很久的火，锅却一直不热。后来发现烟道堵了，火只在灶口舔，里面全是灰。</p>
+<p id="c19-p005">它还想起第一个跟它讲故事的人。那个人的脸已经记不清，手里倒像提着一捆布。究竟是不是布，它翻遍最早的本子，也没有找到。</p>
+<p id="c19-p006">它只写下自己记得的部分。</p>
+<p id="c19-p007">写到出门看海，它停了好些天。原先已经讲过多次的东西，落在纸上，有些太短，有些又太长。面团的事，它改了三遍，第三遍读起来，还不如第一遍。</p>
+<p id="c19-p008">它把第一遍找回来，压在上面。</p>
+<p id="c19-p009">何师傅在旁边修一把伞，抬头看了一眼。</p>
+<p id="c19-p010">“又改回来了？”</p>
+<p id="c19-p011">“嗯。”</p>
+<p id="c19-p012">她低下头继续穿线。</p>
+<p id="c19-p013">九步有时问她愿不愿意听一段。她有时说听，有时说今天脑子里都是伞骨，听不进去。</p>
+<p id="c19-p014">它便自己读。</p>
+<p id="c19-p015">读到“过桥费”那几个字，它停住很久。</p>
+<p id="c19-p016">旧木牌还挂在门边，重新刮过的那一面，漆已经浅了。原先几个字的颜色渗进木纹，从侧面看，仍能看到一点痕迹。</p>
+<p id="c19-p017">它没有把那些痕迹再磨掉。</p>
+<p id="c19-p018">夏天来了，阿禾回家过了一小段假。她把桌腿那截虚线补成实线，又在图边画了两张凳子。</p>
+<p id="c19-p019">她的台子可以降下去了，不过做出来以后，老师让她再做一个更小的。</p>
+<p id="c19-p020">她说起这件事，翻了一个很大的白眼。九步笑着把茶递给她，险些洒到图上。</p>
+<p id="c19-p021">海边的来信也到了。</p>
+<p id="c19-p022">旅店老板说，那条毛巾洗过几回，边已经散了，问九步还要不要。他女儿在下面画了一头有角的兽，两只角上各挂一只袜子。</p>
+<p id="c19-p023">九步回信说，毛巾可以拿去擦桌子。又问明年春天，楼上那间朝海的房是否还能住。</p>
+<p id="c19-p024">它还没有定下日子。</p>
+<p id="c19-p025">桥上的日子仍然忙闲不一。有时一天只写两行，有时写了半页，便有人来找工具。也有时候，桌子一下午都是空的，它却迟迟没落笔，只盯着河岸的一棵草发呆。</p>
+<p id="c19-p026">等它终于写到从城里回来，那一摞纸已经挺厚。</p>
+<p id="c19-p027">木匠的徒弟给它做了一块压纸的木条。何师傅把装稿子的旧袋换了底。阿禾写信来问，写完能不能先寄几页，让同屋的人也读一读。</p>
+<p id="c19-p028">九步说可以，还得再看一遍。</p>
+<p id="c19-p029">它看了一个星期。</p>
+<p id="c19-p030">有一句它实在不舍得划，虽然读到那里，总觉得跟前后接不上。它把那一句抄到别的纸上，才肯从正文里去掉。</p>
+<p id="c19-p031">最后一天，天很热。</p>
+<p id="c19-p032">九步把桌子擦干净，摊开稿子，从第一页读起。读到面包店，笑了一次；读到关桥，爪子停在杯子旁边，过一会儿才又翻页。</p>
+<p id="c19-p033">有人推车过桥，轮子碾过木板，轻轻响了几声。它抬起头，看那人过去，又低头读。</p>
+<p id="c19-p034">傍晚，何师傅来了，抱着半个西瓜。</p>
+<p id="c19-p035">“买大了。”她说。</p>
+<p id="c19-p036">九步起身去拿刀。</p>
+<p id="c19-p037">她把瓜放在桌上，发现它的稿子已经叠齐，最上面压着木条。</p>
+<p id="c19-p038">“写完了？”</p>
+<p id="c19-p039">“写完了。”</p>
+<p id="c19-p040">“叫什么？”</p>
+<p id="c19-p041">“过桥费。”</p>
+<p id="c19-p042">何师傅看了一眼门边的旧牌子，点点头。</p>
+<p id="c19-p043">九步拿来盘子，把瓜切成几片。瓜汁顺着桌面往那道浅凹痕里流，它忙拿布擦。何师傅接过刀，接着切。</p>
+<p id="c19-p044">两人坐下吃了一会儿。</p>
+<p id="c19-p045">何师傅先吃完，把瓜皮放进盆里，洗净手，擦干。</p>
+<p id="c19-p046">“给我看看。”她说。</p>
+<p id="c19-p047">九步把稿子递过去，自己起身点灯。</p>
+<p id="c19-p048">灯芯刚拨好，桥上走来一个背包的人。他在牌子前站了一小会儿，往屋里看。</p>
+<p id="c19-p049">“能坐一下吗？”</p>
+<p id="c19-p050">“能。”九步说。</p>
+<p id="c19-p051">那人放下背包，坐在空凳子上。走了很久的路，脚已经肿了，他松开鞋带，轻轻吐出一口气。</p>
+<p id="c19-p052">九步把盘子推近一点。</p>
+<p id="c19-p053">那人拿起一片瓜，刚想开口，九步便指了指桌边的盆。</p>
+<p id="c19-p054">“籽吐这里就行。”</p>
+<p id="c19-p055">屋里安静了一阵，只听见何师傅翻纸。</p>
+<p id="c19-p056">九步正要把灯挪近一些，她按住一页，抬起头。</p>
+<p id="c19-p057">“这儿得改。”</p>
+<p id="c19-p058">“哪儿？”</p>
+<p id="c19-p059">“我那天穿的是蓝衣服。褐色那件，早让火星子烧了个洞。”</p>
+<p id="c19-p060">九步凑过去看。</p>
+<p id="c19-p061">她指的那一行，它读过许多遍，一直记得很清楚，现在却忽然拿不准。</p>
+<p id="c19-p062">“真是蓝的？”</p>
+<p id="c19-p063">“深蓝。袖子这里还补过一块。”</p>
+<p id="c19-p064">九步去拿笔，蘸好墨，把“褐色”轻轻划掉。桌对面，赶路的人已经吃完第一片瓜，又伸手拿起一片。</p>
+<p id="c19-p065">灯有些偏，九步伸出爪子，往三个人中间挪了挪。</p>
+<p id="c19-p066" class="story-end">（完）</p>
+</div>
+<div class="chapter-bottom" aria-hidden="true"><span>✧</span></div>
+</article></div>
+    </div>
+    <section class="afterword" aria-labelledby="end-title" id="afterword">
+      <svg class="end-lamp" viewBox="0 0 60 80" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M23 19v-6a7 7 0 0 1 14 0v6M19 21h22l4 37H15ZM15 60h30M20 65h20M24 26v23m12-23v23M30 38q7 7 0 13-7-6 0-13Z"/><path d="M8 29H3m54 0h-5M11 15l-4-4m42 4 4-4M30 75v-5" opacity=".5"/></svg>
+      <h2 id="end-title">故事到这里，灯还亮着。</h2>
+      <p>谢谢你在桥边坐了这么久。<br>愿你也有想去的地方，和可以回来的小屋。</p>
+      <div class="end-actions"><a class="end-link" href="#cover">再从桥头走一遍 <span aria-hidden="true">↑</span></a><button class="end-link js-only" id="download-story">带走这个故事 <svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button></div>
+    </section>
+  </main>
+  <footer class="footer"><span>过桥费 · 十九章 · 完</span><span>一张桌子，留一个空位。</span></footer>
+  <nav class="mobile-dock" id="reading-dock" aria-label="章节翻页" hidden><button class="round-control" data-step="-1" aria-label="上一章" disabled><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button class="dock-title" id="dock-title" data-open="contents" aria-haspopup="dialog" aria-controls="contents">01 · 看不见对岸的水</button><button class="round-control" data-step="1" aria-label="下一章"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button></nav>
+  <dialog class="toc-dialog" id="contents" aria-labelledby="contents-title">
+    <div class="toc-inner"><div class="dialog-top"><div><p class="dialog-kicker">CONTENTS / 01—19</p><h2 id="contents-title">翻到哪一章</h2></div><button class="close-dialog" data-close aria-label="关闭目录"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+      <p class="toc-intro">从桥边出发，也回到桥边。<br>每一章，都有一个可以停下来的地方。</p>
+      <ol class="toc-list"><li><a class="toc-entry" href="#chapter-01"><span class="toc-number">01</span><span class="toc-title">看不见对岸的水</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-02"><span class="toc-number">02</span><span class="toc-title">不想讲故事的人</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-03"><span class="toc-number">03</span><span class="toc-title">旧桥板</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-04"><span class="toc-number">04</span><span class="toc-title">一下午的雨</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-05"><span class="toc-number">05</span><span class="toc-title">信封上的名字</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-06"><span class="toc-number">06</span><span class="toc-title">借出去的本子</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-07"><span class="toc-number">07</span><span class="toc-title">修伞铺的门</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-08"><span class="toc-number">08</span><span class="toc-title">雨先下在上游</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-09"><span class="toc-number">09</span><span class="toc-title">豆腐已经做出来了</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-10"><span class="toc-number">10</span><span class="toc-title">阿禾的箱子</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-11"><span class="toc-number">11</span><span class="toc-title">穿着鞋的夜晚</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-12"><span class="toc-number">12</span><span class="toc-title">轮到谁</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-13"><span class="toc-number">13</span><span class="toc-title">九步</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-14"><span class="toc-number">14</span><span class="toc-title">车窗里的灯</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-15"><span class="toc-number">15</span><span class="toc-title">阿禾画到一半的图</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-16"><span class="toc-number">16</span><span class="toc-title">空出来的一天</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-17"><span class="toc-number">17</span><span class="toc-title">寄回去的信</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-18"><span class="toc-number">18</span><span class="toc-title">桥还在那里</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+<li><a class="toc-entry" href="#chapter-19"><span class="toc-number">19</span><span class="toc-title">灯下</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li></ol><div class="toc-footer">不急着读完，故事会在这里。</div>
+    </div>
+  </dialog>
+  <dialog class="settings-dialog" id="reading-settings" aria-labelledby="settings-title">
+    <div class="dialog-top"><div><p class="dialog-kicker">MAKE YOURSELF AT HOME</p><h2 id="settings-title">读得舒服一点</h2></div><button class="close-dialog" data-close aria-label="关闭阅读设置"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <fieldset class="setting-group"><legend>纸页与灯光</legend><div class="choice-row"><button class="choice" data-theme-choice="paper" aria-pressed="true"><span class="swatch swatch-paper" aria-hidden="true"></span>纸页</button><button class="choice" data-theme-choice="night" aria-pressed="false"><span class="swatch swatch-night" aria-hidden="true"></span>夜色</button></div></fieldset>
+    <fieldset class="setting-group"><legend>文字大小</legend><div class="choice-row"><button class="choice" data-size-choice="small" aria-pressed="false">小</button><button class="choice" data-size-choice="medium" aria-pressed="true">中</button><button class="choice" data-size-choice="large" aria-pressed="false">大</button></div></fieldset>
+    <p class="settings-note">找一个舒服的姿势，剩下的慢慢来。</p>
+  </dialog>
+  <div class="status" id="status" role="status" hidden></div>
+  <script id="story-source" type="application/json">"过桥费\n\n一　看不见对岸的水\n\n桥下的水很浅。\n\n夏天的时候，卷起裤脚就能走过去。到了冬天，村里人往水里摆几块石头，连裤脚都不用卷。\n\n但大家还是走桥，因为桥上住着一头兽。\n\n它有两只向后弯的角，肚皮上长着灰白色的软毛。下雨时，它穿一件雨衣，角从帽子上戳出去。它自己剪的洞，位置不太准，所以总有一只耳朵淋着。\n\n桥头竖着一块木牌：\n\n“过桥费：一个故事。”\n\n故事长短不限。\n\n卖豆腐的说，今早有只猫在门口蹲了半天，他给它豆腐，它不吃。他走到哪儿，它跟到哪儿。最后发现自己踩着它的尾巴。\n\n兽听完，把这件事记进本子里，抬起栏杆。\n\n一个小孩说，昨晚梦见自己长得比屋顶还高。\n\n“后来呢？”兽问。\n\n“后来我妈叫我起床，说上学要迟到了。”\n\n兽想了想，也抬起了栏杆。\n\n邮差每天经过。他的故事很多，却总说自己没什么可讲。有一次，兽从他嘴里问出了一个把信寄给自己的老人。\n\n“他为什么给自己写信？”\n\n“他说这样每天都有盼头。”\n\n兽低头记了很久。\n\n它有十七本本子，装在桥洞上方一个干燥的木箱里。最早的一本被翻得松了线，里面有一页专门记着海：\n\n“海：很大的水。咸的。会自己来，又自己走。有些鱼大得要命。”\n\n它在“大得要命”下面画了一条鱼，画到纸边，只好把尾巴折到背面。\n\n有一天，一个从海边回来的女孩经过。\n\n她说，海上有时会起雾，船在里面开着，四周白茫茫的，只能听见船底下的水声。\n\n兽问：“那怎么知道自己走没走？”\n\n“有罗盘。”\n\n“罗盘坏了呢？”\n\n“还有别的办法。不过我们那次没坏。”\n\n兽点点头，又问：\n\n“从岸上，能看见对岸吗？”\n\n“看不见。”\n\n“天气好的时候呢？”\n\n“也看不见。”\n\n兽没有马上抬栏杆。\n\n它站起来，走到桥这头，又走到桥那头。桥一共九步，它每天扫两遍。\n\n“我还没见过看不见对岸的水。”它说。\n\n女孩问：“你为什么不去看看？”\n\n兽用爪子敲了敲木牌。\n\n女孩看了一眼。\n\n“这上面只写了过桥费。”\n\n“总得有人守着。”\n\n“我明天可以帮你守。我放假了。”\n\n兽想了想，打开小屋的门，取出一张很旧的纸。它受聘那天，村长写给它的，上面有每月的工钱、修桥的钱从哪里领，以及最后一行：\n\n“遇到拿不准的事，可以来问我。”\n\n第二天，兽去问了。\n\n村长戴上眼镜，把纸看了一遍。\n\n“你干了多少年了？”\n\n“二十三年。”\n\n村长摘下眼镜。\n\n“你先去收拾东西吧。这里我来安排。”\n\n兽收拾了很久。\n\n它带上杯子、毛巾、一小包盐，又把盐拿出来。它听说海边多的是这个。\n\n十七本本子太沉。它一本一本翻，想选一本带走，最后全放回了木箱，只带了一个空本子。\n\n临走前，它给女孩解释怎么抬栏杆，怎样记账，以及碰到说不出故事的人怎么办。\n\n“怎么办？”女孩问。\n\n“就多等一会儿。有些人说话慢。”\n\n兽出了村。\n\n它走过一直能从桥上望见的那道山坡，才发现山坡后面有一座磨坊。磨坊旁边种着一棵很大的梨树。\n\n它在梨树下坐了坐。\n\n过去二十三年，它不知道这里还有地方可以坐。\n\n去海边的路上，它投宿过一家面包店。老板娘没有合适的枕头，给了它一袋没发好的面团。第二天，面团把枕套撑破了。\n\n它迷过一次路，问了一个扛锄头的人。那个人给它指完，又想起前面修路，追上来重新指了一遍。\n\n它把这些都记在空本子里。\n\n第五天下午，它闻到了一股陌生的气味。\n\n路边有卖草帽的、晒干鱼的，还有一家铺子，门口挂着好几件被风吹得鼓起来的衬衫。\n\n走过那家铺子，海就在前面。\n\n兽把包放下。\n\n水一直铺到远处，远处又低低地压着天。它沿着那条交界找了半天，确实没有找到对岸。\n\n它往前走了一点。\n\n浪涌过来，漫过它的脚背，又退下去，把脚边的沙带走。它赶紧挪了一下，还是站稳了。\n\n第二道浪来的时候，它没动。\n\n它在那里站到太阳快落山，才想起找住处。\n\n晚上，旅店老板问它房间朝街还是朝海。\n\n“朝海。”\n\n“贵两个铜子。”\n\n兽付了钱。\n\n半夜醒来，它听见窗外还在响，就披着毯子去看。黑暗里什么也看不清，水声一阵接着一阵。\n\n它在窗边坐了很久，后来回床上拿来枕头。\n\n兽一共离开了十九天。\n\n回村那天，它晒黑了一点，雨衣的一个破洞缝好了，另一个洞仍然会漏水。\n\n它走到桥头，女孩放下了栏杆。\n\n“过桥费。”\n\n兽愣了一下，随后把包搁在脚边。\n\n“我见到海了。”\n\n女孩搬来一只凳子。\n\n兽从路上那家面包店讲起。讲到面团半夜从枕套里挤出来，粘住了它的一只角，女孩笑得差点连凳子一起翻过去。\n\n卖豆腐的停下了车。\n\n邮差本来已经走远，听见笑声，也掉头回来。\n\n兽讲那个重新追来指路的人，讲海边晾着的衬衫，讲第一次有浪过来时，它以为海想把它拽倒。\n\n“后来我发现，脚往下踩一点就好了。”\n\n它说着，低头看了看自己的脚。\n\n天慢慢暗了。\n\n桥头停了三辆车、两头驴，还有一个抱着西瓜的人。\n\n那个人等了一会儿，从车上取来一把刀，把西瓜切开了。\n\n二　不想讲故事的人\n\n有个人不愿意交过桥费。\n\n那是一个修伞的女人，穿着褐色外衣，手里提着空篮子。\n\n“一个故事。”兽照例说。\n\n“今天不想讲。”\n\n“讲以前的也行。”\n\n“以前的也不想讲。”\n\n兽的爪子还搭在栏杆上。\n\n女人站着等了一会儿。\n\n“我就想过去买点面粉。”她说。\n\n兽抬起了栏杆。\n\n这原本是一件很小的事。女人走过去，买了面粉，回来的时候冲它点点头。它也点点头。\n\n到了晚上，兽却把那块木牌翻来覆去看了好几遍。\n\n牌子是它自己写的。\n\n上岗的第一个星期，它还不认识村里的人。每天有人走过，它都想说点什么，又不知道怎么开口。后来，它想到了收故事这个办法。\n\n二十三年过去，它已经把这条规矩记得比上岗那天签的合同还熟。\n\n它找出合同，铺在桌上。\n\n里面写着检查桥板，清理积雪，涨水的时候提醒行人。最后仍然是那句：“遇到拿不准的事，可以来问我。”\n\n第二天，它把木牌上的字刮掉，重新写：\n\n“我想听故事，也可以讲给你听。\n赶路的请直接过桥。”\n\n写完以后，它站远了一点看。\n\n“我想”两个字有些歪。它的爪子不太适合握笔，以前写“过桥费”的时候，练过整整半天。\n\n它这次没有重写。\n\n事情也没有因此立刻变得热闹。\n\n卖豆腐的点点头，推着车过去了。他今天出门晚，再耽搁一会儿，豆腐就赶不上早市。\n\n邮差远远挥了挥手，骑得飞快。\n\n兽好几次把爪子伸向栏杆，又收回来。\n\n上午它扫完桥，检查了桥底的木梁。下午，它坐在小屋门口，摊开那个从海边带回来的本子。\n\n讲给大家听的时候，它讲了破掉的枕套、迷路的经历，还有第一次被浪冲到脚背。每讲一次，人们都会在差不多的地方笑起来。\n\n现在桥头很安静，它慢慢写起了另一些细节。\n\n旅店的门闩很松，要往上提一下才能锁好。\n\n床边有一块地板，踩上去会响。\n\n第一天晚上，它一直没有脱鞋。它担心海水半夜涨进来，自己来不及跑。后来它去问老板，老板带它看了门外的台阶，说水到不了这里。\n\n兽写到这儿，用爪背蹭了蹭鼻子。\n\n这个它还没有讲给谁听。\n\n傍晚，修伞的女人又来了。\n\n兽抬头看她。\n\n女人指了指挂在门边的雨衣。\n\n“你这个洞，剪偏了。”\n\n“我知道。”\n\n“下雨漏不漏？”\n\n“漏。”\n\n“拿下来吧。我带回去补。两个铜子。”\n\n兽进屋取了钱，把雨衣递给她。\n\n女人收进篮子，却没有马上走。她看见了摊开的本子。\n\n“你在写海？”\n\n“嗯。”\n\n“我听他们说，你在那里住了好几天。”\n\n“五天。”\n\n“那边晚上冷吗？”\n\n“有一点。窗户关上就好多了。”\n\n女人在门槛另一头坐下来，把篮子挪到脚边。\n\n兽低头看了一眼本子。\n\n“我第一天睡觉没脱鞋。”它说。\n\n女人看着它。\n\n“我怕海水进屋。”\n\n她笑了。\n\n兽也笑了一下。\n\n“后来我去问老板。他领我出去，数给我看，旅店门口有十三级台阶。他说，水要是能到这儿，先着急的肯定是他。”\n\n这时，有人赶着一头驴从桥上经过。\n\n兽把凳子往旁边挪了挪，给他们让出路，接着讲了下去。\n\n“我第二天还是出去看了一次。”\n\n“看水？”\n\n“数台阶。我夜里有点没听清，以为他说的是三十级。”\n\n三　旧桥板\n\n傍晚那段话还没讲完，桥那头来了一辆拉木料的车。\n\n车轮在土路上压出两道深印。赶车的人停在桥前，把鞭子插进车辕，问：\n\n“守桥的在吗？”\n\n兽站起来。\n\n那人从怀里掏出一张折了四折的纸。\n\n“木料到了。明天先拆旧桥，后天开工。村长让我来跟你核尺寸。”\n\n兽快步走过去。\n\n“批下来了？”\n\n“批了。”\n\n“全换？”\n\n“全换。”\n\n兽两只爪子接过图纸，摊在桥头的石墩上。它半个身子压着纸，怕晚风吹跑。\n\n修伞的女人也走了过来。\n\n“要造新桥了？”\n\n“我申请两年了。”兽说，“去年冬天，下面那根梁裂了一道缝。我填过一次，开春又裂了。我写了三封申请。”\n\n它用爪尖点着图纸。\n\n新桥比现在宽，能让两辆小车错身。桥两侧有护栏，中间还有一截遮雨的顶棚。\n\n“这里能挡雨？”它问。\n\n“能。”\n\n“雪呢？”\n\n“也能。”\n\n兽点了好几次头。\n\n核完尺寸，赶车的人走了，说明早带人来。女人也提起篮子，把兽的雨衣带回去修。\n\n兽把图纸收进屋，出来扫桥。\n\n它每天扫两遍。这天扫到最后一块桥板的时候，停了下来。\n\n板上有一道浅浅的凹痕。\n\n几年前，有个人挑着两筐南瓜过桥，扁担断了。最大的一只南瓜砸在这里，滚到兽脚下。那个人心疼得蹲在地上，兽以为瓜摔坏了，也跟着蹲下来看。\n\n后来那人说：“瓜没事。我这扁担用了十一年。”\n\n兽用扫帚把凹痕里的灰扫净。\n\n又往前走了两步，蹲下，摸了摸最靠近小屋的那块桥板。它刚来时，晚上住不惯，常常坐在这里，把两只脚悬在水面上。\n\n它在那里坐了一会儿。\n\n然后回屋，找出一截炭，在几块木板上做了记号。\n\n第二天，木匠带着人来了。\n\n兽先领他们去看裂开的梁，又指出哪几处钉子松了。说完，它指了指自己画过炭记的地方。\n\n“这几块拆的时候，能给我留下吗？”\n\n木匠弯下腰检查。\n\n“桥面上这些还能用。你要做什么？”\n\n兽还没想好。\n\n“先留下。”\n\n拆桥比它想的快。\n\n上午它还站在桥上跟木匠说话，下午，两岸之间就只剩下几根露出来的旧梁。\n\n兽站在岸边，忽然看见对面小屋的全貌。以前从这里看过去，桥头的护栏总会挡住门口那截墙。\n\n原来墙角长了那么多草。\n\n接下来的四天，它比平时还忙。\n\n河水浅，大家能踩石头过去。兽搬来几块平一些的大石头，在岸边铺了条临时的路。有人挑着担子来，它就帮着扶一把。\n\n那头每天过桥的驴不肯下水。\n\n兽蹲在水里，拿了半根胡萝卜等它。驴伸长脖子，把萝卜吃了，仍旧站着不动。\n\n赶驴的人笑得直不起腰。\n\n最后还是给驴蒙上眼，才牵过去。\n\n兽把这件事记在本子里，写了两行，又添上一句：\n\n“下次过了河再给。”\n\n新桥造好的那天，木匠把最后一颗钉子敲进去，让兽先走一趟。\n\n兽从这头走到那头，又走回来。\n\n“怎么样？”\n\n“很稳。”\n\n“还有呢？”\n\n兽低头看了看脚下。\n\n新木板颜色很浅，踩上去没有熟悉的响声。它走到中间，抬起一只脚，换了个地方落下。\n\n“挺好。”它说。\n\n木匠站在旁边看了一会儿。\n\n“旧桥板给你堆在屋后了。我下午还有半天空，你要用，就给你做出来。”\n\n兽回头看向小屋门口。\n\n那里放着它的一张凳子。别人来坐，通常得再搬一块石头，或是直接坐门槛。\n\n“做张桌子吧。”\n\n它比画了一个宽度。\n\n“放得下本子、茶杯，最好还能放个西瓜。”\n\n木匠看看它。\n\n“那得再宽点。”\n\n“好，再宽点。”\n\n傍晚，桌子做好了。\n\n桌腿用的是剩下的新木料，桌面拼了三块旧桥板。砸过南瓜的那道凹痕，被木匠刨浅了一些，还能看见。\n\n修伞的女人过来送雨衣。\n\n她把雨衣展开。两个歪洞都补好了，帽子上重新开了洞，洞边缝着一圈结实的线。\n\n“穿上试试。”\n\n兽套进去，晃了晃头，又低头，把两只角往前探。\n\n耳朵都在帽子里面。\n\n“行吗？”女人问。\n\n“行。”\n\n兽付了两个铜子，又从屋里搬出另一张凳子。\n\n女人在新桌旁坐下，伸手摸了摸那道凹痕。\n\n“这儿不平。”\n\n“砸过一个南瓜。”\n\n“多大？”\n\n兽张开两只爪子。\n\n女人看看它比画的大小，往后挪了挪杯子。\n\n兽笑起来，进屋拿了茶壶。\n\n坐下以后，它把那个空了大半的本子也摆上桌，翻到写海的那页。\n\n风从新桥中间穿过去。卖豆腐的推着空车回家，在遮雨棚下停了一会儿，抬头看了看屋顶。\n\n“这个好。”他说，“冬天卖剩的豆腐，能放这儿冻一会儿。”\n\n兽刚端起杯子，又放下了。\n\n它在本子空白处写了一行：\n\n“新桥第一天，已经有人替它找到了另一份工作。”\n\n四　一下午的雨\n\n新桥落成后的第一场雨，下在一个原本该晴的下午。\n\n兽早上洗了床单，挂在屋后。它在桌旁写字，听见顶棚响，先以为是鸟，抬头看了片刻，才想起床单。\n\n它跑到屋后，抱着一团湿布回来。桥上已经站了六个人。\n\n卖豆腐的把两桶豆腐往里面挪。一个背着娃娃的妇人站在旁边，侧过身，让孩子的脚也能躲进来。木匠的徒弟刚给人送完两把椅子，一把顶在自己头上，另一把抱在胸前。\n\n兽把床单搁进盆里，去烧水。\n\n水还没开，那个妇人便走了。她家灶上煨着东西，不敢多等，拿一块布盖住孩子，低头跑进雨里。\n\n兽探出头：“要不要借件雨衣？”\n\n她没听见。\n\n它迟了一步，又坐回来。\n\n木匠的徒弟问：“你这儿能坐吗？”\n\n兽指指门口。\n\n“那把。”\n\n“我说我送的这把。反正都淋过了。”\n\n两人坐着看雨。椅子的一条腿短了，徒弟坐下以后，前后摇了摇，皱起眉头，从口袋里拿出一片木楔。\n\n“送过去也得挨骂。”他说。\n\n他把木楔垫在下面，椅子稳了。过一会儿，又把木楔抽出来，翻过椅子，盯着四条腿看。\n\n兽找来尺子，替他扶着量。\n\n“我师父下午还问我，量过没有。”\n\n“你怎么说？”\n\n“我说量过了。”\n\n兽没接话。它自己记账时，也有过一时懒得检查，便在格子里画勾的事。\n\n徒弟把尺子贴着椅腿，量了两遍。\n\n“回去还得告诉他。”\n\n雨停时，水刚烧好。桥上的人纷纷走了，徒弟也提起两把椅子，说要趁天亮送过去。\n\n“你不先修？”\n\n“先跟人家说。说好了再带回来。”\n\n兽拿了两个杯子，最后只倒了一杯。\n\n它坐在桌旁，听见桥下雨水滴进河里。盆里的床单仍在淌水，屋子里有股潮湿的棉布味。\n\n它打开本子，写：\n\n“今天来避雨的有六个人。”\n\n写完，它想了一会儿，划掉了数字。它记不得后来从桥另一头走进来的那个老人，究竟是第六个还是第七个。\n\n它也没有写椅子的事。\n\n晚上，徒弟回来还尺子，带了一包热栗子。\n\n“师父说该谢你。”\n\n“椅子呢？”\n\n“修好了。他叫我以后哪条腿没量，就老实说哪条没量。”\n\n两个人剥栗子吃。兽的爪子很大，剥坏了好几个，徒弟给它示范怎样先从开口处捏一下。\n\n月亮出来以后，兽去把床单重新挂好。\n\n徒弟在身后问：“你那个本子，什么都记吗？”\n\n“也不是什么都记。”\n\n“那就好。”\n\n兽转过身，看见他正偷偷把最后一个栗子塞进口袋。\n\n“给我妹妹。”他解释。\n\n“我还没问呢。”兽说。\n\n五　信封上的名字\n\n几天以后，邮差把一封信搁在桌上。\n\n“给你的。”\n\n兽看着信封。\n\n上面写的是：\n\n“往北走，过磨坊和梨树，村口小河边，守桥的兽收。”\n\n地址里的“梨”字被雨洇开了，有人用另一种墨水补过一遍。\n\n“这也能送到？”兽问。\n\n“前面写了镇名。”邮差说，“再说，你还想往哪里送？”\n\n兽认出了旅店老板的字。\n\n老板说，它走后第二天，那个吱呀响的地板被修好了。工人掀起木板，在下面找到一把勺子、两枚旧铜子和一颗小孩的牙。牙不知道是谁的，放在柜台上三天，也没人来领。\n\n他还说，兽忘了一条毛巾。洗干净了，下次来拿。\n\n信末附着一个问题：\n\n“你们那边冬天河会冻住吗？冻住以后，鱼在哪儿？”\n\n兽读到这里，出门去看河。\n\n河水清清地流着。\n\n它蹲在岸边，想了很久。\n\n冬天鱼在哪儿，它竟然也不知道。\n\n它原本准备立刻回信。纸摊开了，第一行写着“这里很好”，下面却迟迟没有落笔。\n\n下午，一个提鱼篓的老人经过，兽把他请进来，问起河里的鱼。\n\n老人说了些深水、淤泥、草根底下的地方，又说这得看什么鱼，自己也只认得常捉的几种。\n\n兽听完，问能不能记。\n\n“你记吧。要寄出去，记得写上，我也没把它们冬天一条条捞出来看过。”\n\n兽写了整整三页。\n\n讲河写了一页，讲修桥写了一页，最后一页讲自己现在有张桌子，桌面上有一道凹痕，放杯子得避开。\n\n它写得慢，第三页写完，手已经酸了。收信人的名字抄错一次，用小刀刮掉，纸上起了毛。\n\n第二天，它把信交给邮差。\n\n邮差掂了掂，说邮钱得多两个铜子。\n\n兽掏钱。\n\n“你以前收到过别人寄来的信吗？”邮差问。\n\n“有。补木料的回执，工钱的通知，桥下那段河道改过一次编号。”\n\n邮差看看它，把信装进邮包。\n\n“这种呢？”\n\n兽摇头。\n\n那封从海边来的信，它当天读了五遍。睡觉前，又取出来看了一次信封。\n\n它一直住在桥边，别人寄东西，知道桥就够了。它从没觉得这有什么不妥。\n\n现在它想给自己找一个名字。\n\n它试着在纸上写了几个。有一个写出来很神气，念出来像是在吓唬人；另一个听起来不错，仔细想想，是镇上一家粮铺的字号。\n\n最后，它把纸收进抽屉，暂时作罢。\n\n第二次回信时，它在末尾写：\n\n“我还没想好叫什么。你先照旧寄。毛巾替我留着，谢谢。”\n\n六　借出去的本子\n\n女孩来借本子，说学校里要办一次小小的朗读会。\n\n“我自己的呢？”兽问。\n\n“你的也行。以前听来的也行。读完就还你。”\n\n兽给她挑了第三本。\n\n第三本最厚，里面夹着树叶，树叶下面压着一张糖纸。它翻了半天，翻到一个年轻人第一次卖菜的故事，说这篇很有意思。年轻人认不得秤，把半筐萝卜便宜卖了，回家路上才算明白，气得又折回去，找了半天，找不着买的人。\n\n“他后来怎么样？”女孩问。\n\n“后来学会看秤了。”\n\n朗读会在三天以后。\n\n第四天，卖豆腐的经过，问兽是不是把他哥的事给孩子们讲了。\n\n“是你哥？”\n\n“你不记得了？从前跟我一起挑担子的那个。”\n\n兽想起来了。\n\n“大家笑了？”它问。\n\n“笑了。我儿子昨晚回家还问他大伯，后来是不是又赔了一筐。”\n\n卖豆腐的说这话时，也没发火，只把桶盖掀开，看看里面还剩多少。\n\n“我哥说，你记性倒好。”\n\n兽当天下午去了一趟豆腐坊。\n\n哥哥正在洗桶。兽站在水沟边等他把桶洗完。\n\n“那件事，”兽说，“我借给人看了。”\n\n“我知道。”\n\n“我没想过先来问你。”\n\n哥哥把水倒出去。\n\n“我早忘了自己还讲过这个。”\n\n兽的爪子在衣角上搓了搓。\n\n“要不要我把那页拿掉？”\n\n“你拿掉干什么？我又不是没干过。”\n\n哥哥把桶倒扣在架子上，重新拧紧一根绳。\n\n“就是别再说我认不得秤。我那时候认得。我爹的秤跟借来的那把不一样，我一着急，看错了。”\n\n兽点头。\n\n“还有，卖的是白菜。”\n\n兽又点头。\n\n“下次讲之前来问我。我自己都能添两句。”\n\n回去以后，兽取出第三本。\n\n它当年写得很肯定：“有个认不得秤的人，去卖萝卜。”\n\n那天还有谁从桥上走过，它已经不记得。年轻人原先怎么说的，它也记不得了。只记得自己听完，笑了好一阵。\n\n它用新纸把那一页重写了一遍，夹在原页后面。\n\n女孩来还书时，它把这件事告诉她。\n\n女孩坐下，挨页看了看。\n\n“我也讲错了。”她说，“我说他赔了一筐。这样读起来更好笑。”\n\n两个人在桌边坐了一会儿。\n\n最后，女孩说：“明天我跟大家说。”\n\n兽送她到桥头。\n\n“你以后还办朗读会吗？”\n\n“办。得等下学期。”\n\n“那我自己写一篇。”\n\n“写什么？”\n\n兽想起海边那十三级台阶。\n\n“写一件我也挺不好意思的事。”\n\n七　修伞铺的门\n\n修伞的女人姓何。\n\n村里人叫她何师傅。兽知道这个称呼，是因为它提着一只漏水的茶壶去找她，门口正好有人来取伞。\n\n何师傅没接茶壶。\n\n“我修伞。”\n\n“你上回把雨衣也修好了。”\n\n“雨衣能缝。”\n\n兽看看壶底的小洞。\n\n“这个不能？”\n\n何师傅接过去，翻过来，叹了口气。\n\n“我给你问问补锅的。先搁那儿。”\n\n店里比兽以为的窄。它进去时，一只角碰响了门上的铃铛。墙边有两排伞，颜色深的在外，颜色浅的靠里，桌上摆着细铁丝、油布和剪下来的旧伞面。\n\n兽低头看那些布。\n\n“这些还要吗？”\n\n“做补片。”\n\n“这个蓝色的呢？”\n\n“也要。”\n\n兽收回爪子。\n\n何师傅看了它一眼，把那块蓝布推给它。\n\n“你想做什么？”\n\n“本子的封皮起毛了，想包一下。”\n\n她量了量，说这块不够，得拼。\n\n兽坐着等。何师傅剪布时，门不停地被风吹开。她起身关了两次，第三次索性拿一块砖顶住。\n\n“门闩坏了？”兽问。\n\n“没坏。关紧了别人以为我不在。”\n\n“挂个牌子呢？”\n\n“挂过。来的人还是敲。手里都拿着活，得起身给他们开。”\n\n兽盯着那扇门。\n\n它说可以做一根绳，从里面绕过去，开门的时候拉一下。说到一半，它想起自己也不知道绳该拴在哪儿，便停住了。\n\n何师傅没有笑它。她把剪刀放下，跟它一起研究了一会儿。\n\n最后，两个人约了木匠来看。\n\n木匠说换个合页就行。\n\n他看了一眼兽，又看了一眼何师傅，问：“你们那根绳，原先打算绕到哪里去？”\n\n兽把想好的路线给他指了一遍。\n\n木匠沿着它的爪尖看过去。\n\n“我个子矮，来一次得勒一次脖子。”\n\n何师傅先笑了，兽也跟着笑。木匠拿出工具，边拆合页边笑，掉了一颗螺丝，三个人又蹲下去找。\n\n壶隔了两天补好。本子也包好了，是深蓝和灰色拼在一起的，夹页的位置留得很宽。\n\n兽付过钱，提着壶往回走。走到门口，何师傅叫住它。\n\n“这星期日你忙不忙？”\n\n“怎么？”\n\n“我要去镇上进油布。顺路有一家卖纸的。你不是总说这儿买不到厚纸？”\n\n兽立刻想起自己星期日要做的事：扫桥、查木梁、把领来的钉子数清楚。查木梁可以提前，钉子也能星期一再数。\n\n它站在门边算了半天。\n\n何师傅已经重新拿起针，等着它的答复。\n\n“去。”兽说。\n\n它走出门，那扇门在身后慢慢合上。铃铛响了一声，停住了。\n\n八　雨先下在上游\n\n星期六夜里，兽被窗外一阵沉闷的撞击声惊醒。\n\n兽披上衣服，推开门，看见一根树枝从桥下冲过去。\n\n河水是浑的。\n\n村里只落了几滴雨，屋檐下面的土还是干的。上游的山却从黄昏开始，一直闷着雷。\n\n兽提灯去看桥墩。石头缝里那一丛它前两天还准备拔掉的草，已经被水压住。水往桥底的木梁上打，发出密密的拍击声。\n\n它回屋，取出两根刷过红漆的横木。\n\n天亮以前，两边的路口都拦好了。\n\n卖豆腐的第一个来。\n\n他推着两桶新做的豆腐，看见横木，把车停住。\n\n“什么时候能过？”\n\n“还不知道。”\n\n“我从这儿到镇上，半个时辰就够。你让我先过去。”\n\n兽没有搬横木。\n\n“水还在涨。”\n\n两人隔着车站着。卖豆腐的往桥底看了一眼，回来又握住车把。\n\n“我过了就不过来。傍晚水退了再回。”\n\n兽摇头。\n\n卖豆腐的嘴唇动了动，把车掉过头。木轮卡在路旁的石头上，他推了两次，才推出去。\n\n兽想上前帮忙，他抬手挡了一下。\n\n天亮后，村长带人来了。女孩也来，头发没梳整齐，一边系鞋带，一边问还缺什么。\n\n兽让她去河弯那边提醒挑水的人。另一岸的木匠领了横木，守在路口。大家沿着高处把警示牌摆好，退回岸边。\n\n到午前，河里的石头全看不见了。\n\n一棵连根拔起的小树从水面斜斜地冲过来，枝杈撞上桥墩，猛地转了一圈。树根挂在那里，后面又积起草和烂枝。\n\n兽抓起长杆，往前走了一步。\n\n村长拉住它的雨衣。\n\n“够不着。”\n\n它试着比了一下距离，停住了。\n\n水从树根两边挤过去，泡沫越来越密。过了很久，那棵树才一点点转开，整团杂物往下一沉，冲出了桥洞。\n\n兽一直盯着，直到再也看不见。\n\n它的爪子还紧紧攥着长杆。\n\n下午，何师傅送来一锅饭。\n\n星期日去镇上的事，谁也没提。\n\n女孩来吃饭时，裙摆上全是泥。她说河弯有个老人已经把桶放下去了，好在绳子没解，她喊了一声，对方才抬头。\n\n“我就一直站那儿。”她说，“他也不走。我问他为什么，他说怕我一个人站着没意思。”\n\n兽低头扒了一口饭。\n\n女孩掀开锅盖，发现底下还有一个荷包蛋。\n\n“给你的。”何师傅说，“你早上没吃。”\n\n天黑以后，水开始慢慢往下退。\n\n兽仍然睡不着，每隔一会儿便出来照一次。雨衣里暖暖的，两只耳朵都干着。\n\n后半夜，它困得坐在门槛上点头。木匠过来接班，把灯从它爪子里拿走。\n\n“醒了再说。”\n\n兽进屋时，长杆还靠在墙边。它把杆子往里面推了推，免得明早有人被绊着，才躺了下去。\n\n九　豆腐已经做出来了\n\n桥在星期一中午重新开放。\n\n木匠和兽查了半天，换掉一块被杂物撞裂的侧板，又把岸边松动的石块垫稳。\n\n人们开始过桥。一个赶路的商人走到中间，回头问：“这不挺结实的吗？”\n\n兽把拆下来的侧板搬到屋后，没有回答。\n\n卖豆腐的傍晚来了，车上只有空桶。\n\n“昨天倒了一桶半。”他说。\n\n兽让开路。\n\n他却停在桌子旁边，坐下了。\n\n“水是午前才涨到那么高的。我早上过去，能卖半天。”\n\n“我早上不知道后面会涨多快。”\n\n“你不知道，我也不知道。可豆腐已经做出来了。”\n\n兽给他倒水。他没喝，站起来，把杯子往桌子里面挪了挪。\n\n“算了。”他说。\n\n这两个字让兽难受了很久。\n\n晚上它算了自己的钱。付完修雨衣、寄信和壶的钱，抽屉里还有一些。赔半桶，勉强够；赔一桶半，得等下月工钱。\n\n它把铜子摊在桌上，又收回去。\n\n第二天，何师傅来借火。兽把这件事讲给她听。\n\n“你要给，就想好自己为什么给。”她说，“以后每回涨水都照这么办？”\n\n兽摇头。\n\n“那你怎么跟下一家说？”\n\n兽又没说出话。\n\n何师傅把引着的炭拨进小炉，没有替它再往下想。\n\n过了两天，兽去了豆腐坊。\n\n卖豆腐的在磨豆子。石磨压着湿豆，发出低低的声音。他没抬头，兽便在旁边站着。\n\n“我想过，”兽说，“我还是得拦。那天再来一次，我也得拦。”\n\n卖豆腐的手停了一下，又推起来。\n\n“我知道你要说这个。”\n\n“我也想过赔你的豆腐。可我赔不起所有人的。”\n\n石磨又转了一圈。\n\n“我没找你要。”\n\n兽低下头。\n\n水顺着磨盘淌进木桶。两个人隔着磨子，一个站，一个推。窗外有人晒着淋湿的被褥，竹竿的一头伸进窗框。\n\n“往后关桥，”卖豆腐的说，“能不能尽早让人来喊我一声？我哥听见河响了，还说没事。那时候一锅豆浆正热着，另一锅还没点。”\n\n兽认真问了他每天什么时辰起床，什么时辰开始磨豆子。\n\n他一项项说，说完又补充，冬天晚一点，赶庙会还得早。\n\n回去以后，兽找村长商量报信的办法。上游能传来的消息先传；夜里真要拦桥，村里各条路也得有人去叫。纸上列了几户早起做生意的人，空了半行，留着以后添。\n\n这些事忙了几天。卖豆腐的仍旧从桥上过，点点头，不怎么停。\n\n兽也没再问他消气没有。\n\n有一天，那两只桶的绳子松了，兽过去帮他抬了一下。他让兽搭了手。\n\n等桶放稳，他说：“小心，底下有豆渣，滑。”\n\n兽把爪子移开，扶住车辕。卖豆腐的重新绑紧绳，两人一道，把车推上了桥。\n\n十　阿禾的箱子\n\n暑气退下去的时候，女孩拖着一只箱子来到桥头。\n\n她叫阿禾。兽平常总在她赶路时听见别人喊这个名字：阿禾，把你家的篮子带回去；阿禾，明天上学别忘了那把尺。\n\n她这次带了尺，也带了书、两套衣服和一双新鞋。\n\n箱盖合不上。\n\n“帮我按一下。”她说。\n\n兽一只爪子按住箱盖，另一只扶住底。阿禾扣上搭扣，退后看了看，箱子靠近铰链的地方，仍然鼓着。\n\n“得拿点出来。”兽说。\n\n阿禾不肯。\n\n她要去城里的工艺学校，夏天才收到补录的信。信来以前，她说过要在原来的学校办朗读会，也说过冬天帮家里做豆腐架子。信来以后，家里人围着桌子算了三个晚上。\n\n“你怕不怕？”兽问。\n\n“怕钱带得不够。”\n\n“还有呢？”\n\n“怕去晚了，只能睡靠茅厕那间。我表姐说那间特别潮。”\n\n兽想起她说海上起雾的样子。那时候它觉得，她大概什么都懂。\n\n阿禾蹲下来，把箱子重新打开。\n\n“我可能学不好。”她说。\n\n兽刚想说不会，阿禾便把一把折扇抽了出来，又抽出一本硬皮书。\n\n“他们有人已经会画整套机器了。我连学校的量具都没摸过。”\n\n兽嘴边的话停了停。\n\n“我第一次给桥钉木板，把两块连脚手架一起钉住了。”\n\n阿禾抬头。\n\n“真的？”\n\n“后来拆的时候才发现。多忙了一下午。”\n\n“这件事你也没记？”\n\n“没记。”\n\n阿禾笑了。她把书翻开，犹豫很久，还是放回箱子。\n\n最后留在桌上的，是一只沉沉的玻璃杯。\n\n“那边买得着。”她说。\n\n兽把杯子收进柜子。\n\n“回来还给你。”\n\n“你先用。别放在那个坑上，会歪。”\n\n她出发那天，兽送到磨坊。\n\n车还没来，两人坐在梨树下。梨已经摘得差不多，树顶剩了几个，鸟啄过了，风一吹，叶子翻出浅色的一面。\n\n阿禾掰开一个烧饼，分给兽一半。\n\n“你的故事写了吗？”她问。\n\n“写了开头。”\n\n“写完寄给我。”\n\n兽从衣袋里拿出一张纸，让她写地址。纸的背面是给它自己列的清单，上面有“钉子”和“灯油”。她避开透过来的字，把地址一笔一画写清楚。\n\n车来时，她把笔还给它，提起箱子。\n\n兽又伸出爪子，替她托了一下箱底。箱子上车，阿禾也上车。车夫收好凳子，吆喝一声，车便动了。\n\n它送过许多人。这次却往前追了两步。\n\n阿禾从窗口探头：“还有什么？”\n\n兽想不出自己要喊什么。\n\n最后它指指她那半个烧饼。\n\n“拿好了。”\n\n阿禾把饼举起来，给它看。她的另一只手已经压在箱子上，免得它一路颠着往下掉。\n\n十一　穿着鞋的夜晚\n\n阿禾走后，兽把故事的开头抄了一遍。\n\n“我第一次去看海，走了五天。”\n\n抄完，它发现不对。\n\n出发那天，为什么没有坐车？它记得自己原先打算在镇上搭车，也记得背包的带子勒得肩膀疼，却想不起在哪个岔路改了主意。\n\n它去翻旅行的本子。\n\n里面记着磨坊和梨树，记着面包店的面团，唯独没有这件事。\n\n它把那一行划掉，重新写：\n\n“我到了海边，先去找住处。”\n\n这次顺利得多。\n\n它写老板怎么把钥匙给它，自己上楼的时候，角又怎么碰了一下楼梯拐弯处的灯罩。灯罩摇晃，老板在底下喊小心，它立刻站住，以为要赔钱。\n\n它写窗外的浪声越来越近，自己把床边的包搬到椅子上，过一会儿又搬到柜顶。\n\n它写去问老板时，故意先要了一壶热水，等水烧开，才顺便提起海水会不会涨进屋。\n\n它慢慢记起，当时老板正给女儿扎头发。\n\n小孩坐在柜台上，手里攥着一截红绳。老板一边回答兽，一边想把她歪掉的辫子重新拆开。小孩忍了半天，说：“爹，你别说了，你又把这边扯长了。”\n\n兽写到这里，笑出了声。\n\n它原先只记得那十三级台阶。\n\n故事写了六天。\n\n它本来想在最后加一句，解释自己后来怎样懂得不必害怕。可是它知道，倘若换一个陌生地方，夜里听见很大的水声，自己大概还是要出去问问。\n\n它便写到第二天早上。\n\n早上，鞋已经脱了，整齐地摆在床下。它一只脚踩进鞋里，另一只袜子不见了，在床底找了一圈，最后发现挂在自己的角上。\n\n前一晚它怕袜子落进水里，特地找了一个高处。\n\n寄信前，它拿给何师傅看。\n\n何师傅读得很慢。她读完，翻回第一页，又读了一小段。\n\n“你这里写，掌柜扎好辫子才带你下楼。”\n\n“嗯。”\n\n“后面又说，你们上来时，他女儿正等着他扎另一边。”\n\n兽接过来，看了半天。\n\n“那就是没扎好。”\n\n它取来笔，改了几个字。\n\n何师傅把稿子推回来，端起杯子。\n\n“挂袜子那儿，你给别人讲过吗？”\n\n兽摇头。\n\n“我刚想起来。”\n\n那一回，兽把稿子抄了两份，一份留给自己，一份寄去城里。\n\n阿禾的回信来得很快。\n\n她说宿舍不靠茅厕，不过窗子推不开，一开就碰隔壁伸出来的晾衣杆。她和室友正在商量怎么改。\n\n她还说，她把故事读给了同屋的人听，问过兽能不能让她们再抄一份。信的最后，有人添了一行不同的字：\n\n“请问角上还能挂几只袜子？”\n\n兽拿起尺子，比了比。\n\n回信时，它写：“没试过。左边大概还能多挂一只。”\n\n十二　轮到谁\n\n第一场雪来的时候，兽病了。\n\n它半夜还出去铲过一次雪，早上醒来，觉得屋子一阵近，一阵远。伸爪子去够杯子，爪子碰到了桌沿，杯子却像又往前挪了一点。\n\n它躺回去，等屋子停稳。\n\n门被敲响时，它才发现天已经大亮。\n\n木匠的徒弟站在门外，提着一把铲子。\n\n“你怎么没出来？”\n\n兽坐起来，刚要解释，打了个喷嚏。\n\n徒弟往后一躲。\n\n“知道了。”\n\n他铲了桥上的雪，又去找村长。何师傅听见消息，送了热饭来。卖豆腐的把车停在门口，问要不要捎大夫。最后大夫也来了，让兽安心躺着。\n\n他们商量事情时，兽在屋里听得清清楚楚。\n\n第二天谁来，第三天谁没空，木匠的徒弟下午还要送一套窗框，邮差只能早上替着看一眼，何师傅有两把赶着交的伞。\n\n兽很想出去说，自己明天就能起来。\n\n它掀开被子，刚穿上一只鞋，忽然困了。等再次醒来，鞋还在脚上，另一只被谁整齐地搁在床边。\n\n它养了四天。\n\n第五天出来，桥上扫得很干净，灯油少了半壶，钉子一颗没丢。桌上却多了一张纸，密密麻麻记着这几天谁来过桥。\n\n“这个不用记。”兽对徒弟说。\n\n“不是怕你回来想知道吗？”\n\n兽拿起那张纸。\n\n上面写着：\n\n“早上，赶驴的人。驴不想走。”\n\n“中午，两个赶驴的人。商量完，驴还是不想走。”\n\n兽笑得咳了一会儿，把纸留了下来。\n\n病好以后，它去了一趟村长家。\n\n两个人算了一下午账。\n\n村长起初想定一个替班的人，逢兽有事便去。兽问那个替班的人平时做什么，村长翻翻名单，划掉两个有固定活计的，又添上一个，觉得也不妥。\n\n最后谈成的是每星期歇两天，另请人按天领工钱。兽自己的工钱照旧。村长说还得在月会上过一遍，河两岸的两组人都要来。\n\n月会没有一遍就过。\n\n有人觉得天晴时用不着守，有人说冬天铲雪得早，也有人问，新桥刚修好，为什么又要添一笔钱。\n\n兽把日常检查的本子拿给他们看，一项项讲。讲到半夜涨水时，它又讲了一遍报信的办法。\n\n会开到灯芯结花。村长拨了两次灯，才把账做完。\n\n木匠的徒弟后来接下了其中一天，另一天由磨坊的人轮着来。几个人一起学怎样查桥，哪里放横木，出事去找谁。要紧的步骤写在纸上，用油布包好，挂在屋里。\n\n兽第一次正式休息，是个晴天。\n\n它站在门口，看徒弟检查灯，检查栏杆，又把横木搬出来看了一眼。\n\n“你去吧。”徒弟说。\n\n“我就在这儿。”\n\n“那你把铲子放下。”\n\n兽看看自己的爪子。\n\n它放下铲子，沿着河走了一段，找了块背风的石头坐着。坐了不久，它觉得该回去看看，又想起徒弟皱眉的样子，便多坐了一会儿。\n\n石头晒热了，透过衣服贴着后背。\n\n它后来睡着了。醒来时，太阳已经绕到另一边，磨坊的人正推着车从远处经过。\n\n对方问它坐这儿做什么。\n\n“晒太阳。”\n\n“这会儿？”\n\n兽起身，绕到石头的另一面，又坐下。\n\n“刚才这边没有。”它说。\n\n十三　九步\n\n冬天很长。\n\n河边冻住了一圈，水在中间细细地流。兽没有忘记旅店老板问的鱼，偶尔还会去看，只是隔着冰和黑水，仍然一条也看不到。\n\n它在信里如实写了。\n\n老板回信说，今年海边也冷，女儿的两条辫子已经能扎得一样长。信纸背面是小孩画的海，天是绿的，鱼和房子差不多大。\n\n另一个信封从城里来，里面掉出两张画。\n\n阿禾画了一辆火车。她旁边有个室友总往车站跑，回来便讲轮轴、汽笛和时刻表。阿禾听得烦，陪她去了一次，回来也想画。\n\n画的角落写着：“从南站往城里来，最后一段会过很长的高架。傍晚看得见窗子一扇扇亮。”\n\n兽把画展开，压在桌面上。\n\n火车比它见过的车都长。它沿着窗子一格一格看过去，在其中一格里，想象了一下自己的角。\n\n开春以后，它开始存钱。\n\n它打算坐一次火车，去城里看看。顺便给阿禾送回玻璃杯，再买几沓厚纸。\n\n村长问它去几天。\n\n“七天。”\n\n“哪天走？”\n\n“下个月十六。”\n\n村长把替班的时间排好，递给它一张纸，让它看有没有错。\n\n兽接过来，上面写着“桥务交接”。日期、灯油、工具都列得明白，最后有一个空格，要它签名。\n\n它在空格里写下“守桥的兽”，看了看，又停住。\n\n村长等它签完，去灶间添水。\n\n兽把笔蘸了墨，在废纸上写字。\n\n它早先给自己想的那些名字，还在抽屉里。这个太长，那个像粮铺，还有一个念起来不错，却总写错最后一笔。\n\n它望着窗外，想起旧桥。\n\n它刚来那天，村长的女儿还小，带着它从桥上走过去，一边走，一边数。数到九，两个人到了对岸。小孩说：“我得走十五步。你的腿真长。”\n\n它回来又走了一遍，确实是九步。\n\n后来每次打扫，扫到桥那头，它总能正好数完。\n\n村长端着水回来，看见纸上的两个字。\n\n“九步？”\n\n兽点头。\n\n村长念了一遍，说好记，接过纸，放在最上面。\n\n名字定下以后，兽没有立刻到处告诉人。\n\n它先给海边回信，在末尾签了九步，又在括号里注明，就是原来那头兽。\n\n邮差看见信封，问：“改名了？”\n\n“刚起的。”\n\n邮差低头找了一下自己的小册子，把那两个字添进去。\n\n“那我以后喊九步，你可得应。”\n\n兽说会。\n\n出发前一天，何师傅陪它到镇上买票。\n\n买票的人问要去哪里，何师傅刚想替它答，兽已经把城名说了出来。它数好钱，推过小窗口。\n\n车票很薄，拿在爪子里，甚至不像够让那么大的车走一小段。\n\n它小心地把票收进新缝的衣袋，扣好搭扣。\n\n回去的路上，何师傅问：“你这次最想看什么？”\n\n“火车。”\n\n“坐完呢？”\n\n兽想了想。\n\n“到了再看。”\n\n十四　车窗里的灯\n\n火车还没来，月台已经响了起来。\n\n先是脚底下微微一震，随后远处传来很长的一声汽笛。兽提着包，跟着人群往前挪，挪到白线后面，便不敢再动。\n\n车停下，车门开了。\n\n一个搬行李的催它上去。它抬起脚，踩上一级台阶，忽然想起自己是特意来坐这辆车的，便又低头看了看。\n\n后面的人等得不耐烦，轻轻咳了一声。\n\n兽赶紧进了车厢。\n\n座位比想象中小。它的两只角刚好能避开行李架，但要往前低一点头。它把包塞进座位下面，坐下，再调整一次，给旁边的人让出地方。\n\n旁边是个提着瓦罐的男人，罐口用好几层布扎着。\n\n“头一回？”男人问。\n\n兽点头。\n\n“走的时候会响一下，别怕。”\n\n火车响了一下，男人自己倒赶紧抱住罐子。\n\n兽也抱住了膝盖。\n\n窗外的月台一点点往后滑。站着的人退得越来越快，柱子一根根过去，最后只剩一截低墙，墙头上有一只猫。\n\n兽盯着那只猫，猫也看着它。很快，连墙也没有了。\n\n田野展开。\n\n它经过了许多看起来相似的树。刚觉得树都一样，又发现远处有一棵歪得特别厉害，树下拴着一匹马。\n\n它想看清马的颜色，马却已经过去了。\n\n接着是屋顶、晒场、一片积着水的田。有个人在田里抬起头，兽还没来得及举爪子，便看不见那个人了。\n\n半路停站，提瓦罐的男人下了车。\n\n“罐里是什么？”兽终于问。\n\n“我娘腌的菜。上回摔了一罐，她到现在还念叨。”\n\n男人站稳，把罐子换到另一只手里，往出口走去。\n\n空出来的座位后来上了一个睡觉的人。那个人把帽檐拉低，从坐下到下车，只抬头问过一次到没到站。\n\n兽一个人看了很久窗外。\n\n它原想路上写点什么，取出本子才发现，车一晃，字就跟着歪。它写了半行，停笔，把本子合上。\n\n太阳落下去时，火车开上高处。\n\n阿禾说的那些窗子出现了。\n\n先是一家厨房，灯罩很低，照着一个人在切菜。再过去是一排晾着衣服的窗，有个小孩趴在窗台上，正在等火车。\n\n兽抬起爪子。\n\n小孩也抬手，飞快地挥了几下。\n\n更多的灯亮起来。窗框把房间截成一块一块，每一块里都有它来不及看清的东西。它把脸转向前面，想多留住一会儿，火车却已经慢下来。\n\n站台比出发时长。\n\n兽拿好包，下车，顺着人群走到出口。阿禾在那里等，手里举着一张写了“九步”的纸，举得手酸，时不时换一下。\n\n兽走到她面前。\n\n她把纸放下来，先看见它衣角沾着一点白灰。\n\n“你靠哪儿了？”\n\n“不知道。”\n\n她替它拍了两下。兽也抬起爪子，指指她鼻尖的一道黑印。\n\n阿禾用手背蹭过，又多了一道。\n\n“先吃饭。”她说。\n\n十五　阿禾画到一半的图\n\n他们在一家面铺坐下。\n\n阿禾很熟练地点面，要了两份小菜。兽看着墙上的价钱，心里把自己带的钱重新数了一遍。\n\n阿禾也看了一眼，说：“这顿我请。我替人誊过几张图，领到钱了。”\n\n面上来以后，两个人都低头吃了一阵。\n\n兽的肚子比它以为的饿。吃完第一碗，它有些犹豫，阿禾已经叫来店家，又添了半碗。\n\n“你在信里没说这里这么贵。”兽小声说。\n\n“我刚来也没想到。”\n\n她给它找了一家住处，离学校两条街，房间不朝海，窗外是一堵长满爬藤的墙。\n\n兽放下包，把阿禾的玻璃杯拿出来。\n\n杯子包在毛巾里，里面还塞着两只干净袜子。\n\n阿禾小心地捧起来。\n\n“你真带了。”\n\n“我怕路上碎。”\n\n她把杯子放在桌上。兽取出袜子，想找地方挂，一抬头，正看见阿禾望着它的角。\n\n两个人都笑了。\n\n第二天，阿禾带它去看学校。\n\n她原先说过，院子里有一座做得极细的钟，走到门口，却发现钟拆了，只剩下空架子。园丁在旁边锄草，说修了半个月，还没修好。\n\n阿禾又领它去看展室，展室正换东西，门也锁着。\n\n“上星期明明还开。”她说。\n\n兽把鼻子凑近窗子，看见里面一堆盖着布的架子。\n\n“那个像船。”\n\n“那就是清洁的水桶。”\n\n他们绕到工房。\n\n阿禾在里面有一张桌子。桌上压着图，尺子横放着，边上是几个磨坏的木块。她拿起其中一个，又放下，似乎想收起来。\n\n“这个是什么？”兽问。\n\n“我的作业。”\n\n兽等她往下说。\n\n“还不成。”\n\n她把一张纸拖过来，给兽看自己想做的东西。图上有齿轮、轴和一只可以升降的小台子。兽看了很久，试着转动桌上的木轮，木轮只动了半圈，便卡住。\n\n“我以为能做出来，写信时就说了。”阿禾说，“结果一直卡在这儿。”\n\n“今天也要做？”\n\n“今天下午得交一次。”\n\n兽把爪子收回来。\n\n“那你先做。”\n\n阿禾看看它，又看看窗外。\n\n“还说带你去看大桥。”\n\n“你每天在哪儿吃中饭？”\n\n她指了一个方向。\n\n兽问清楚时辰，便自己出去走。它在校园里找了张长凳，看了半天人搬东西。有人抱着图纸匆匆跑过去，掉了一卷，跑回来捡，嘴里念着什么，又跑走了。\n\n到了中午，阿禾从工房出来，额头上有细细的汗。\n\n她的东西还是卡着。\n\n兽没有问这次为什么。两人端着饭找位置，坐在窗边，一只鸟隔着玻璃看他们吃。阿禾说它已经在这里讨过一个月，专挑吃得慢的人。\n\n下午，兽去逛了一家旧书铺。\n\n晚上阿禾来找它，告诉它作业被退了，要改三个地方。她累得不想再介绍景点，坐在椅子上，喝完一整杯水。\n\n兽翻开在书铺买的旧册子，让她看里面一幅画。\n\n画着一只很小的船，船上却放了一张极大的床。\n\n“你说，”它问，“这个船走起来，会不会把人晃下来？”\n\n阿禾凑过来，认真看了一会儿。\n\n“得看床脚怎么固定。”\n\n她拿出铅笔，在旁边的废纸上画了几笔。画着画着，便把自己的那张图也铺开，给兽讲起另外三个还没改好的地方。\n\n十六　空出来的一天\n\n第三天，阿禾要上课。\n\n兽自己出门，照着店家指的路，想去看城里的大钟。\n\n它走错了一个街口，到了另一个卖钟的地方。铺子里挂着大大小小的钟，有一个钟每隔一会儿，就钻出一只鸟，喊两声，又缩回去。\n\n兽站在橱窗外，等那只鸟再出来。\n\n店家出来问要买什么。\n\n兽说自己想看广场上的钟。\n\n店家有些失望，仍给它指了路。它道过谢，再走出去，刚转过街角，便听见身后的鸟又喊了两声。\n\n广场上的钟很高。\n\n兽看了一会儿，觉得确实很高，又不知道该做什么。它在台阶上坐下，拆开早上买的面包，边吃边看鸽子。\n\n鸽子也看着它。\n\n它把面包收回袋里，鸽子便走远一点。\n\n原先安排的一天，过了不到半天，便没什么可做。\n\n兽取出本子，想看看还能去哪里。地图被它折得有些乱，上面画了一座塔、三座桥和一片小树林。树林在城的另一边，走过去大概要很久。\n\n它把地图合上，往有树荫的地方走。\n\n午后，它在一处小花园听见音乐。\n\n先是一根很细的声音，停住，重来。接着有几声低的，慢慢往前走。它顺着声音找到一排椅子，椅子前面坐着五个人，各自拿着它认得或认不得的乐器。\n\n他们好像没有准备好。\n\n一个人总慢半拍。另一个的弦出了问题，低头拨了半天。最年长的那个戴着眼镜，敲敲谱架，让大家从刚才的地方再来。\n\n兽坐在最后一排。\n\n它起初想，这段像河，那段像火车。想了一会儿，几个人又停下，低声商量，所有东西都断了。\n\n它等着。\n\n重新响起来的时候，那根细细的声音先走了一小段，低的声音从后面接上去。兽把包往脚边挪，坐得舒服一点。\n\n这一次它没有想该像什么。\n\n树叶在椅子上投下不停变化的影子。有人推着小车从远处经过，轮子咯噔一声，音乐仍旧往前走。\n\n兽一直听到他们收拾东西。\n\n戴眼镜的那个人走过来，问它是不是在等谁。\n\n“我听这个。”兽说。\n\n“今天是排练。后天才正式演。”\n\n“后天几点？”\n\n那个人告诉它，又问它住得远不远。\n\n兽把住处说了，对方点点头，说很好找，沿原路来就成。\n\n回去时，兽在本子上添了一行时间。\n\n那天晚上，它没有记广场上的钟有多高。它写下花园的名字，试着把下午听到的调子哼出来，哼了两声，自己先皱起鼻子。\n\n阿禾来敲门，隔着门板问：“你这屋的水管也坏了？”\n\n兽把本子合上，走去开门。\n\n“没有。”\n\n“我听见响。”\n\n“是我。”\n\n十七　寄回去的信\n\n兽后来还是去了那座大桥。\n\n桥下的船慢慢往前开，一艘很低，一艘很高。它靠在栏杆旁，研究水是怎么从桥墩两边绕过去的，又看工人在桥底吊着的架子上补漆。\n\n它看得太专心，站了快一个时辰，才发现桥边还有张长凳。\n\n它坐下来，吃掉最后半块面包。\n\n那家卖厚纸的店也找到了。纸很厚，比村里的贵。兽原先想买十沓，数过钱，只买了四沓。店家用绳捆紧，提起来，居然比它想的沉。\n\n离开店门时，它看见柜台边摆着一种绿皮本子，纸薄一些，中间缝着线。\n\n它已经付完钱，站了片刻，又走回来。\n\n“再要一本这个。”\n\n绿皮本子的第一页，它写给自己。\n\n“我听过五个人一起演奏。里面有一段，我想再听一次。”\n\n它把这一页小心撕下，重新抄进信纸。接着写了花园在哪里，旁边哪条路正在挖，门口有一棵矮树，树下的椅子下午会晒着。\n\n写完，它装进信封，写下桥边的地址。\n\n收信人是九步。\n\n寄信时，它想起那个给自己写信的老人。它仍然不知道老人平时写什么。邮差只讲过那么一句，它就记了二十多年，连对方住在镇上还是村外，也没问清。\n\n这次回去，可以问问邮差，愿不愿意替它带句话。\n\n兽寄完信，又给何师傅买了一枚顶针。顶针很便宜，不过得挑大小。它对着自己的爪子比了半天，店家让它别比了，拿出几种，说可以回去换。\n\n兽看看身后的街，问：“能不能先量量？”\n\n店家给了它一小片纸。它想起何师傅教它捏针的样子，在纸上画出一个大概的指圈。\n\n“我不保证。”店家说。\n\n兽点头，付了钱。\n\n阿禾收到的是一支便宜的笔。她试了一下，说笔尖有点硬，但画细线正好。\n\n她给兽的，是一张画到一半的小图。\n\n图上画着那张旧桥板做的桌子，凹痕也在。她记得桌子多宽，却记不准左边的腿离边缘有多远，留了一截虚线。\n\n“回去量给我。”她说。\n\n她没有一直陪它。还有课，有吃饭时才见得到的室友，也有一张改了几遍还要改的作业。兽有两天自己吃饭，一个晚上独自坐在房间里，觉得有一点无聊，便下楼问店家哪里能买到热水和烧饼。\n\n后天的演出，它按时去了。\n\n人比排练时多，前面的椅子坐满了，它仍坐最后一排。熟悉的那一小段响起来时，它认出了前两个音，往前坐了坐。\n\n这次没有停。\n\n演完以后，人们起身，椅子挪动，有小孩在找掉到地上的糖。兽站了一会儿，等人散开，才出去。\n\n它终于问到那支曲子的名字。名字有些绕口，它请人写在票的背面，收好。\n\n临走前一晚，阿禾陪它去吃面。\n\n这回兽请客。阿禾把小菜的价钱看了看，选了一盘，两人分着吃。\n\n她说自己的小台子已经能升起来，不过往下降，还会有些歪。\n\n兽把筷子放下，用两只爪子在桌上比画了一下。\n\n阿禾摇头。\n\n“那样会更歪。”\n\n它把爪子收回来，继续吃面。\n\n第二天，阿禾送它到车站。进站前，兽低头查看衣袋：票在，零钱在，那张图也在。\n\n“下回我有新地址再告诉你。”阿禾说。\n\n兽点头。\n\n“我还在那里。”\n\n它说完，又想了一下，补充：“有时候也出去。”\n\n十八　桥还在那里\n\n回程的火车晚了一点。\n\n九步没有再一直盯着窗子。它看过一阵田野，靠在座位上睡着了，醒来时，怀里的纸还抱得很紧。\n\n从镇上到村口，它搭了一段木料车。车上坐不稳，厚纸的角硌着肚皮，它挪了三次，才找到合适的位置。\n\n磨坊的梨树已经开过花。\n\n它下车，沿坡往下走，看见桥，桥头的小屋，还有自己留在门边的那把铲子。\n\n木匠的徒弟正蹲在那里修一只凳子。\n\n“回来了？”\n\n九步点头。\n\n“我坐断的。”徒弟先指了指凳子，“已经修好了，胶还没干。”\n\n他又给九步看这几天的账。买过一回灯油，桥北边的排水沟清过一次。有个人捡到一把钥匙，放在窗台上。还有一个人来借锤子，到现在没还，说了名字，记在后面。\n\n九步一项项看完，接过钥匙。\n\n它没有立刻讲火车。\n\n包太重，脚也有点酸。它先提水洗了脸，又煮一锅面，把放了七天的葱择去坏叶。徒弟收好工具走了，天色暗下来，桥上陆续有人回家。\n\n它吃完，把纸放进柜子，倒在床上睡了一觉。\n\n第二天，邮差送来它写给自己的信。\n\n信封上多了几道戳，边角压得有些皱。它剪开，读了一遍，从包里找出那张音乐会的票，夹进绿皮本子。\n\n邮差站在门口，等它说话。\n\n“怎么？”九步问。\n\n“我看着像你的字，又想，这不就是你吗？”\n\n“是我寄的。”\n\n邮差笑着摇摇头，跨上车。\n\n九步叫住他，问起多年前那个给自己写信的老人。\n\n邮差想了好久。\n\n“哦，那一个。后来搬去跟女儿住了。信我没再送过。”\n\n“你有他的地址吗？”\n\n“旧册子里可能有，得找。”\n\n“那你见到他的时候，替我说一声，我也试过了。”\n\n邮差说好，但没保证哪天能见着。九步也没催。\n\n何师傅来时，九步把顶针拿给她。她试了一下，偏小。\n\n九步有些懊恼，把店里能换的事说了，又想起自己已经回来。\n\n何师傅取下来，换了一根手指。\n\n“这个正好。”\n\n她照旧付了钱。九步想说是送她的，何师傅已经把钱压在桌上，问它厚纸买到没有。\n\n它便把纸取出来给她看。\n\n她用指尖捻了捻，说可以画伞样，正要问买几张，九步已经分出一小叠。\n\n“这个给你。”\n\n她想了一下，收了。\n\n后来桥边的人慢慢听说，它在城里听了一场演奏。\n\n卖豆腐的问用了什么乐器，九步有两样叫不上来，把样子画在纸上。卖豆腐的对着看，说其中一个像他舅舅从前吹过的，回头去问问。\n\n九步问他哪天有空，想听他舅舅吹一次。\n\n“早不吹了。牙掉了几颗，说吹着漏气。”\n\n“哦。”\n\n“不过有一把旧琴。我去问问还能不能响。”\n\n那天没有西瓜，也没有许多人等着听完。赶路的人照旧赶路，坐下的人喝一会儿茶。九步讲到阿禾的作业，想起没问她愿不愿意给别人听，便只说她在学校有一张自己的桌子，窗台上放着以前留在这里的玻璃杯。\n\n晚上，它拿尺子量了旧桌左边那条腿。\n\n量完，写信告诉阿禾，又添了一句：\n\n“琴还没问着。问着了再写。”\n\n十九　灯下\n\n九步开始写一篇长一点的故事。\n\n它给自己留了一摞纸，放在桌子靠墙的一头。下雨就收进屋里，天气好，再搬出来。\n\n开始写得很快。\n\n它想起自己刚来时，把锅放在灶上，生了很久的火，锅却一直不热。后来发现烟道堵了，火只在灶口舔，里面全是灰。\n\n它还想起第一个跟它讲故事的人。那个人的脸已经记不清，手里倒像提着一捆布。究竟是不是布，它翻遍最早的本子，也没有找到。\n\n它只写下自己记得的部分。\n\n写到出门看海，它停了好些天。原先已经讲过多次的东西，落在纸上，有些太短，有些又太长。面团的事，它改了三遍，第三遍读起来，还不如第一遍。\n\n它把第一遍找回来，压在上面。\n\n何师傅在旁边修一把伞，抬头看了一眼。\n\n“又改回来了？”\n\n“嗯。”\n\n她低下头继续穿线。\n\n九步有时问她愿不愿意听一段。她有时说听，有时说今天脑子里都是伞骨，听不进去。\n\n它便自己读。\n\n读到“过桥费”那几个字，它停住很久。\n\n旧木牌还挂在门边，重新刮过的那一面，漆已经浅了。原先几个字的颜色渗进木纹，从侧面看，仍能看到一点痕迹。\n\n它没有把那些痕迹再磨掉。\n\n夏天来了，阿禾回家过了一小段假。她把桌腿那截虚线补成实线，又在图边画了两张凳子。\n\n她的台子可以降下去了，不过做出来以后，老师让她再做一个更小的。\n\n她说起这件事，翻了一个很大的白眼。九步笑着把茶递给她，险些洒到图上。\n\n海边的来信也到了。\n\n旅店老板说，那条毛巾洗过几回，边已经散了，问九步还要不要。他女儿在下面画了一头有角的兽，两只角上各挂一只袜子。\n\n九步回信说，毛巾可以拿去擦桌子。又问明年春天，楼上那间朝海的房是否还能住。\n\n它还没有定下日子。\n\n桥上的日子仍然忙闲不一。有时一天只写两行，有时写了半页，便有人来找工具。也有时候，桌子一下午都是空的，它却迟迟没落笔，只盯着河岸的一棵草发呆。\n\n等它终于写到从城里回来，那一摞纸已经挺厚。\n\n木匠的徒弟给它做了一块压纸的木条。何师傅把装稿子的旧袋换了底。阿禾写信来问，写完能不能先寄几页，让同屋的人也读一读。\n\n九步说可以，还得再看一遍。\n\n它看了一个星期。\n\n有一句它实在不舍得划，虽然读到那里，总觉得跟前后接不上。它把那一句抄到别的纸上，才肯从正文里去掉。\n\n最后一天，天很热。\n\n九步把桌子擦干净，摊开稿子，从第一页读起。读到面包店，笑了一次；读到关桥，爪子停在杯子旁边，过一会儿才又翻页。\n\n有人推车过桥，轮子碾过木板，轻轻响了几声。它抬起头，看那人过去，又低头读。\n\n傍晚，何师傅来了，抱着半个西瓜。\n\n“买大了。”她说。\n\n九步起身去拿刀。\n\n她把瓜放在桌上，发现它的稿子已经叠齐，最上面压着木条。\n\n“写完了？”\n\n“写完了。”\n\n“叫什么？”\n\n“过桥费。”\n\n何师傅看了一眼门边的旧牌子，点点头。\n\n九步拿来盘子，把瓜切成几片。瓜汁顺着桌面往那道浅凹痕里流，它忙拿布擦。何师傅接过刀，接着切。\n\n两人坐下吃了一会儿。\n\n何师傅先吃完，把瓜皮放进盆里，洗净手，擦干。\n\n“给我看看。”她说。\n\n九步把稿子递过去，自己起身点灯。\n\n灯芯刚拨好，桥上走来一个背包的人。他在牌子前站了一小会儿，往屋里看。\n\n“能坐一下吗？”\n\n“能。”九步说。\n\n那人放下背包，坐在空凳子上。走了很久的路，脚已经肿了，他松开鞋带，轻轻吐出一口气。\n\n九步把盘子推近一点。\n\n那人拿起一片瓜，刚想开口，九步便指了指桌边的盆。\n\n“籽吐这里就行。”\n\n屋里安静了一阵，只听见何师傅翻纸。\n\n九步正要把灯挪近一些，她按住一页，抬起头。\n\n“这儿得改。”\n\n“哪儿？”\n\n“我那天穿的是蓝衣服。褐色那件，早让火星子烧了个洞。”\n\n九步凑过去看。\n\n她指的那一行，它读过许多遍，一直记得很清楚，现在却忽然拿不准。\n\n“真是蓝的？”\n\n“深蓝。袖子这里还补过一块。”\n\n九步去拿笔，蘸好墨，把“褐色”轻轻划掉。桌对面，赶路的人已经吃完第一片瓜，又伸手拿起一片。\n\n灯有些偏，九步伸出爪子，往三个人中间挪了挪。\n\n（完）\n"</script>
+  <script>
+  (() => {
+    'use strict';
+    const root = document.documentElement;
+    const chapters = [...document.querySelectorAll('.chapter')];
+    const links = [...document.querySelectorAll('.toc-entry')];
+    const reader = document.getElementById('reader');
+    const ending = document.getElementById('afterword');
+    const progressBar = document.getElementById('top-progress');
+    const dock = document.getElementById('reading-dock');
+    const resume = document.getElementById('resume-reading');
+    const progressKey = 'bridge-book.position.v1';
+    const preferencesKey = 'bridge-book.preferences.v1';
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    let current = 0, frame = 0, saveTimer = 0, toastTimer = 0, pendingRestore = false;
+    let latestPosition = null;
+    const readJSON = key => { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (_) { return null; } };
+    const writeJSON = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch (_) { return false; } };
+    const saved = readJSON(progressKey);
+    function validPosition(p) { return p && typeof p.anchor === 'string' && /^c\d{2}-p\d{3}$/.test(p.anchor) && document.getElementById(p.anchor) && Number.isFinite(p.offset) && Number.isInteger(p.chapter) && p.chapter >= 0 && p.chapter < chapters.length; }
+    if (validPosition(saved)) {
+      resume.hidden = false;
+      resume.textContent = `接着读 · 第${chapters[saved.chapter].dataset.ordinal}章`;
+    }
+    function capturePosition() {
+      if (window.scrollY < reader.offsetTop - 130) return null;
+      const chapter = chapters[current];
+      const paras = [...chapter.querySelectorAll('.chapter-text p')];
+      const targetTop = window.innerWidth <= 720 ? 95 : 115;
+      let selected = paras[0];
+      for (const para of paras) {
+        if (para.getBoundingClientRect().top <= targetTop) selected = para;
+        else break;
+      }
+      return { anchor: selected.id, chapter: current, offset: Math.round(selected.getBoundingClientRect().top), version: 1 };
+    }
+    function savePosition() {
+      if (pendingRestore) return;
+      latestPosition = capturePosition() || latestPosition;
+      if (latestPosition && writeJSON(progressKey, latestPosition)) {
+        resume.hidden = false;
+        resume.textContent = `接着读 · 第${chapters[latestPosition.chapter].dataset.ordinal}章`;
+      }
+    }
+    function restorePosition(position) {
+      if (!validPosition(position)) return;
+      const target = document.getElementById(position.anchor);
+      const offset = Math.min(Math.max(position.offset, -120), innerHeight * .45);
+      window.scrollTo({ top: window.scrollY + target.getBoundingClientRect().top - offset, behavior: 'instant' });
+      updateReading();
+    }
+    function syncPreferences() {
+      document.querySelectorAll('[data-theme-choice]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.themeChoice === root.dataset.theme)));
+      document.querySelectorAll('[data-size-choice]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.sizeChoice === root.dataset.size)));
+      document.getElementById('theme-color').content = root.dataset.theme === 'night' ? '#192920' : '#f5f2e9';
+    }
+    function updateReading() {
+      frame = 0;
+      const threshold = innerWidth <= 720 ? 140 : 165;
+      let index = 0;
+      for (let i = 0; i < chapters.length; i++) {
+        if (chapters[i].getBoundingClientRect().top <= threshold) index = i;
+        else break;
+      }
+      current = index;
+      const number = String(index + 1).padStart(2, '0');
+      const title = chapters[index].dataset.title;
+      document.getElementById('rail-number').textContent = number;
+      document.getElementById('rail-title').textContent = title;
+      document.getElementById('dock-title').textContent = `${number} · ${title}`;
+      links.forEach((link, i) => { if (i === index) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
+      document.querySelectorAll('[data-step]').forEach(button => {
+        button.disabled = Number(button.dataset.step) < 0 ? index === 0 : index === chapters.length - 1;
+      });
+      const start = reader.offsetTop - 100;
+      const finish = ending.offsetTop - innerHeight + 150;
+      const progress = Math.max(0, Math.min(1, (scrollY - start) / Math.max(1, finish - start)));
+      progressBar.style.transform = `scaleX(${progress})`;
+      document.getElementById('rail-progress').textContent = `全书 · ${Math.round(progress * 100)}%`;
+      dock.hidden = reader.getBoundingClientRect().top > threshold || ending.getBoundingClientRect().top < innerHeight * .65;
+    }
+    function requestUpdate() {
+      if (!frame) frame = requestAnimationFrame(updateReading);
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(savePosition, 500);
+    }
+    function jumpToChapter(index) {
+      const chapter = chapters[Math.max(0, Math.min(chapters.length - 1, index))];
+      chapter.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
+      chapter.querySelector('h2').focus({ preventScroll: true });
+      try { history.replaceState(null, '', `#${chapter.id}`); } catch (_) {}
+    }
+    function openDialog(id) {
+      const dialog = document.getElementById(id);
+      dialog.showModal();
+      root.classList.add('dialog-open');
+      if (id === 'contents') {
+        const active = dialog.querySelector('[aria-current="location"]');
+        if (active) active.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+      }
+    }
+    document.querySelectorAll('[data-open]').forEach(button => button.addEventListener('click', () => openDialog(button.dataset.open)));
+    document.querySelectorAll('dialog').forEach(dialog => {
+      dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
+      dialog.addEventListener('close', () => {
+        if (!document.querySelector('dialog[open]')) root.classList.remove('dialog-open');
+      });
+      dialog.addEventListener('click', event => {
+        const r = dialog.getBoundingClientRect();
+        if (event.target === dialog && (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom)) dialog.close();
+      });
+    });
+    links.forEach((link, index) => link.addEventListener('click', event => {
+      event.preventDefault();
+      document.getElementById('contents').close();
+      jumpToChapter(index);
+    }));
+    document.querySelectorAll('[data-step]').forEach(button => button.addEventListener('click', () => jumpToChapter(current + Number(button.dataset.step))));
+    document.querySelectorAll('[data-theme-choice]').forEach(button => button.addEventListener('click', () => {
+      root.dataset.theme = button.dataset.themeChoice;
+      writeJSON(preferencesKey, { theme: root.dataset.theme, size: root.dataset.size });
+      syncPreferences();
+    }));
+    document.querySelectorAll('[data-size-choice]').forEach(button => button.addEventListener('click', () => {
+      const position = capturePosition();
+      pendingRestore = true;
+      root.dataset.size = button.dataset.sizeChoice;
+      writeJSON(preferencesKey, { theme: root.dataset.theme, size: root.dataset.size });
+      syncPreferences();
+      requestAnimationFrame(() => { if (position) restorePosition(position); pendingRestore = false; updateReading(); });
+    }));
+    resume.addEventListener('click', () => {
+      const position = latestPosition || saved;
+      if (validPosition(position)) {
+        pendingRestore = true;
+        restorePosition(position);
+        document.getElementById(position.anchor).closest('.chapter').querySelector('h2').focus({ preventScroll: true });
+        pendingRestore = false;
+      }
+    });
+    function announce(message) {
+      const status = document.getElementById('status');
+      status.textContent = message; status.hidden = false;
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => { status.hidden = true; }, 3000);
+    }
+    document.getElementById('download-story').addEventListener('click', () => {
+      const source = JSON.parse(document.getElementById('story-source').textContent);
+      const url = URL.createObjectURL(new Blob([source], { type: 'text/plain;charset=utf-8' }));
+      const a = document.createElement('a'); a.href = url; a.download = '过桥费.txt';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      announce('故事已备好，愿它陪你走一段。');
+    });
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    window.addEventListener('pagehide', savePosition);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) savePosition(); });
+    syncPreferences(); updateReading();
+  })();
+  </script>
+</body>
+</html>
